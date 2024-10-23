@@ -1,15 +1,4 @@
-{% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet" />
-    <link href="{% static 'polls/initialLogIn.css' %}" rel="stylesheet" />
-    <title>Spotify Wrapped</title>
-    <style>
-        * {
+* {
             box-sizing: border-box;
         }
         body, html {
@@ -58,26 +47,3 @@
             text-align: center;
             margin-bottom: 20px;           /* Space between the heading and the button */
         }
-    </style>
-</head>
-<body>
-    <div class="v7_5">
-        <span class="v37_6">Spotify Wrapped</span>
-        <button class="v8_18" onclick="redirectToSpotify()">
-            Log In with Spotify
-        </button>
-    </div>
-
-    <script>
-        function redirectToSpotify() {
-            const clientId = '48d97781e4c9413f92e8d682609b8649'; // Replace with your actual Client ID
-            const redirectUri = 'http://127.0.1:8000/polls'; // Replace with your redirect URI
-            const scopes = 'user-read-private user-read-email'; // The scopes you need
-            const spotifyAuthUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
-
-            // Redirect to Spotify Authorization URL
-            window.location.href = spotifyAuthUrl;
-        }
-    </script>
-</body>
-</html>
