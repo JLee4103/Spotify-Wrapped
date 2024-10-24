@@ -47,3 +47,8 @@
             text-align: center;
             margin-bottom: 20px;           /* Space between the heading and the button */
         }
+        a.login-button {
+            background-color: #1DB954;
+            border-radius: 30px;
+            line-height: 60px;
+        }

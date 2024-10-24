@@ -1,17 +1,74 @@
 import requests
+import polls.settings
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.generic import RedirectView
-from django.conf import settings
 from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views import generic
+from django.views import generic, View
 from django.utils import timezone
 
 
 from .models import Choice, Question
+
+class SpotifyLoginView(View):
+    def get(self, request):
+        spotify_auth_url = 'https://accounts.spotify.com/authorize'
+        response_type = 'code'
+        scope = 'user-top-read'
+
+        # Construct the Spotify authorization URL
+        auth_url = (
+            f"{spotify_auth_url}?client_id={polls.settings.SPOTIFY_CLIENT_ID}"
+            f"&response_type={response_type}"
+            f"&redirect_uri={polls.settings.SPOTIFY_REDIRECT_URI}"
+            f"&scope={scope}"
+        )
+
+        # Redirect the user to the Spotify authorization page
+        return redirect(auth_url)
+
+class SpotifyCallbackView(View):
+    def get(self, request):
+        # Get the authorization code from the callback URL
+        code = request.GET.get('code')
+
+        if code is None:
+            # Handle the case where authorization fails or user denies permission
+            return render(request, 'polls/index.html', {'error': 'Authorization failed.'})
+
+        # Spotify token exchange endpoint
+        token_url = 'https://accounts.spotify.com/api/token'
+
+        # Payload to exchange the authorization code for an access token
+        payload = {
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': polls.settings.SPOTIFY_REDIRECT_URI,
+            'client_id': polls.settings.SPOTIFY_CLIENT_ID,
+            'client_secret': polls.settings.SPOTIFY_CLIENT_SECRET,
+        }
+
+        # Make a POST request to get the access token
+        response = requests.post(token_url, data=payload)
+        response_data = response.json()
+
+        # Retrieve access token and refresh token from the response
+        access_token = response_data.get('access_token')
+        refresh_token = response_data.get('refresh_token')
+
+        if access_token is None:
+            # Handle the error if we do not get an access token
+            return render(request, 'polls/index.html', {'error': 'Token exchange failed.'})
+
+        # Store the access token in the session
+        request.session['access_token'] = access_token
+        request.session['refresh_token'] = refresh_token
+
+        # Redirect to the top songs view or home page after successful authentication
+        return redirect('top_songs')
 
 class IndexView(generic.ListView):
     template_name = "polls/initialLogIn.html"
@@ -25,60 +82,6 @@ class IndexView(generic.ListView):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[
                :5
                ]
-
-    def spotify_login(request):
-        spotify_auth_url = 'https://accounts.spotify.com/authorize'
-        response_type = 'code'
-        scope = 'user-read-email user-read-private'  # Customize the scope as needed
-
-        auth_url = (
-            f"{spotify_auth_url}?client_id={settings.SPOTIFY_CLIENT_ID}"
-            f"&response_type={response_type}"
-            f"&redirect_uri={settings.SPOTIFY_REDIRECT_URI}"
-            f"&scope={scope}"
-        )
-        return redirect(auth_url)
-
-    def spotify_callback(request):
-        code = request.GET.get('code')
-        token_url = 'https://accounts.spotify.com/api/token'
-
-        payload = {
-            'grant_type': 'authorization_code',
-            'code': code,
-            'redirect_uri': settings.SPOTIFY_REDIRECT_URI,
-            'client_id': settings.SPOTIFY_CLIENT_ID,
-            'client_secret': settings.SPOTIFY_CLIENT_SECRET,
-        }
-
-        response = requests.post(token_url, data=payload)
-        response_data = response.json()
-
-        access_token = response_data.get('access_token')
-        refresh_token = response_data.get('refresh_token')
-
-        # Store tokens in session or database
-        request.session['access_token'] = access_token
-        request.session['refresh_token'] = refresh_token
-
-        # Redirect to a page where you use the token to interact with the Spotify API
-        return redirect('some_view_using_spotify_api')
-
-    def some_view_using_spotify_api(request):
-        access_token = request.session.get('access_token')
-
-        if access_token:
-            headers = {
-                'Authorization': f'Bearer {access_token}'
-            }
-
-            profile_url = 'https://api.spotify.com/v1/me'
-            response = requests.get(profile_url, headers=headers)
-            profile_data = response.json()
-
-            return render(request, 'profile.html', {'profile': profile_data})
-        else:
-            return redirect('spotify_login')
 
 
 class DetailView(generic.DetailView):

@@ -8,57 +8,6 @@
     <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet" />
     <link href="{% static 'polls/initialLogIn.css' %}" rel="stylesheet" />
     <title>Spotify Wrapped</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-size: 14px;
-        }
-        body {
-            font-family: 'Hiragino Kaku Gothic Std', sans-serif;
-        }
-        .v7_5 {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;      /* Vertically center the content */
-            align-items: center;          /* Horizontally center the content */
-            width: 100%;
-            height: 100vh;                /* Full viewport height */
-            background: rgba(0, 0, 0, 1); /* Black background */
-            position: relative;
-        }
-        button.v8_18 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 543px;
-            height: 134px;
-            background: rgba(50, 250, 50, 1); /* Green background */
-            border-radius: 16px;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;              /* Space between the heading and button */
-            font-size: 36px;
-            font-weight: bold;
-            color: rgba(0, 0, 0, 1);
-            text-align: center;
-            font-family: 'Hiragino Kaku Gothic Std', sans-serif;
-        }
-        button.v8_18:hover {
-            background-color: rgba(40, 200, 40, 1); /* Darker green on hover */
-        }
-        .v37_6 {
-            color: rgba(255, 255, 255, 1);
-            font-size: 128px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;           /* Space between the heading and the button */
-        }
-    </style>
 </head>
 <body>
     <div class="v7_5">
@@ -70,13 +19,8 @@
 
     <script>
         function redirectToSpotify() {
-            const clientId = '48d97781e4c9413f92e8d682609b8649'; // Replace with your actual Client ID
-            const redirectUri = 'http://127.0.1:8000/polls'; // Replace with your redirect URI
-            const scopes = 'user-read-private user-read-email'; // The scopes you need
-            const spotifyAuthUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
-
             // Redirect to Spotify Authorization URL
-            window.location.href = spotifyAuthUrl;
+            window.location.href = "{% url 'polls:spotify_login' %}";
         }
     </script>
 </body>
