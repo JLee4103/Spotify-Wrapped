@@ -7,6 +7,9 @@ from django.utils import timezone
 
 from .models import Choice, Question
 
+def spotify_test(request):
+    return render(request, "polls/spotify_test.html")
+
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"

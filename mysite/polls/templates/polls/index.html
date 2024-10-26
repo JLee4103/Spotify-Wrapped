@@ -1,13 +1,41 @@
-{% load static %}
+{% extends 'polls/base.html' %}  <!-- Must be the first line -->
 
+{% load static %}  <!-- Load static after extending -->
+
+{% block title %}Spotify Wrapped{% endblock %}
+
+{% block content %}
+<!-- Include the main CSS -->
 <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 
-{% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+<div class="spotify-wrapped">
+    <section class="hero-section">
+        <h1 class="title display-1 text-center text-white">Your 2023 Wrapped</h1>
+        <p class="subtitle text-center text-white">A journey through your favorite tunes</p>
+    </section>
+
+    <section class="summary-section">
+        <h2 class="section-title text-center">Your Top Genres</h2>
+        <div class="genres">
+            <div class="genre-card">Pop</div>
+            <div class="genre-card">Rock</div>
+            <div class="genre-card">Jazz</div>
+            <!-- Add more genre cards as needed -->
+        </div>
+    </section>
+
+    <section class="top-artists-section">
+        <h2 class="section-title text-center">Your Top Artists</h2>
+        <div class="artists">
+            <div class="artist-card">Artist 1</div>
+            <div class="artist-card">Artist 2</div>
+            <div class="artist-card">Artist 3</div>
+            <!-- Add more artist cards as needed -->
+        </div>
+    </section>
+
+    <section class="listen-now">
+        <a href="{% url 'wrapped:spotify_test' %}" class="btn btn-primary btn-lg">Listen Now</a>
+    </section>
+</div>
+{% endblock %}
