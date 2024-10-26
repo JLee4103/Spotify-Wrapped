@@ -1,65 +1,44 @@
-/* Spotify Wrapped Inspired Styles */
-
-.spotify-wrapped {
-    font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
+body {
+    background-color: #000;
+    color: #fff;
 }
 
-.hero-section {
-    background: linear-gradient(135deg, #1DB954, #191414);
-    padding: 80px 20px;
-    text-align: center;
-}
-
-.title {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    font-size: 1.2em;
-}
-
-.section-title {
-    font-size: 2em;
-    margin: 40px 0 20px;
-}
-
-.genres, .artists {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px;
-}
-
-.genre-card, .artist-card {
-    background-color: #333333;
-    padding: 20px;
-    border-radius: 8px;
-    min-width: 150px;
-    text-align: center;
-    color: #1DB954;
-    font-weight: bold;
-}
-
-.listen-now {
-    text-align: center;
-    margin: 40px 0;
-}
-
-.btn-primary {
-    background-color: #1DB954;
+#wrapped-card {
+    background-color: #1DB954; /* Spotify green color */
     border: none;
-    padding: 15px 30px;
-    font-size: 1.2em;
-    border-radius: 25px;
-    color: white;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
 }
 
-.btn-primary:hover {
-    background-color: #1ed760;
+#wrapped-card .card-body {
+    padding: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000; /* Black text inside green card */
+}
+
+.progress {
+    background-color: #333;
+}
+
+.progress-bar.segment {
+    background-color: #ffffff;
+}
+
+.btn-green {
+    background-color: #1DB954; /* Spotify green color */
+    border: none;
+    color: #000; /* Black text on green button */
+}
+
+.btn-green:hover {
+    background-color: #17a34a; /* Darker green on hover */
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0 10px;
+    filter: invert(1); /* Invert color to ensure icons show on black background */
 }
