@@ -20,7 +20,7 @@
     <script>
         function redirectToSpotify() {
             // Redirect to Spotify Authorization URL
-            window.location.href = "{% url 'polls:spotify_login' %}";
+            window.location.href = "{% url 'spotifyWrapped:spotify_login' %}";
         }
     </script>
 </body>

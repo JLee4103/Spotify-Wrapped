@@ -5,7 +5,7 @@ from . import views
 from . import views
 from .views import SpotifyLoginView, SpotifyCallbackView
 
-app_name = "polls"
+app_name = "spotifyWrapped"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),

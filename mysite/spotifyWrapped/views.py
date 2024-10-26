@@ -1,5 +1,5 @@
 import requests
-import polls.settings
+import spotifyWrapped.settings
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.generic import RedirectView
@@ -21,9 +21,9 @@ class SpotifyLoginView(View):
 
         # Construct the Spotify authorization URL
         auth_url = (
-            f"{spotify_auth_url}?client_id={polls.settings.SPOTIFY_CLIENT_ID}"
+            f"{spotify_auth_url}?client_id={spotifyWrapped.settings.SPOTIFY_CLIENT_ID}"
             f"&response_type={response_type}"
-            f"&redirect_uri={polls.settings.SPOTIFY_REDIRECT_URI}"
+            f"&redirect_uri={spotifyWrapped.settings.SPOTIFY_REDIRECT_URI}"
             f"&scope={scope}"
         )
 
@@ -37,7 +37,7 @@ class SpotifyCallbackView(View):
 
         if code is None:
             # Handle the case where authorization fails or user denies permission
-            return render(request, 'polls/index.html', {'error': 'Authorization failed.'})
+            return render(request, 'spotifyWrapped/index.html', {'error': 'Authorization failed.'})
 
         # Spotify token exchange endpoint
         token_url = 'https://accounts.spotify.com/api/token'
@@ -46,9 +46,9 @@ class SpotifyCallbackView(View):
         payload = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': polls.settings.SPOTIFY_REDIRECT_URI,
-            'client_id': polls.settings.SPOTIFY_CLIENT_ID,
-            'client_secret': polls.settings.SPOTIFY_CLIENT_SECRET,
+            'redirect_uri': spotifyWrapped.settings.SPOTIFY_REDIRECT_URI,
+            'client_id': spotifyWrapped.settings.SPOTIFY_CLIENT_ID,
+            'client_secret': spotifyWrapped.settings.SPOTIFY_CLIENT_SECRET,
         }
 
         # Make a POST request to get the access token
@@ -61,17 +61,17 @@ class SpotifyCallbackView(View):
 
         if access_token is None:
             # Handle the error if we do not get an access token
-            return render(request, 'polls/index.html', {'error': 'Token exchange failed.'})
+            return render(request, 'spotifyWrapped/index.html', {'error': 'Token exchange failed.'})
 
         # Store the access token in the session
         request.session['access_token'] = access_token
         request.session['refresh_token'] = refresh_token
 
         # Redirect to the top songs view or home page after successful authentication
-        return redirect('top_songs')
+        return redirect(spotifyWrapped.settings.SPOTIFY_REDIRECT_URI)
 
 class IndexView(generic.ListView):
-    template_name = "polls/initialLogIn.html"
+    template_name = "spotifyWrapped/initialLogIn.html"
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
@@ -86,7 +86,7 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Question
-    template_name = "polls/detail.html"
+    template_name = "spotifyWrapped/detail.html"
     def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
@@ -96,19 +96,19 @@ class DetailView(generic.DetailView):
 
 class ResultsView(generic.DetailView):
     model = Question
-    template_name = "polls/results.html"
+    template_name = "spotifyWrapped/results.html"
 
 def index(request):
     latest_question_list = Question.objects.order_by("-pub_date")[:5]
     context = {"latest_question_list": latest_question_list}
-    return render(request, "polls/index.html", context)
+    return render(request, "spotifyWrapped/index.html", context)
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/detail.html", {"question": question})
+    return render(request, "spotifyWrapped/detail.html", {"question": question})
 
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/results.html", {"question": question})
+    return render(request, "spotifyWrapped/results.html", {"question": question})
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -118,7 +118,7 @@ def vote(request, question_id):
         # Redisplay the question voting form.
         return render(
             request,
-            "polls/detail.html",
+            "spotifyWrapped/detail.html",
             {
                 "question": question,
                 "error_message": "You didn't select a choice.",
@@ -130,4 +130,4 @@ def vote(request, question_id):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+        return HttpResponseRedirect(reverse("spotifyWrapped:results", args=(question.id,)))
