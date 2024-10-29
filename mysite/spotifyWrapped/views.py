@@ -23,7 +23,7 @@ class SpotifyLoginView(View):
         auth_url = (
             f"{spotify_auth_url}?client_id={spotifyWrapped.settings.SPOTIFY_CLIENT_ID}"
             f"&response_type={response_type}"
-            f"&redirect_uri={spotifyWrapped.settings.SPOTIFY_REDIRECT_URL}"
+            f"&redirect_uri={spotifyWrapped.settings.SPOTIFY_REDIRECT_URI}"
             f"&scope={scope}"
         )
 
@@ -52,7 +52,7 @@ class SpotifyCallbackView(View):
         }
 
         # Make a POST request to get the access token
-        response = requests.post(token_url, data=payload)
+        response = requests.post(url=token_url, data=payload)
         response_data = response.json()
 
         # Retrieve access token and refresh token from the response
@@ -68,7 +68,7 @@ class SpotifyCallbackView(View):
         request.session['refresh_token'] = refresh_token
 
         # Redirect to the top songs view or home page after successful authentication
-        return redirect(spotifyWrapped.settings.SPOTIFY_REDIRECT_URL)
+        return redirect(spotifyWrapped.settings.SPOTIFY_REDIRECT_URI)
 
 class IndexView(generic.ListView):
     template_name = "spotifyWrapped/initialLogIn.html"

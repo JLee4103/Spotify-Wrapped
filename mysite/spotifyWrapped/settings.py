@@ -1,5 +1,9 @@
 # settings.py
+import os
+from dotenv import load_dotenv
 
-SPOTIFY_CLIENT_ID = '48d97781e4c9413f92e8d682609b8649'
-SPOTIFY_CLIENT_SECRET = '2db721a3612b408baa6b488227aadcbd'
-SPOTIFY_REDIRECT_URL = 'http://127.0.0.1:8000/spotifyWrapped/home'
+load_dotenv()
+
+SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/spotifyWrapped/home'
