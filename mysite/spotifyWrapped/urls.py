@@ -13,4 +13,5 @@ urlpatterns = [
     path("<int:question_id>/vote/", views.vote, name="vote"),
     path('spotify/login/', SpotifyLoginView.as_view(), name='spotify_login'),
     path('spotify/callback/', SpotifyCallbackView.as_view(), name='spotify_callback'),
+    path('home/', views.HomeView.as_view(), name='home'),
 ]

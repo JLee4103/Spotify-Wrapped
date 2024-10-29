@@ -23,7 +23,7 @@ class SpotifyLoginView(View):
         auth_url = (
             f"{spotify_auth_url}?client_id={spotifyWrapped.settings.SPOTIFY_CLIENT_ID}"
             f"&response_type={response_type}"
-            f"&redirect_uri={spotifyWrapped.settings.SPOTIFY_REDIRECT_URI}"
+            f"&redirect_uri={spotifyWrapped.settings.SPOTIFY_REDIRECT_URL}"
             f"&scope={scope}"
         )
 
@@ -83,6 +83,8 @@ class IndexView(generic.ListView):
                :5
                ]
 
+class HomeView(generic.TemplateView):
+    template_name = 'spotifyWrapped/home.html'
 
 class DetailView(generic.DetailView):
     model = Question
