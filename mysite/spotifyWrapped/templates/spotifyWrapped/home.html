@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Wrapped Grid</title>
     <style>
+        /* Add your existing styles here */
         body {
             margin: 0;
             padding: 20px;
@@ -49,79 +50,97 @@
             font-weight: bold;
         }
 
-        .card-content {
+        /* Time Period Selection Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .selection-modal-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             text-align: center;
+            max-width: 300px;
         }
 
-        .card-name {
+        .time-button {
+            background-color: #1DB954;
+            color: white;
             font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
 
-        .card-date {
-            margin-bottom: 5px;
+        .time-button:hover {
+            background-color: #1aa34a;
         }
 
-        .card-duration {
-            opacity: 0.8;
+        .close-button {
+            margin-top: 20px;
+            background-color: #333;
+            padding: 10px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
     <h1>All Spotify Wrapped's</h1>
     <div class="grid-container" id="gridContainer">
-        <div class="card add-card">
+        <div class="card add-card" id="addCard">
             <span>+</span>
         </div>
     </div>
 
+    <!-- Time Period Selection Modal -->
+    <div class="modal" id="selectionModal">
+        <div class="selection-modal-content">
+            <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
+            <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
+            <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
+            <button class="close-button" onclick="closeSelectionModal()">Close</button>
+        </div>
+    </div>
+
     <script>
-        // Sample data - Replace this with your database fetch
-        const wrappedData = [
-            { name: "Wrapped 2023", date: "Dec 2023", duration: "45min" },
-            { name: "Wrapped 2022", date: "Dec 2022", duration: "42min" },
-            { name: "Wrapped 2021", date: "Dec 2021", duration: "38min" },
-            // Add more items as needed
-        ];
+        const addCard = document.getElementById('addCard');
+        const selectionModal = document.getElementById('selectionModal');
 
-        const gridContainer = document.getElementById('gridContainer');
-
-        function createCard(data) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="card-content">
-                    <div class="card-name">${data.name}</div>
-                    <div class="card-date">${data.date}</div>
-                    <div class="card-duration">${data.duration}</div>
-                </div>
-            `;
-            return card;
+        // Show the time period selection modal
+        function showSelectionModal() {
+            selectionModal.style.display = 'flex';
         }
 
-        function loadCards() {
-            wrappedData.forEach(data => {
-                const card = createCard(data);
-                gridContainer.appendChild(card);
-            });
+        // Close the selection modal
+        function closeSelectionModal() {
+            selectionModal.style.display = 'none';
         }
 
-        // Initial load
-        loadCards();
+        // Start Spotify Wrapped based on selected time period
+        function startWrapped(period) {
+            closeSelectionModal();
+            alert(`Generating Spotify Wrapped for: ${period}`);
+            // Here you would implement logic to fetch Spotify data for the chosen period
+            // For example, you might call an API with the time range as a parameter
+        }
 
-        // Example of infinite scroll implementation
-        window.addEventListener('scroll', () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-                // Load more cards when near bottom
-                // You would typically fetch more data from your database here
-                // For demo, we'll just duplicate existing data
-                wrappedData.forEach(data => {
-                    const card = createCard(data);
-                    gridContainer.appendChild(card);
-                });
-            }
-        });
+        // Add event listener to open selection modal on add card click
+        addCard.addEventListener('click', showSelectionModal);
     </script>
 </body>
 </html>
