@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet" />
+    <link href="{% static 'polls/initialLogIn.css' %}" rel="stylesheet" />
+    <title>Spotify Wrapped</title>
+</head>
+<body>
+    <div class="v7_5">
+        <span class="v37_6">Spotify Wrapped</span>
+        <button class="v8_18" onclick="redirectToSpotify()">
+            Log In with Spotify
+        </button>
+    </div>
+
+    <script>
+        function redirectToSpotify() {
+            // Redirect to Spotify Authorization URL
+            window.location.href = "{% url 'spotifyWrapped:spotify_login' %}";
+        }
+    </script>
+</body>
+</html>
