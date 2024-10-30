@@ -3,65 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Home</title>
+    <title>Spotify Wrapped Grid</title>
     <style>
-        /* Basic reset and styling */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
         body {
+            margin: 0;
+            padding: 20px;
+            background-color: #000000;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        h1 {
+            margin-left: 20px;
+            font-size: 2.5em;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            aspect-ratio: 1;
+            background-color: #1DB954;
+            border-radius: 10px;
+            padding: 20px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background-color: #191414; /* Spotify dark background */
-            color: #fff;
-        }
-        .container {
-            text-align: center;
-            max-width: 600px;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        .button-container {
-            margin-top: 2rem;
-        }
-        .login-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #1DB954; /* Spotify green */
-            color: #fff;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
             cursor: pointer;
+            transition: transform 0.2s;
         }
-        .login-button:hover {
-            background-color: #1aa34a; /* Darker green on hover */
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .add-card {
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .card-content {
+            text-align: center;
+        }
+
+        .card-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-date {
+            margin-bottom: 5px;
+        }
+
+        .card-duration {
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        {% if username != "Guest" %}
-            <h1>Welcome, {{ username }}!</h1>
-            <p>You're now logged in with Spotify.</p>
-        {% else %}
-            <h1>Welcome to Spotify Connect</h1>
-            <p>Log in to view your Spotify profile information and explore more features!</p>
-            <div class="button-container">
-                <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button">Log in with Spotify</a>
-            </div>
-        {% endif %}
+    <h1>All Spotify Wrapped's</h1>
+    <div class="grid-container" id="gridContainer">
+        <div class="card add-card">
+            <span>+</span>
+        </div>
     </div>
+
+    <script>
+        // Sample data - Replace this with your database fetch
+        const wrappedData = [
+            { name: "Wrapped 2023", date: "Dec 2023", duration: "45min" },
+            { name: "Wrapped 2022", date: "Dec 2022", duration: "42min" },
+            { name: "Wrapped 2021", date: "Dec 2021", duration: "38min" },
+            // Add more items as needed
+        ];
+
+        const gridContainer = document.getElementById('gridContainer');
+
+        function createCard(data) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-content">
+                    <div class="card-name">${data.name}</div>
+                    <div class="card-date">${data.date}</div>
+                    <div class="card-duration">${data.duration}</div>
+                </div>
+            `;
+            return card;
+        }
+
+        function loadCards() {
+            wrappedData.forEach(data => {
+                const card = createCard(data);
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // Initial load
+        loadCards();
+
+        // Example of infinite scroll implementation
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                // Load more cards when near bottom
+                // You would typically fetch more data from your database here
+                // For demo, we'll just duplicate existing data
+                wrappedData.forEach(data => {
+                    const card = createCard(data);
+                    gridContainer.appendChild(card);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
