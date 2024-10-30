@@ -1,4 +1,6 @@
 import requests
+from requests import request
+
 import spotifyWrapped.settings
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -27,48 +29,55 @@ class SpotifyLoginView(View):
             f"&scope={scope}"
         )
 
+
         # Redirect the user to the Spotify authorization page
         return redirect(auth_url)
 
 class SpotifyCallbackView(View):
     def get(self, request):
-        # Get the authorization code from the callback URL
-        code = request.GET.get('code')
+        auth_code = request.GET.get("code")
+        url = "https://accounts.spotify.com/api/token"
 
-        if code is None:
-            # Handle the case where authorization fails or user denies permission
-            return render(request, 'spotifyWrapped/index.html', {'error': 'Authorization failed.'})
-
-        # Spotify token exchange endpoint
-        token_url = 'https://accounts.spotify.com/api/token'
-
-        # Payload to exchange the authorization code for an access token
-        payload = {
-            'grant_type': 'authorization_code',
-            'code': code,
-            'redirect_uri': spotifyWrapped.settings.SPOTIFY_REDIRECT_URI,
-            'client_id': spotifyWrapped.settings.SPOTIFY_CLIENT_ID,
-            'client_secret': spotifyWrapped.settings.SPOTIFY_CLIENT_SECRET,
+        # Headers
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded"
         }
 
-        # Make a POST request to get the access token
-        response = requests.post(url=token_url, data=payload)
-        response_data = response.json()
+        # Data payload
+        data = {
+            "grant_type": "authorization_code",
+            "code": auth_code,
+            "redirect_uri": spotifyWrapped.settings.SPOTIFY_REDIRECT_URI,
+            "client_id": spotifyWrapped.settings.SPOTIFY_CLIENT_ID,
+            "client_secret": spotifyWrapped.settings.SPOTIFY_CLIENT_SECRET,
+        }
 
-        # Retrieve access token and refresh token from the response
-        access_token = response_data.get('access_token')
-        refresh_token = response_data.get('refresh_token')
+        # Make the POST request
+        response = requests.post(url, data=data)
 
-        if access_token is None:
-            # Handle the error if we do not get an access token
-            return render(request, 'spotifyWrapped/index.html', {'error': 'Token exchange failed.'})
+        # Check if the request was successful and print the token
+        if response.status_code == 200:
+            tokens = response.json()
+            access_token = tokens.get("access_token")
+            refresh_token = tokens.get("refresh_token")  # Only if using auth code flow
 
-        # Store the access token in the session
-        request.session['access_token'] = access_token
-        request.session['refresh_token'] = refresh_token
+            # Save tokens to session
+            request.session['access_token'] = access_token
+            if refresh_token:
+                request.session['refresh_token'] = refresh_token
 
+            # fetch user data
+            profile_url = "https://api.spotify.com/v1/me"
+            headers = {"Authorization": f"Bearer {access_token}"}
+            profile_response = requests.get(profile_url, headers=headers)
+            profile_data = profile_response.json()
+
+            #save username to session
+            request.session['spotify_username'] = profile_data.get("display_name")
+            #Uncomment next line for debugging
+            #print(profile_data)
         # Redirect to the top songs view or home page after successful authentication
-        return redirect(spotifyWrapped.settings.SPOTIFY_REDIRECT_URI)
+        return redirect("spotifyWrapped:home")
 
 class IndexView(generic.ListView):
     template_name = "spotifyWrapped/initialLogIn.html"
@@ -83,8 +92,12 @@ class IndexView(generic.ListView):
                :5
                ]
 
-class HomeView(generic.TemplateView):
+class HomeView(View):
     template_name = 'spotifyWrapped/home.html'
+    def get(self, request):
+        username = request.session.get("spotify_username", "Guest")
+        return render(request, "spotifyWrapped/home.html", {"username": username})
+
 
 class DetailView(generic.DetailView):
     model = Question
