@@ -1,13 +1,4 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Wrapped Grid</title>
-    <link href="{% static 'spotifyWrapped/home.css' %}" rel="stylesheet" />
-    <style>
-        /* Add your existing styles here */
+/* Add your existing styles here */
         body {
             margin: 0;
             padding: 20px;
@@ -99,50 +90,3 @@
             cursor: pointer;
             border-radius: 10px;
         }
-    </style>
-</head>
-<body>
-    <h1>All Spotify Wrapped's</h1>
-    <div class="grid-container" id="gridContainer">
-        <div class="card add-card" id="addCard">
-            <span>+</span>
-        </div>
-    </div>
-
-    <!-- Time Period Selection Modal -->
-    <div class="modal" id="selectionModal">
-        <div class="selection-modal-content">
-            <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
-            <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
-            <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
-            <button class="close-button" onclick="closeSelectionModal()">Close</button>
-        </div>
-    </div>
-
-    <script>
-        const addCard = document.getElementById('addCard');
-        const selectionModal = document.getElementById('selectionModal');
-
-        // Show the time period selection modal
-        function showSelectionModal() {
-            selectionModal.style.display = 'flex';
-        }
-
-        // Close the selection modal
-        function closeSelectionModal() {
-            selectionModal.style.display = 'none';
-        }
-
-        // Start Spotify Wrapped based on selected time period
-        function startWrapped(period) {
-            closeSelectionModal();
-            alert(`Generating Spotify Wrapped for: ${period}`);
-            // Here you would implement logic to fetch Spotify data for the chosen period
-            // For example, you might call an API with the time range as a parameter
-        }
-
-        // Add event listener to open selection modal on add card click
-        addCard.addEventListener('click', showSelectionModal);
-    </script>
-</body>
-</html>
