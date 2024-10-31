@@ -134,11 +134,27 @@
         }
 
         // Start Spotify Wrapped based on selected time period
-        function startWrapped(period) {
+        async function startWrapped(period) {
             closeSelectionModal();
             alert(`Generating Spotify Wrapped for: ${period}`);
-            // Here you would implement logic to fetch Spotify data for the chosen period
-            // For example, you might call an API with the time range as a parameter
+
+            // Example data structure, replace with actual data fetching logic
+            const data = { /* your Spotify data */ };
+
+            // Send the data to your backend
+            try {
+                const response = await fetch('http://localhost:5000/api/wrapped', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ period, data }),
+                });
+                const result = await response.json();
+                console.log('Data saved:', result);
+            } catch (error) {
+                console.error('Error saving data:', error);
+            }
         }
 
         // Add event listener to open selection modal on add card click
