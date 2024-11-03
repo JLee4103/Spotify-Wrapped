@@ -7,7 +7,7 @@
     <title>Spotify Wrapped Grid</title>
     <link href="{% static 'spotifyWrapped/home.css' %}" rel="stylesheet" />
     <style>
-        /* Add your existing styles here */
+        /* Your existing styles */
         body {
             margin: 0;
             padding: 20px;
@@ -43,6 +43,12 @@
             transition: transform 0.2s;
         }
 
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
         .card:hover {
             transform: scale(1.02);
         }
@@ -54,111 +60,115 @@
 
         /* Time Period Selection Modal */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
-            align-items: center;
-            color: white;
-            overflow: hidden;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.9); /* Black with opacity */
+            justify-content: center; /* Centered horizontally */
+            align-items: center; /* Centered vertically */
         }
 
         .selection-modal-content {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            text-align: center;
-            max-width: 300px;
+            text-align: center; /* Center text */
         }
 
         .time-button {
-            background-color: #1DB954;
+            background-color: #1DB954; /* Spotify green */
             color: white;
             font-size: 1.2em;
             padding: 10px;
-            border: none;
             border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .time-button:hover {
-            background-color: #1aa34a;
         }
 
         .close-button {
-            margin-top: 20px;
-            background-color: #333;
-            padding: 10px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 10px;
-        }
+          margin-top :20px; 
+          background-color:#333; 
+          padding :10px; 
+          border:none; 
+          color:white; 
+          cursor:pointer; 
+          border-radius :10px
+      }
     </style>
 </head>
 <body>
-    <h1>All Spotify Wrapped's</h1>
+    <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
+
+    <!-- Top Tracks Section -->
+    <h2>Your Top Tracks</h2>
     <div class="grid-container" id="gridContainer">
+        
+        <!-- Add Card for Time Selection -->
         <div class="card add-card" id="addCard">
-            <span>+</span>
+           <span>+</span>
         </div>
+
+        <!-- Display Top Tracks -->
+        {% for track in top_tracks %}
+        <div class="card">
+           <img src="{{ track.album_image }}" alt="{{ track.name }}">
+           <h3>{{ track.name }}</h3>
+           <p>Artist: {{ track.artist }}</p>
+           <p>Estimated Listening Time: {{ track.estimated_listening_time }} minutes</p> 
+        </div>
+        {% endfor %}
+        
+        {% if not top_tracks %}
+           <p>No Top Tracks Found.</p>
+        {% endif %}
     </div>
 
     <!-- Time Period Selection Modal -->
     <div class="modal" id="selectionModal">
-        <div class="selection-modal-content">
-            <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
-            <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
-            <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
-            <button class="close-button" onclick="closeSelectionModal()">Close</button>
-        </div>
-    </div>
+      <div class="selection-modal-content">
+         <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
+         <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
+         <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
+         <button class="close-button" onclick="closeSelectionModal()">Close</button>
+      </div>
+   </div>
 
-    <script>
-        const addCard = document.getElementById('addCard');
-        const selectionModal = document.getElementById('selectionModal');
+   <!-- JavaScript Section -->
+   <script>
+      const addCard = document.getElementById('addCard');
+      const selectionModal = document.getElementById('selectionModal');
 
-        // Show the time period selection modal
-        function showSelectionModal() {
-            selectionModal.style.display = 'flex';
+      // Show the modal when the add card is clicked
+      addCard.addEventListener('click', () => {
+         selectionModal.style.display = 'flex';
+      });
+
+      // Close modal function
+      function closeSelectionModal() {
+         selectionModal.style.display = 'none';
+      }
+
+      // Start Spotify Wrapped based on selected time period
+      async function startWrapped(period) {
+        closeSelectionModal();
+        alert(`Generating Spotify Wrapped for ${period}`);
+     
+        try {
+            const response = await fetch(`http://localhost/api/wrapped?period=${encodeURIComponent(period)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = await response.json();
+            console.log("Data saved", result);
+        } catch (error) {
+            console.error("Error saving data", error);
         }
+     }
+   </script>
 
-        // Close the selection modal
-        function closeSelectionModal() {
-            selectionModal.style.display = 'none';
-        }
-
-        // Start Spotify Wrapped based on selected time period
-        async function startWrapped(period) {
-            closeSelectionModal();
-            alert(`Generating Spotify Wrapped for: ${period}`);
-
-            // Example data structure, replace with actual data fetching logic
-            const data = { /* your Spotify data */ };
-
-            // Send the data to your backend
-            try {
-                const response = await fetch('http://localhost:5000/api/wrapped', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ period, data }),
-                });
-                const result = await response.json();
-                console.log('Data saved:', result);
-            } catch (error) {
-                console.error('Error saving data:', error);
-            }
-        }
-
-        // Add event listener to open selection modal on add card click
-        addCard.addEventListener('click', showSelectionModal);
-    </script>
 </body>
 </html>

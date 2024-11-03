@@ -1,19 +1,14 @@
 import requests
-from requests import request
-
-import spotifyWrapped.settings
-from django.shortcuts import redirect
-from django.shortcuts import render
-from django.views.generic import RedirectView
-from django.db.models import F
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views import View
+from django.conf import settings  # Use settings for Spotify credentials
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views import generic, View
 from django.utils import timezone
-
-
+from django.db.models import F
 from .models import Choice, Question
+import spotifyWrapped.settings
+
 
 class SpotifyLoginView(View):
     def get(self, request):
@@ -29,9 +24,9 @@ class SpotifyLoginView(View):
             f"&scope={scope}"
         )
 
-
         # Redirect the user to the Spotify authorization page
         return redirect(auth_url)
+
 
 class SpotifyCallbackView(View):
     def get(self, request):
@@ -79,54 +74,168 @@ class SpotifyCallbackView(View):
         # Redirect to the top songs view or home page after successful authentication
         return redirect("spotifyWrapped:home")
 
-class IndexView(generic.ListView):
-    template_name = "spotifyWrapped/initialLogIn.html"
-    context_object_name = "latest_question_list"
-
-    def get_queryset(self):
-        """
-        Return the last five published questions (not including those set to be
-        published in the future).
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[
-               :5
-               ]
 
 class HomeView(View):
     template_name = 'spotifyWrapped/home.html'
+
     def get(self, request):
         username = request.session.get("spotify_username", "Guest")
-        return render(request, "spotifyWrapped/home.html", {"username": username})
+        
+        # Fetch top tracks/artists only if user is authenticated with Spotify
+        access_token = request.session.get('access_token', None)
+        
+        # You may want to get the period from request or session (for example purposes)
+        period = request.GET.get('period', 'Past Year')  # Default to "Past Year" if not provided
+        
+        if access_token:
+            # Pass the period argument here
+            top_tracks, top_artists = self.get_spotify_wrapped_data(access_token, period)
+        else:
+            top_tracks, top_artists = [], []
+
+        return render(request, self.template_name, {
+            "username": username,
+            "top_tracks": top_tracks,
+            "top_artists": top_artists,
+        })
+
+    def get_spotify_wrapped_data(self, access_token, period):
+        """
+        Fetches user's top tracks and artists from Spotify based on the selected time range.
+        """
+        headers = {"Authorization": f"Bearer {access_token}"}
+        
+        # Map the selected period to Spotify's time range
+        time_range_map = {
+            'Past Month': 'short_term',
+            'Past 6 Months': 'medium_term',
+            'Past Year': 'long_term'
+        }
+        
+        # Get the appropriate time range for Spotify API
+        time_range = time_range_map.get(period, 'long_term')
+        
+        # Fetch user's top tracks from Spotify
+        top_tracks_url = f"https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}"
+        top_tracks_response = requests.get(top_tracks_url, headers=headers)
+        
+        if top_tracks_response.status_code == 200:
+            top_tracks_data = top_tracks_response.json().get('items', [])
+            top_tracks = [
+                {
+                    'name': track['name'],
+                    'artist': track['artists'][0]['name'],
+                    'album_image': track['album']['images'][0]['url'] if track['album']['images'] else None,
+                }
+                for track in top_tracks_data
+            ]
+        else:
+            top_tracks = []
+        
+        # Fetch user's top artists from Spotify
+        top_artists_url = f"https://api.spotify.com/v1/me/top/artists?limit=10&time_range={time_range}"
+        top_artists_response = requests.get(top_artists_url, headers=headers)
+        
+        if top_artists_response.status_code == 200:
+            top_artists_data = top_artists_response.json().get('items', [])
+            top_artists = [
+                {
+                    'name': artist['name'],
+                    'image': artist['images'][0]['url'] if artist['images'] else None,
+                }
+                for artist in top_artists_data
+            ]
+        else:
+            top_artists = []
+        
+        return top_tracks, top_artists
+
+def get_spotify_wrapped_data(self, access_token, period):
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    # Map the selected period to Spotify's time range
+    time_range_map = {
+        'Past Month': 'short_term',
+        'Past 6 Months': 'medium_term',
+        'Past Year': 'long_term'
+    }
+    
+    time_range = time_range_map.get(period, 'long_term')
+    
+    # Fetch user's top tracks
+    top_tracks_url = f"https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}"
+    top_tracks_response = requests.get(top_tracks_url, headers=headers)
+    
+    if top_tracks_response.status_code == 200:
+        top_tracks_data = top_tracks_response.json().get('items', [])
+        top_tracks = []
+        
+        for track in top_tracks_data:
+            # Fetch additional details such as duration
+            track_id = track['id']
+            track_details_url = f"https://api.spotify.com/v1/tracks/{track_id}"
+            track_details_response = requests.get(track_details_url, headers=headers)
+            if track_details_response.status_code == 200:
+                track_details = track_details_response.json()
+                duration_ms = track_details.get('duration_ms', 0)  # Default to 0 if not available
+                
+                # Calculate estimated listening time (for example purposes, assume 10 plays)
+                estimated_listening_time_minutes = round((duration_ms / 1000 / 60) * 10, 2) if duration_ms > 0 else 0
+                
+                top_tracks.append({
+                    'name': track['name'],
+                    'artist': track['artists'][0]['name'],  
+                    'album_image': track['album']['images'][0]['url'] if track['album']['images'] else None,
+                    'estimated_listening_time': estimated_listening_time_minutes
+                })
+    else:
+        top_tracks = []
+
+    return top_tracks
 
 
-class DetailView(generic.DetailView):
-    model = Question
+class IndexView(View):
+    template_name = "spotifyWrapped/initialLogIn.html"
+    
+    def get(self, request):
+        latest_question_list = Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+        
+        context = {
+            "latest_question_list": latest_question_list,
+        }
+        
+        return render(request, self.template_name, context)
+
+
+class DetailView(View):
     template_name = "spotifyWrapped/detail.html"
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
+    
+    def get(self, request, question_id):
+        question = get_object_or_404(Question, pk=question_id)
+        
+        context = {
+            "question": question,
+        }
+        
+        return render(request, self.template_name, context)
 
 
-class ResultsView(generic.DetailView):
-    model = Question
+class ResultsView(View):
     template_name = "spotifyWrapped/results.html"
+    
+    def get(self, request, question_id):
+        question = get_object_or_404(Question, pk=question_id)
+        
+        context = {
+            "question": question,
+        }
+        
+        return render(request, self.template_name, context)
 
-def index(request):
-    latest_question_list = Question.objects.order_by("-pub_date")[:5]
-    context = {"latest_question_list": latest_question_list}
-    return render(request, "spotifyWrapped/index.html", context)
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "spotifyWrapped/detail.html", {"question": question})
-
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "spotifyWrapped/results.html", {"question": question})
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
@@ -142,7 +251,5 @@ def vote(request, question_id):
     else:
         selected_choice.votes = F("votes") + 1
         selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse("spotifyWrapped:results", args=(question.id,)))
+        
+    return HttpResponseRedirect(reverse("spotifyWrapped:results", args=(question.id,)))
