@@ -15,10 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
+from django.views.generic import RedirectView
+
 urlpatterns = [
-    path("spotifyWrapped/", include("spotifyWrapped.urls")),
+    path('', RedirectView.as_view(url='/spotifyWrapped/', permanent=True)),
+    path('spotifyWrapped/', include('spotifyWrapped.urls')),
     path('admin/', admin.site.urls),
 ]
+
