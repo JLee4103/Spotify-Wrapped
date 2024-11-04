@@ -8,7 +8,14 @@
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}"  />
 </head>
 <body>
-    <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
+    {% if username != "Guest" %}
+        <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
+    {% else %}
+        <h1>Log in to Get Started!</h1>
+        <div class="button">
+            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button">Log In With Spotify</a>
+        </div>
+    {% endif %}
 
     <!-- Top Tracks Section -->
     <h2>Your Top Tracks</h2>
