@@ -1,129 +1,127 @@
 /* Your existing styles */
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #000000;
-            font-family: Arial, sans-serif;
-            color: white;
-        }
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #000000; 
+    font-family: Arial, sans-serif;
+    color: white; /* Default text color */
+}
 
-        h1 {
-            text-align: center;
-            margin-left: 20px;
-            font-size: 2.5em;
-        }
+.dark-mode {
+    background-color: #ffffff; /* Light background */
+    color: #000000; /* Dark text color */
+}
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 2.5em;
+}
 
-        .card {
-            aspect-ratio: 1;
-            background-color: #1DB954;
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        .card img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
+.card {
+    aspect-ratio: 1;
+    background-color: #1DB954; /* Default card background */
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
-        .card:hover {
-            transform: scale(1.02);
-        }
+.card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
 
-        .card:active {
-            background-color: #128b3f;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transform: translateY(0);
-        }
+.card:hover {
+    transform: scale(1.02);
+}
 
-        .add-card {
-            font-size: 40px;
-            font-weight: bold;
-        }
+.add-card {
+    font-size: 40px;
+    font-weight: bold;
+}
 
-        /* Time Period Selection Modal */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            background-color: rgba(0, 0, 0, 0.9); /* Black with opacity */
-            justify-content: center; /* Centered horizontally */
-            align-items: center; /* Centered vertically */
-        }
+/* Time Period Selection Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.9); /* Black with opacity */
+    justify-content: center; /* Centered horizontally */
+    align-items: center; /* Centered vertically */
+}
 
-        .selection-modal-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            text-align: center; /* Center text */
-        }
+.selection-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center; /* Center text */
+}
 
-        .time-button {
-            background-color: #1DB954; /* Spotify green */
-            color: white;
-            font-size: 1.2em;
-            padding: 10px;
-            border-radius: 10px;
-        }
+.time-button {
+    background-color: #1DB954; /* Spotify green */
+    color: white;
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 10px;
+}
 
-        .close-button {
-          margin-top :20px;
-          background-color:#333;
-          padding :10px;
-          border:none;
-          color:white;
-          cursor:pointer;
-          border-radius :10px
-        }
+.close-button {
+    margin-top: 20px;
+    background-color: #333;
+    padding: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+}
 
-        .login-button {
-            display: inline-block;
-            background-color: #1DB954; /* Spotify green */
-            color: #fff;
-            font-weight: bold;
-            font-size: 1.2em;
-            padding: 0.8em 1.5em;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+.dark-mode-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #1DB954; /* Spotify green */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
 
-        /* Hover effect */
-        .login-button:hover {
-            background-color: #17a74b;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-            transform: translateY(-3px);
-        }
+.dark-mode-button:hover {
+    background-color: #17a74b;
+}
 
-        /* Active effect */
-        .login-button:active {
-            background-color: #128b3f;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transform: translateY(0);
-        }
+/* Styles for dark mode */
+.dark-mode .card {
+    background-color: #2a2a2a; /* Darker card background for dark mode */
+    color: white;
+}
 
-        /* Centering login button container */
-        .button {
-            text-align: center;
-            margin-top: 20px;
-        }
+.dark-mode .dark-mode-button {
+    background-color: #1DB954; /* Keep the button green in dark mode */
+}
+
+.dark-mode .dark-mode-button:hover {
+    background-color: #17a74b; /* Hover state for dark mode */
+}

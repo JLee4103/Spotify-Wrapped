@@ -63,13 +63,13 @@ a.login-button {
 /* Media Queries for Mobile Adjustments */
 @media (max-width: 600px) {
     button.v8_18 {
-        width: 90%;               /* Full width on mobile */
-        height: auto;            /* Allow height to adjust */
-        padding: 20px;           /* Add padding for better touch targets */
-        font-size: 24px;         /* Smaller font size */
+        width: 90%;              
+        height: auto;            
+        padding: 20px;           
+        font-size: 24px;        
     }
 
     .v37_6 {
-        font-size: 64px;         /* Smaller font size for headings */
+        font-size: 64px;  
     }
 }
