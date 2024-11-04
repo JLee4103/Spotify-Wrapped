@@ -6,7 +6,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import F
-from .models import Choice, Question
 import spotifyWrapped.settings
 
 
@@ -198,58 +197,4 @@ class IndexView(View):
     template_name = "spotifyWrapped/initialLogIn.html"
     
     def get(self, request):
-        latest_question_list = Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
-        
-        context = {
-            "latest_question_list": latest_question_list,
-        }
-        
-        return render(request, self.template_name, context)
-
-
-class DetailView(View):
-    template_name = "spotifyWrapped/detail.html"
-    
-    def get(self, request, question_id):
-        question = get_object_or_404(Question, pk=question_id)
-        
-        context = {
-            "question": question,
-        }
-        
-        return render(request, self.template_name, context)
-
-
-class ResultsView(View):
-    template_name = "spotifyWrapped/results.html"
-    
-    def get(self, request, question_id):
-        question = get_object_or_404(Question, pk=question_id)
-        
-        context = {
-            "question": question,
-        }
-        
-        return render(request, self.template_name, context)
-
-
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST["choice"])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(
-            request,
-            "spotifyWrapped/detail.html",
-            {
-                "question": question,
-                "error_message": "You didn't select a choice.",
-            },
-        )
-    else:
-        selected_choice.votes = F("votes") + 1
-        selected_choice.save()
-        
-    return HttpResponseRedirect(reverse("spotifyWrapped:results", args=(question.id,)))
+         return render(request, 'spotifyWrapped/index.html')
