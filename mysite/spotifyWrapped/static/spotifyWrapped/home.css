@@ -1,92 +1,126 @@
-/* Add your existing styles here */
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #000000;
-            font-family: Arial, sans-serif;
-            color: white;
-        }
+/* Base Styles */
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #000000;
+    font-family: Arial, sans-serif;
+    color: white;
+}
 
-        h1 {
-            margin-left: 20px;
-            font-size: 2.5em;
-        }
+h1 {
+    margin-left: 20px;
+    font-size: 2.5rem; /* Use rem for better scaling */
+}
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        .card {
-            aspect-ratio: 1;
-            background-color: #1DB954;
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+.card {
+    aspect-ratio: 1;
+    background-color: #1DB954;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
-        .card:hover {
-            transform: scale(1.02);
-        }
+.card img {
+    width: 100%;
+    height: auto; /* Maintains aspect ratio */
+    max-height: 250px; /* Controls the maximum height */
+    object-fit: cover; /* Ensures the image covers the space without stretching */
+    border-radius: 5px;
+}
 
-        .add-card {
-            font-size: 40px;
-            font-weight: bold;
-        }
 
-        /* Time Period Selection Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
-            align-items: center;
-            color: white;
-            overflow: hidden;
-        }
+.card:hover {
+    transform: scale(1.02);
+}
 
-        .selection-modal-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-            max-width: 300px;
-        }
+.add-card {
+    font-size: 40px;
+    font-weight: bold;
+}
 
-        .time-button {
-            background-color: #1DB954;
-            color: white;
-            font-size: 1.2em;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
+/* Time Period Selection Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.9); /* Black with opacity */
+    justify-content: center; /* Centered horizontally */
+    align-items: center; /* Centered vertically */
+}
 
-        .time-button:hover {
-            background-color: #1aa34a;
-        }
+.selection-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center; /* Center text */
+}
 
-        .close-button {
-            margin-top: 20px;
-            background-color: #333;
-            padding: 10px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 10px;
-        }
+.time-button {
+    background-color: #1DB954; /* Spotify green */
+    color: white;
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.close-button {
+    margin-top: 20px; 
+    background-color: #333; 
+    padding: 10px; 
+    border: none; 
+    color: white; 
+    cursor: pointer; 
+    border-radius: 10px;
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Less padding */
+    }
+
+    h1 {
+        font-size: 2rem; /* Smaller heading */
+        margin-left: 10px; /* Less margin */
+    }
+
+    .grid-container {
+        padding: 10px; /* Less padding for grid */
+    }
+
+    .card {
+        padding: 15px; /* Adjust card padding */
+    }
+
+    .add-card {
+        font-size: 30px; /* Smaller size for mobile */
+    }
+
+    .time-button, .close-button {
+        width: 100%; /* Full width buttons for better touch targets */
+        font-size: 1em; /* Adjust font size */
+        padding: 15px; /* More padding for touch */
+    }
+
+    .modal {
+        padding: 20px; /* Add padding for mobile modal */
+    }
+}
