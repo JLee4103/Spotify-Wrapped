@@ -7,8 +7,8 @@
     <title>Spotify Wrapped Grid</title>
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}" />
 </head>
-<body class >
-    <button  class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
+<body>
+    <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
 
     {% if username != "Guest" %}
         <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
@@ -25,35 +25,35 @@
         
         <!-- Add Card for Time Selection -->
         <div class="card add-card" id="addCard">
-           <span>+</span>
+            <span>+</span>
         </div>
 
         <!-- Display Top Tracks -->
         {% for track in top_tracks %}
         <div class="card">
-           <img src="{{ track.album_image }}" alt="{{ track.name }}">
-           <h3>{{ track.name }}</h3>
-           <p>Artist: {{ track.artist }}</p>
-           <p>Estimated Listening Time: {{ track.estimated_listening_time }} minutes</p> 
+            <img src="{{ track.album_image }}" alt="{{ track.name }}">
+            <h3>{{ track.name }}</h3>
+            <p>Artist: {{ track.artist }}</p>
+            <p>Estimated Listening Time: {{ track.estimated_listening_time }} minutes</p> 
+
+            <!-- Audio Player for Song Preview -->
+            {% if track.preview_url %}
+            <audio controls>
+                <source src="{{ track.preview_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            {% else %}
+            <p>Preview not available.</p>
+            {% endif %}
         </div>
         {% endfor %}
         
         {% if not top_tracks %}
-           <p>No Top Tracks Found.</p>
+            <p>No Top Tracks Found.</p>
         {% endif %}
     </div>
 
-    <!-- Time Period Selection Modal -->
-    <div class="modal" id="selectionModal">
-      <div class="selection-modal-content">
-         <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
-         <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
-         <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
-         <button class="close-button" onclick="closeSelectionModal()">Close</button>
-      </div>
-   </div>
-
-   <!-- JavaScript Section -->
-   <script src="{% static 'spotifyWrapped/home.js' %}"></script>
+    <!-- JavaScript Section -->
+    <script src="{% static 'spotifyWrapped/home.js' %}"></script>
 </body>
 </html>
