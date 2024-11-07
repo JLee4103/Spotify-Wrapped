@@ -27,6 +27,7 @@ h1 {
     margin: 0 auto;
 }
 
+
 .card {
     aspect-ratio: 1;
     background-color: #1DB954; /* Default card background */
@@ -170,6 +171,7 @@ h1 {
 }
 
 /* Modal styles */
+/* Modal styles */
 .modal {
     display: none;  /* Hide modal by default */
     position: fixed;
@@ -183,25 +185,48 @@ h1 {
 }
 
 .selection-modal-content {
-    background-color: white;
+    background-color: #1DB954; /* Spotify green */
+    color: white;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+    width: 300px;
+    margin: auto;
 }
 
 .time-button {
-    margin: 10px;
-    padding: 10px;
+    background-color: #000000; /* Black background */
+    color: #1DB954; /* Spotify green text */
+    border: 2px solid #1DB954; /* Green border to match Spotify's theme */
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.time-button:hover {
+    background-color: #1DB954; /* Spotify green background on hover */
+    color: white; /* White text on hover */
 }
 
 .close-button {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f44336;
-    color: white;
+    background-color: #000000; /* Black background */
+    color: #f44336; /* Red text for close button */
+    border: 2px solid #f44336; /* Red border */
+    padding: 10px 20px;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
 }
+
+.close-button:hover {
+    background-color: #f44336; /* Red background on hover */
+    color: white; /* White text on hover */
+}
+
 
 /* Friend List Dropdown Container */
 .friend-list-container {
