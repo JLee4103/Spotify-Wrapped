@@ -6,18 +6,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Wrapped Grid</title>
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}" />
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+        .light-mode {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+        .dark-mode-button, .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
+            background-color: #1DB954;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 25px;
+            margin: 10px 0;
+            transition: background-color 0.3s ease;
+        }
+        .dark-mode-button:hover, .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
+            background-color: #1ED760;
+        }
+        header, .friend-list-container, .wraps-section, .modal {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #282828;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .light-mode header, .light-mode .friend-list-container, .light-mode .wraps-section, .light-mode .modal {
+            background-color: #F0F0F0;
+            color: #000000;
+        }
+        header h1 {
+            font-size: 2em;
+            margin: 0;
+        }
+        .friend-list-container label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .friend-list-container select, .friend-list-container button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #1DB954;
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+        .light-mode .friend-list-container select, .light-mode .friend-list-container button {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+        .light-mode .friend-list-container label {
+            color: #000000;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1E1E1E;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .light-mode .card {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .add-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: #1DB954;
+            cursor: pointer;
+            border: 2px dashed #1DB954;
+        }
+        .track-info {
+            margin: 10px 0;
+        }
+        .track-info img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .track-info p {
+            margin: 10px 0;
+        }
+    </style>
 </head>
-<body>
+<body class="dark-mode">
     <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
 
-    {% if username != "Guest" %}
-        <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
-    {% else %}
-        <h1>Log in to Get Started!</h1>
-        <div class="button">
-            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button">Log In With Spotify</a>
-        </div>
-    {% endif %}
+    <header>
+        {% if username != "Guest" %}
+            <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
+        {% else %}
+            <h1>Log in to Get Started!</h1>
+            <div class="button">
+                <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button">Log In With Spotify</a>
+            </div>
+        {% endif %}
+    </header>
 
     <!-- Friend List Dropdown -->
     <div class="friend-list-container">
@@ -32,46 +136,48 @@
     </div>
 
     <!-- Spotify Wraps Section -->
-    <h2>Your Generated Spotify Wraps</h2>
-    <div class="grid-container" id="gridContainer">
-        
-        <!-- Always display the Add Card for Time Selection -->
-        <div class="card add-card" id="addCard">
-            <span>+</span>
-        </div>
-
-        <!-- Display Generated Wraps if available -->
-        {% if wraps %}
-            {% for wrap in wraps %}
-            <div class="card">
-                <h3>{{ wrap.title }}</h3>
-                <p>Generated on: {{ wrap.date_generated }}</p>
-
-                <!-- List of Tracks in this Wrap -->
-                <div class="wrap-tracks">
-                    {% for track in wrap.tracks %}
-                        <div class="track-info">
-                            <img src="{{ track.album_image }}" alt="{{ track.name }}">
-                            <p><strong>{{ track.name }}</strong> by {{ track.artist }}</p>
-
-                            <!-- Audio Player for Song Preview -->
-                            {% if track.preview_url %}
-                            <audio controls>
-                                <source src="{{ track.preview_url }}" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                            {% else %}
-                            <p>Preview not available.</p>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
+    <section class="wraps-section">
+        <h2>Your Generated Spotify Wraps</h2>
+        <div class="grid-container" id="gridContainer">
+            
+            <!-- Always display the Add Card for Time Selection -->
+            <div class="card add-card" id="addCard">
+                <span>+</span>
             </div>
-            {% endfor %}
-        {% else %}
-            <p>No wraps have been generated yet. Click on the "+" to create a new Spotify Wrapped!</p>
-        {% endif %}
-    </div>
+
+            <!-- Display Generated Wraps if available -->
+            {% if wraps %}
+                {% for wrap in wraps %}
+                <div class="card">
+                    <h3>{{ wrap.title }}</h3>
+                    <p>Generated on: {{ wrap.date_generated }}</p>
+
+                    <!-- List of Tracks in this Wrap -->
+                    <div class="wrap-tracks">
+                        {% for track in wrap.tracks %}
+                            <div class="track-info">
+                                <img src="{{ track.album_image }}" alt="{{ track.name }}">
+                                <p><strong>{{ track.name }}</strong> by {{ track.artist }}</p>
+
+                                <!-- Audio Player for Song Preview -->
+                                {% if track.preview_url %}
+                                <audio controls>
+                                    <source src="{{ track.preview_url }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                                {% else %}
+                                <p>Preview not available.</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No wraps have been generated yet. Click on the "+" to create a new Spotify Wrapped!</p>
+            {% endif %}
+        </div>
+    </section>
 
     <!-- Time Period Selection Modal -->
     <div class="modal" id="selectionModal">
@@ -85,5 +191,11 @@
 
     <!-- JavaScript Section -->
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
+    <script>
+        document.getElementById('toggleDarkMode').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
+        });
+    </script>
 </body>
 </html>
