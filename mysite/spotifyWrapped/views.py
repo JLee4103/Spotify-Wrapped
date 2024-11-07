@@ -63,10 +63,8 @@ class SpotifyCallbackView(View):
 
             # Save username to session
             request.session['spotify_username'] = profile_data.get("display_name")
-            # Uncomment next line for debugging
-            # print(profile_data)
-        
-        # Redirect to the top songs view or home page after successful authentication
+
+        # Redirect to the home page after successful authentication
         return redirect("spotifyWrapped:home")
 
 
@@ -147,8 +145,56 @@ class HomeView(View):
         return top_tracks, top_artists
 
 
-class IndexView(View):
-    template_name = "spotifyWrapped/initialLogIn.html"
+class SlideshowView(View):
+    template_name = 'spotifyWrapped/slideshow.html'
 
     def get(self, request):
-        return render(request, 'spotifyWrapped/index.html')
+        # Get the period from the query string (default to 'Past Year' if not provided)
+        period = request.GET.get('period', 'Past Year')
+        access_token = request.session.get('access_token')
+
+        if access_token:
+            top_tracks = self.get_spotify_wrapped_data(access_token, period)  # Only get top_tracks
+        else:
+            top_tracks = []
+
+        return render(request, self.template_name, {
+            "top_tracks": top_tracks,
+            "period": period  # Pass the selected period to the template if needed
+        })
+
+    def get_spotify_wrapped_data(self, access_token, period):
+        """
+        Fetches user's top tracks from Spotify based on the selected time range.
+        """
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        # Map the selected period to Spotify's time range
+        time_range_map = {
+            'Past Month': 'short_term',
+            'Past 6 Months': 'medium_term',
+            'Past Year': 'long_term'
+        }
+
+        # Get the appropriate time range for Spotify API
+        time_range = time_range_map.get(period, 'long_term')
+
+        # Fetch user's top tracks from Spotify
+        top_tracks_url = f"https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}"
+        top_tracks_response = requests.get(top_tracks_url, headers=headers)
+
+        if top_tracks_response.status_code == 200:
+            top_tracks_data = top_tracks_response.json().get('items', [])
+            top_tracks = [
+                {
+                    'name': track['name'],
+                    'artist': track['artists'][0]['name'],
+                    'album_image': track['album']['images'][0]['url'] if track['album']['images'] else None,
+                    'preview_url': track.get('preview_url')  # Add preview_url here
+                }
+                for track in top_tracks_data
+            ]
+        else:
+            top_tracks = []
+
+        return top_tracks  # Only return the top_tracks

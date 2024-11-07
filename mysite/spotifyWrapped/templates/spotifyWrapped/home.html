@@ -53,6 +53,16 @@
         {% endif %}
     </div>
 
+    <!-- Time Period Selection Modal -->
+    <div class="modal" id="selectionModal">
+      <div class="selection-modal-content">
+         <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
+         <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
+         <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
+         <button class="close-button" onclick="closeSelectionModal()">Close</button>
+      </div>
+    </div>
+
     <!-- JavaScript Section -->
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
 </body>

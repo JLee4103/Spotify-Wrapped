@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Wrapped Slideshow</title>
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/slideshow.css' %}" />
+</head>
+<body>
+    <h1>Your Spotify Wrapped for {{ period }}</h1>
+    
+    <div class="slideshow-container">
+        {% for track in top_tracks %}
+            <div class="slide">
+                <img src="{{ track.album_image }}" alt="{{ track.name }}">
+                <h3>{{ track.name }}</h3>
+                <p>Artist: {{ track.artist }}</p>
+
+                {% if track.preview_url %}
+                    <audio controls>
+                        <source src="{{ track.preview_url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                {% else %}
+                    <p>Preview not available.</p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No top tracks available for this period.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Slideshow controls (optional) -->
+    <button onclick="prevSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(index) {
+            if (index >= slides.length) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = slides.length - 1;
+            } else {
+                currentSlide = index;
+            }
+
+            slides.forEach((slide, i) => {
+                slide.style.display = (i === currentSlide) ? 'block' : 'none';
+            });
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Initially show the first slide
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>

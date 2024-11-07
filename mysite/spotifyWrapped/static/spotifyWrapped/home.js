@@ -27,22 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.startWrapped = async function(period) {
-        closeSelectionModal();
-        alert(`Generating Spotify Wrapped for ${period}`);
-        try {
-            const response = await fetch(`http://localhost/api/wrapped?period=${encodeURIComponent(period)}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const result = await response.json();
-            console.log("Data saved", result);
-        } catch (error) {
-            console.error("Error saving data", error);
-        }
+    // When a time period is selected, navigate to the slideshow view with the selected period
+    window.startWrapped = function(period) {
+        closeSelectionModal();  // Close the modal when a period is selected
+
+        // Redirect to the slideshow view, passing the selected period as a query parameter
+        const slideshowUrl = `/slideshow?period=${encodeURIComponent(period)}`;
+        window.location.href = slideshowUrl;
     };
 });
-
-

@@ -38,6 +38,7 @@ h1 {
     align-items: center;
     cursor: pointer;
     transition: transform 0.2s;
+    color: white;
 }
 
 .card img {
@@ -61,48 +62,84 @@ h1 {
     font-weight: bold;
 }
 
-/* Time Period Selection Modal */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    background-color: rgba(0, 0, 0, 0.9); /* Black with opacity */
-    justify-content: center; /* Centered horizontally */
-    align-items: center; /* Centered vertically */
+/* Audio player styling within the card */
+.card audio {
+    width: 100%;
+    margin-top: 16px; /* Add spacing above the audio element */
+    border-radius: 10px; /* Round the corners of the player */
+    background-color: #1a1a1a; /* Dark background for the audio player */
+    border: none; /* Remove default border */
+    outline: none;
+    padding: 10px;
 }
 
-.selection-modal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    text-align: center; /* Center text */
+/* Styling for Webkit-based browsers (Chrome, Safari, Edge) */
+.card audio::-webkit-media-controls-panel {
+    background-color: #1DB954; /* Spotify green background */
+    border-radius: 10px;
+    padding: 8px;
 }
 
-.time-button {
-    background-color: #1DB954; /* Spotify green */
+.card audio::-webkit-media-controls-play-button,
+.card audio::-webkit-media-controls-volume-slider,
+.card audio::-webkit-media-controls-current-time-display,
+.card audio::-webkit-media-controls-duration-display,
+.card audio::-webkit-media-controls-mute-button {
+    color: white; /* White control buttons for contrast */
+}
+
+.card audio::-webkit-media-controls-play-button {
+    background-color: #17a74b; /* Darker green for play button */
+    border-radius: 5px;
+}
+
+.card audio::-webkit-media-controls-play-button:hover {
+    background-color: #128b3f; /* Even darker on hover */
+}
+
+/* Style the audio player progress bar */
+.card audio::-webkit-media-controls-timeline {
+    background-color: #17a74b; /* Progress bar in darker green */
+    height: 5px;
+    border-radius: 5px;
+}
+
+.card audio::-webkit-media-controls-volume-slider {
+    background-color: #17a74b; /* Volume slider in darker green */
+    height: 5px;
+}
+
+.card audio::-webkit-media-controls-mute-button {
+    background-color: #17a74b; /* Mute button with a green background */
+    border-radius: 5px;
+}
+
+.card audio::-webkit-media-controls-volume-slider:active {
+    background-color: #128b3f;
+}
+
+/* Firefox-specific styling for audio */
+.card audio {
+    background-color: #1a1a1a; /* Spotify green background for controls */
     color: white;
-    font-size: 1.2em;
     padding: 10px;
     border-radius: 10px;
 }
 
-.close-button {
-    margin-top: 20px;
-    background-color: #333;
-    padding: 10px;
-    border: none;
+/* For dark mode */
+.dark-mode .card audio {
+    background-color: #1DB954; /* Darker background for audio in dark mode */
     color: white;
-    cursor: pointer;
-    border-radius: 10px;
+}
+
+/* Hover state for the audio container */
+.card audio:hover {
+    transform: scale(1.02); /* Slight zoom-in effect on hover */
 }
 
 .dark-mode-button {
-    top: 20px;
-    right: 20px;
+    top: 20px;       /* Set distance from the top of the viewport */
+    right: 20px;     /* Set distance from the right side */
     background-color: #1DB954; /* Spotify green */
     color: white;
     padding: 10px 15px;
@@ -131,97 +168,36 @@ h1 {
     background-color: #17a74b; /* Hover state for dark mode */
 }
 
-.login-button {
-    display: inline-block;
-    background-color: #1DB954; /* Spotify green */
-    color: #fff;
-    font-weight: bold;
-    font-size: 1.2em;
-    padding: 0.8em 1.5em;
-    border-radius: 30px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Hover effect */
-.login-button:hover {
-    background-color: #17a74b;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-3px);
-}
-
-/* Active effect */
-.login-button:active {
-    background-color: #128b3f;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transform: translateY(0);
-}
-
-/* Centering login button container */
-.button {
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Audio player styling within the card */
-.card audio {
+/* Modal styles */
+.modal {
+    display: none;  /* Hide modal by default */
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    margin-top: 16px; /* Add spacing above the audio element */
-    border-radius: 5px; /* Round the corners */
-    background-color: #2a2a2a; /* Dark background for the audio player */
-    border: none; /* Remove default border */
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
 }
 
-/* Customizing the audio controls */
-.card audio::-webkit-media-controls-panel {
-    background-color: #1DB954; /* Spotify green background for controls */
-    border-radius: 10px;
-    padding: 8px;
+.selection-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
 }
 
-.card audio::-webkit-media-controls-play-button,
-.card audio::-webkit-media-controls-volume-slider,
-.card audio::-webkit-media-controls-current-time-display,
-.card audio::-webkit-media-controls-duration-display,
-.card audio::-webkit-media-controls-mute-button {
-    color: white; /* White control buttons for contrast */
-}
-
-.card audio::-webkit-media-controls-play-button:hover {
-    background-color: #17a74b; /* Slightly darker green on hover */
-}
-
-/* For other browsers (like Firefox) that support the standard audio control styles */
-.card audio {
-    background-color: #1DB954; /* Spotify green background for controls */
-    color: white;
+.time-button {
+    margin: 10px;
     padding: 10px;
-    border-radius: 10px;
+    cursor: pointer;
 }
 
-/* Style the audio player progress bar */
-.card audio::-webkit-media-controls-timeline {
-    background-color: #17a74b; /* Darker green for the progress bar */
-    height: 5px;
-    border-radius: 2px;
-}
-
-.card audio::-webkit-media-controls-volume-slider {
-    background-color: #17a74b; /* Volume slider in darker green */
-    height: 5px;
-}
-
-.card audio::-webkit-media-controls-mute-button {
-    background-color: #17a74b; /* Mute button with a green background */
-}
-
-.card audio:hover {
-    transform: scale(1.02); /* Slight zoom-in effect on hover */
-}
-
-.dark-mode .card audio {
-    background-color: #1a1a1a; /* Slightly darker for dark mode */
+.close-button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f44336;
     color: white;
+    cursor: pointer;
 }
-
