@@ -1,0 +1,10 @@
+{% import static %}
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="friend_username" placeholder="Enter friend's Spotify username">
+    <button type="submit">Search</button>
+</form>
+
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}

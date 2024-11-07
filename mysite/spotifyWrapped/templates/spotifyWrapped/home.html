@@ -19,6 +19,19 @@
         </div>
     {% endif %}
 
+    <!-- Friend List Dropdown -->
+<div class="friend-list-container">
+    <label for="friend-select">View a Friend's Wrapped</label>
+    <select id="friend-select" name="friend_username">
+        <option value="">--Select a Friend--</option>
+        {% for friend in followers %}
+            <option value="{{ friend.username }}">{{ friend.username }}</option>
+        {% endfor %}
+    </select>
+    <button id="view-friend-button">View Friend's Wrapped</button>
+</div>
+
+
     <!-- Top Tracks Section -->
     <h2>Your Top Tracks</h2>
     <div class="grid-container" id="gridContainer">

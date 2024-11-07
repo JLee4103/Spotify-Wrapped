@@ -1,14 +1,18 @@
-import requests
-from django.shortcuts import redirect, render
+from django.shortcuts import render, redirect
 from django.views import View
+import requests
+from .spotify_util import get_spotify_wrapped_data
 import spotifyWrapped.settings
 
 
 class SpotifyLoginView(View):
     def get(self, request):
+        # Clear previous tokens
+        request.session.flush()  # This clears all session data, including tokens
+        
         spotify_auth_url = 'https://accounts.spotify.com/authorize'
         response_type = 'code'
-        scope = 'user-top-read'
+        scope = 'user-top-read user-follow-read'  # Ensure both 'user-top-read' and 'user-follow-read' are included
 
         # Construct the Spotify authorization URL
         auth_url = (
@@ -20,6 +24,7 @@ class SpotifyLoginView(View):
 
         # Redirect the user to the Spotify authorization page
         return redirect(auth_url)
+
 
 
 class SpotifyCallbackView(View):
@@ -41,14 +46,14 @@ class SpotifyCallbackView(View):
             "client_secret": spotifyWrapped.settings.SPOTIFY_CLIENT_SECRET,
         }
 
-        # Make the POST request
+        # Make the POST request to exchange the code for tokens
         response = requests.post(url, data=data)
 
-        # Check if the request was successful and print the token
+        # Check if the request was successful and handle tokens
         if response.status_code == 200:
             tokens = response.json()
             access_token = tokens.get("access_token")
-            refresh_token = tokens.get("refresh_token")  # Only if using auth code flow
+            refresh_token = tokens.get("refresh_token")
 
             # Save tokens to session
             request.session['access_token'] = access_token
@@ -73,128 +78,124 @@ class HomeView(View):
 
     def get(self, request):
         username = request.session.get("spotify_username", "Guest")
+        access_token = request.session.get('access_token')
+        followers = []
+        top_tracks, top_artists = [], []
 
-        # Fetch top tracks/artists only if user is authenticated with Spotify
-        access_token = request.session.get('access_token', None)
-
-        # You may want to get the period from request or session (for example purposes)
-        period = request.GET.get('period', 'Past Year')  # Default to "Past Year" if not provided
-
+        # Only fetch data if user is authenticated with Spotify
         if access_token:
-            # Pass the period argument here
-            top_tracks, top_artists = self.get_spotify_wrapped_data(access_token, period)
-        else:
-            top_tracks, top_artists = [], []
+            top_tracks, top_artists = get_spotify_wrapped_data(access_token)
+            followers = self.get_spotify_following(access_token)
 
         return render(request, self.template_name, {
             "username": username,
             "top_tracks": top_tracks,
             "top_artists": top_artists,
+            "followers": followers,
         })
 
-    def get_spotify_wrapped_data(self, access_token, period):
-        """
-        Fetches user's top tracks and artists from Spotify based on the selected time range.
-        """
+    def get_spotify_following(self, access_token):
+        following_url = "https://api.spotify.com/v1/me/following?type=user&limit=50"
         headers = {"Authorization": f"Bearer {access_token}"}
 
-        # Map the selected period to Spotify's time range
-        time_range_map = {
-            'Past Month': 'short_term',
-            'Past 6 Months': 'medium_term',
-            'Past Year': 'long_term'
-        }
+        following = []
+        while following_url:
+            response = requests.get(following_url, headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                following.extend(data['artists'])  # 'artists' because 'following' is type 'user' or 'artist'
+                following_url = data.get('next')  # Pagination to get more followings
+            else:
+                print("Failed to fetch following:", response.json())
+                break
 
-        # Get the appropriate time range for Spotify API
-        time_range = time_range_map.get(period, 'long_term')
-
-        # Fetch user's top tracks from Spotify
-        top_tracks_url = f"https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}"
-        top_tracks_response = requests.get(top_tracks_url, headers=headers)
-
-        if top_tracks_response.status_code == 200:
-            top_tracks_data = top_tracks_response.json().get('items', [])
-            top_tracks = [
-                {
-                    'name': track['name'],
-                    'artist': track['artists'][0]['name'],
-                    'album_image': track['album']['images'][0]['url'] if track['album']['images'] else None,
-                    'preview_url': track.get('preview_url')  # Add preview_url here
-                }
-                for track in top_tracks_data
-            ]
-        else:
-            top_tracks = []
-
-        # Fetch user's top artists from Spotify
-        top_artists_url = f"https://api.spotify.com/v1/me/top/artists?limit=10&time_range={time_range}"
-        top_artists_response = requests.get(top_artists_url, headers=headers)
-
-        if top_artists_response.status_code == 200:
-            top_artists_data = top_artists_response.json().get('items', [])
-            top_artists = [
-                {
-                    'name': artist['name'],
-                    'image': artist['images'][0]['url'] if artist['images'] else None,
-                }
-                for artist in top_artists_data
-            ]
-        else:
-            top_artists = []
-
-        return top_tracks, top_artists
-
+        return [{'username': user['name']} for user in following]
 
 class SlideshowView(View):
     template_name = 'spotifyWrapped/slideshow.html'
 
     def get(self, request):
-        # Get the period from the query string (default to 'Past Year' if not provided)
         period = request.GET.get('period', 'Past Year')
         access_token = request.session.get('access_token')
 
+        top_tracks = []
+
         if access_token:
-            top_tracks = self.get_spotify_wrapped_data(access_token, period)  # Only get top_tracks
-        else:
-            top_tracks = []
+            # Fetch top tracks using the helper function
+            top_tracks, _ = get_spotify_wrapped_data(
+                access_token,
+                period,
+                refresh_access_token_callback=self.refresh_access_token_callback
+            )
 
         return render(request, self.template_name, {
             "top_tracks": top_tracks,
-            "period": period  # Pass the selected period to the template if needed
+            "period": period
         })
 
-    def get_spotify_wrapped_data(self, access_token, period):
-        """
-        Fetches user's top tracks from Spotify based on the selected time range.
-        """
-        headers = {"Authorization": f"Bearer {access_token}"}
+    def refresh_access_token_callback(self):
+        refresh_token = self.request.session.get('refresh_token')
+        if refresh_token:
+            return self.refresh_access_token(refresh_token)
+        return None
 
-        # Map the selected period to Spotify's time range
-        time_range_map = {
-            'Past Month': 'short_term',
-            'Past 6 Months': 'medium_term',
-            'Past Year': 'long_term'
+    def refresh_access_token(self, refresh_token):
+        url = "https://accounts.spotify.com/api/token"
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        data = {
+            "grant_type": "refresh_token",
+            "refresh_token": refresh_token,
+            "client_id": spotifyWrapped.settings.SPOTIFY_CLIENT_ID,
+            "client_secret": spotifyWrapped.settings.SPOTIFY_CLIENT_SECRET,
         }
+        response = requests.post(url, headers=headers, data=data)
 
-        # Get the appropriate time range for Spotify API
-        time_range = time_range_map.get(period, 'long_term')
-
-        # Fetch user's top tracks from Spotify
-        top_tracks_url = f"https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}"
-        top_tracks_response = requests.get(top_tracks_url, headers=headers)
-
-        if top_tracks_response.status_code == 200:
-            top_tracks_data = top_tracks_response.json().get('items', [])
-            top_tracks = [
-                {
-                    'name': track['name'],
-                    'artist': track['artists'][0]['name'],
-                    'album_image': track['album']['images'][0]['url'] if track['album']['images'] else None,
-                    'preview_url': track.get('preview_url')  # Add preview_url here
-                }
-                for track in top_tracks_data
-            ]
+        if response.status_code == 200:
+            tokens = response.json()
+            new_access_token = tokens.get("access_token")
+            self.request.session['access_token'] = new_access_token
+            return new_access_token
         else:
-            top_tracks = []
+            print("Failed to refresh access token:", response.json())
+            return None
 
-        return top_tracks  # Only return the top_tracks
+
+class SearchFriendView(View):
+    template_name = 'spotifyWrapped/search_friend.html'
+
+    def get(self, request):
+        # Render search page for the friend
+        return render(request, self.template_name)
+
+    def post(self, request):
+        # Get the friend's username or public ID from the form
+        friend_username = request.POST.get("friend_username")
+        
+        if friend_username:
+            # Redirect to view the friend's wrapped
+            return redirect("spotifyWrapped:view_friend_wrapped", friend_username=friend_username)
+
+        return render(request, self.template_name, {'error': 'Please enter a valid Spotify username.'})
+
+
+class FriendWrappedView(View):
+    template_name = 'spotifyWrapped/friend_wrapped.html'
+
+    def get(self, request):
+        friend_username = request.GET.get('friend_username')
+
+        # Fetch friend's data based on username (this could be another API call)
+        # You may need to query your database or fetch friend-specific data here
+
+        # For example, fetching top tracks/artists for the friend
+        access_token = request.session.get('access_token')
+        if access_token and friend_username:
+            top_tracks, top_artists = get_spotify_wrapped_data(access_token)
+        else:
+            top_tracks, top_artists = [], []
+
+        return render(request, self.template_name, {
+            'friend_username': friend_username,
+            'top_tracks': top_tracks,
+            'top_artists': top_artists,
+        })
