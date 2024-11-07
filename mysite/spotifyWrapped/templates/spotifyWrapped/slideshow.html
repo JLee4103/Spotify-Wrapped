@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,61 +9,37 @@
     <link rel="stylesheet" href="{% static 'spotifyWrapped/slideshow.css' %}" />
 </head>
 <body>
-    <h1>Your Spotify Wrapped for {{ period }}</h1>
+    <!-- Dark Mode Toggle Button -->
+    <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
     
+    <!-- Back to Home Button -->
+    <a href="{% url 'spotifyWrapped:home' %}" class="back-home-button">Back to Home</a>
+
+    <h1>Spotify Wrapped Slideshow</h1>
+
+    <!-- Song Information Container -->
     <div class="slideshow-container">
         {% for track in top_tracks %}
-            <div class="slide">
-                <img src="{{ track.album_image }}" alt="{{ track.name }}">
-                <h3>{{ track.name }}</h3>
-                <p>Artist: {{ track.artist }}</p>
-
-                {% if track.preview_url %}
-                    <audio controls>
-                        <source src="{{ track.preview_url }}" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                {% else %}
-                    <p>Preview not available.</p>
-                {% endif %}
+        <div class="song {% if forloop.first %}active{% endif %}">
+            <div class="album-cover">
+                <img src="{{ track.album_image }}" alt="{{ track.name }} Album Cover" />
             </div>
-        {% empty %}
-            <p>No top tracks available for this period.</p>
+            <div class="song-info">
+                <h2>{{ track.name }}</h2>
+                <h3>{{ track.artist }}</h3>
+                <p>Estimated Listening Time: {{ track.estimated_listening_time }} minutes</p>
+            </div>
+            <audio>
+                <source src="{{ track.preview_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
         {% endfor %}
     </div>
 
-    <!-- Slideshow controls (optional) -->
-    <button onclick="prevSlide()">Previous</button>
-    <button onclick="nextSlide()">Next</button>
+    <!-- Play Button -->
+    <button id="startSlideshowButton">Start Slideshow</button>
 
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-
-        function showSlide(index) {
-            if (index >= slides.length) {
-                currentSlide = 0;
-            } else if (index < 0) {
-                currentSlide = slides.length - 1;
-            } else {
-                currentSlide = index;
-            }
-
-            slides.forEach((slide, i) => {
-                slide.style.display = (i === currentSlide) ? 'block' : 'none';
-            });
-        }
-
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
-
-        function prevSlide() {
-            showSlide(currentSlide - 1);
-        }
-
-        // Initially show the first slide
-        showSlide(currentSlide);
-    </script>
+    <script src="{% static 'spotifyWrapped/slideshow.js' %}"></script>
 </body>
 </html>

@@ -138,6 +138,7 @@ h1 {
 }
 
 .dark-mode-button {
+    position: absolute;
     top: 20px;       /* Set distance from the top of the viewport */
     right: 20px;     /* Set distance from the right side */
     background-color: #1DB954; /* Spotify green */

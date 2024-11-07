@@ -29,10 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // When a time period is selected, navigate to the slideshow view with the selected period
     window.startWrapped = function(period) {
-        closeSelectionModal();  // Close the modal when a period is selected
-
-        // Redirect to the slideshow view, passing the selected period as a query parameter
-        const slideshowUrl = `/slideshow?period=${encodeURIComponent(period)}`;
+        closeSelectionModal();
+    
+        // Ensure the correct URL with the period query string
+        const slideshowUrl = `/spotifyWrapped/slideshow?period=${encodeURIComponent(period)}`;
         window.location.href = slideshowUrl;
     };
+    
 });
