@@ -16,42 +16,41 @@ function startSlideshow() {
     playSong(currentSongIndex);
 }
 
-// Function to play the current song and set up the transition to the next song
+// Function to play the current song
 function playSong(index) {
     const song = songs[index];
     const audio = song.querySelector('audio');  // Select the audio element inside the song
 
-    // If there's no audio preview, skip to the next song
-    if (!audio) {
-        nextSong();
-        return;
-    }
-
     song.classList.add('active');  // Show the current song
-    audio.play();  // Play the song preview
 
-    // Stop the audio after 8 seconds
-    setTimeout(() => {
-        audio.pause();  // Stop the song
-        nextSong();     // Go to the next song
-    }, 8000); // 8000 milliseconds = 8 seconds
+    // Play the song preview if available
+    if (audio) {
+        audio.play();
+    }
 }
 
 // Function to go to the next song
 function nextSong() {
     // Hide the current song
     songs[currentSongIndex].classList.remove('active');
+    const currentAudio = songs[currentSongIndex].querySelector('audio');
+
+    // Pause the audio if it's playing
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;  // Reset the audio to the start
+    }
 
     // Increment the index to the next song
     currentSongIndex = (currentSongIndex + 1) % songs.length;
 
-    // If the slideshow is still running, play the next song
+    // Play the next song if the slideshow is running
     if (isSlideshowRunning) {
         playSong(currentSongIndex);
     }
 }
 
-// Function to pause the slideshow and reset it
+// Function to pause the slideshow
 function pauseSlideshow() {
     console.log("Pausing slideshow..."); // Debugging log
     isSlideshowRunning = false;
@@ -59,16 +58,17 @@ function pauseSlideshow() {
     const audio = songs[currentSongIndex].querySelector('audio');
     if (audio) {
         audio.pause();  // Pause the audio
+        audio.currentTime = 0;  // Reset the audio to the start
     }
 }
 
-// Function to toggle dark mode
+// Toggle dark mode
 const darkModeButton = document.getElementById('toggleDarkMode');
 darkModeButton.addEventListener('click', function () {
     document.body.classList.toggle('dark-mode');
 });
 
-// Event listener to start the slideshow when the "Start Slideshow" button is clicked
+// Start slideshow button event listener
 const startButton = document.getElementById('startSlideshowButton');
 if (startButton) {
     startButton.addEventListener('click', function () {
@@ -79,5 +79,13 @@ if (startButton) {
     console.log("Start slideshow button not found"); // Debugging log
 }
 
-// Event listener to pause the slideshow when the "Pause Slideshow" button is clicked
+// Pause slideshow button event listener
 document.getElementById('pauseSlideshowButton')?.addEventListener('click', pauseSlideshow);
+
+// Event listener to advance the slideshow on click
+const slideshowContainer = document.querySelector(".slideshow-container");
+slideshowContainer.addEventListener('click', function () {
+    if (isSlideshowRunning) {
+        nextSong();
+    }
+});
