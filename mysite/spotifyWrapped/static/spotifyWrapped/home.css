@@ -1,4 +1,5 @@
 /* Your existing styles */
+
 body {
     margin: 0;
     padding: 20px;
@@ -302,3 +303,56 @@ h1 {
         width: 100%;
     }
 }
+
+    /* Footer Styles */
+    .footer-section {
+        background-color: #1DB954; /* Spotify green background */
+        color: white; /* White text color */
+        text-align: center; /* Center the text */
+        padding: 20px; /* Add some padding */
+        margin-top: 40px; /* Add some margin at the top */
+        border-top: 2px solid #128b3f; /* Add a top border in a darker green */
+        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
+        position: fixed; /* Fix the footer at the bottom */
+        bottom: 0; /* Align to the bottom of the page */
+        width: 100%; /* Full width */
+        z-index: 1000; /* Ensure it stays on top */
+    }
+
+    .footer-section .contact-dev {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-section h2 {
+        margin-bottom: 10px;
+        font-size: 1.5em; /* Adjust font size */
+        color: white; /* White for the heading */
+    }
+
+    .footer-section p {
+        margin: 0;
+        font-size: 1em; /* Adjust font size */
+    }
+
+    .footer-section a {
+        color: white; /* White for the link */
+        text-decoration: none; /* Remove underline from the link */
+        font-weight: bold; /* Make the link bold */
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Space between text and icon */
+        transition: color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+    }
+
+    .footer-section a:hover {
+        color: #17a74b; /* Darker green on hover */
+        transform: scale(1.05); /* Slightly enlarge on hover */
+    }
+
+    .footer-section i {
+        font-size: 1.2em; /* Adjust icon size */
+    }
+
+
