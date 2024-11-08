@@ -312,8 +312,6 @@ h1 {
         margin-top: 40px; /* Add some margin at the top */
         border-top: 2px solid #128b3f; /* Add a top border in a darker green */
         box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
-        position: fixed; /* Fix the footer at the bottom */
-        bottom: 0; /* Align to the bottom of the page */
         width: 100%; /* Full width */
         z-index: 1000; /* Ensure it stays on top */
     }
