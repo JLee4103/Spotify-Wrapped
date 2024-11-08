@@ -21,7 +21,7 @@
             background-color: #FFFFFF;
             color: #000000;
         }
-        .dark-mode-button, .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
+        .logout-button, .dark-mode-button, .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
             background-color: #1DB954;
             color: #FFFFFF;
             border: none;
@@ -31,7 +31,7 @@
             margin: 10px 0;
             transition: background-color 0.3s ease;
         }
-        .dark-mode-button:hover, .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
+        .logout-button, .dark-mode-button:hover, .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
             background-color: #1ED760;
         }
         header, .friend-list-container, .wraps-section, .modal {
@@ -112,10 +112,10 @@
 </head>
 <body class="dark-mode">
     <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
-
     <header>
         {% if username != "Guest" %}
             <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
+            <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button">Log Out</a>
         {% else %}
             <h1>Log in to Get Started!</h1>
             <div class="button">

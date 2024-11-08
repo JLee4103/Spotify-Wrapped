@@ -3,6 +3,7 @@ from django.views import View
 import requests
 from .spotify_util import get_spotify_wrapped_data
 import spotifyWrapped.settings
+from django.contrib.auth import logout
 
 
 class SpotifyLoginView(View):
@@ -199,3 +200,9 @@ class FriendWrappedView(View):
             'top_tracks': top_tracks,
             'top_artists': top_artists,
         })
+    
+
+def logout_view(request):
+    logout(request)
+    return redirect('spotifyWrapped:home')
+
