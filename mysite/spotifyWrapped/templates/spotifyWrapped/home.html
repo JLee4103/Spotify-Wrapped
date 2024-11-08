@@ -7,108 +7,6 @@
     <title>Spotify Wrapped Grid</title>
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .dark-mode {
-            background-color: #121212;
-            color: #FFFFFF;
-        }
-        .light-mode {
-            background-color: #FFFFFF;
-            color: #000000;
-        }
-        .logout-button, .dark-mode-button, .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
-            background-color: #1DB954;
-            color: #FFFFFF;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 25px;
-            margin: 10px 0;
-            transition: background-color 0.3s ease;
-        }
-        .logout-button, .dark-mode-button:hover, .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
-            background-color: #1ED760;
-        }
-        header, .friend-list-container, .wraps-section, .modal {
-            margin: 20px;
-            padding: 20px;
-            border-radius: 15px;
-            background-color: #282828;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .light-mode header, .light-mode .friend-list-container, .light-mode .wraps-section, .light-mode .modal {
-            background-color: #F0F0F0;
-            color: #000000;
-        }
-        header h1 {
-            font-size: 2em;
-            margin: 0;
-        }
-        .friend-list-container label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        .friend-list-container select, .friend-list-container button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #1DB954;
-            background-color: #121212;
-            color: #FFFFFF;
-        }
-        .light-mode .friend-list-container select, .light-mode .friend-list-container button {
-            background-color: #FFFFFF;
-            color: #000000;
-        }
-        .light-mode .friend-list-container label {
-            color: #000000;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background-color: #1E1E1E;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .light-mode .card {
-            background-color: #FFFFFF;
-            color: #000000;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
-        .add-card {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2em;
-            color: #1DB954;
-            cursor: pointer;
-            border: 2px dashed #1DB954;
-        }
-        .track-info {
-            margin: 10px 0;
-        }
-        .track-info img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        .track-info p {
-            margin: 10px 0;
-        }
-    </style>
 </head>
 <body class="dark-mode">
     <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
@@ -192,12 +90,6 @@
 
     <!-- JavaScript Section -->
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
-    <script>
-        document.getElementById('toggleDarkMode').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
-        });
-    </script>
 </body>
 <!-- Footer Section -->
 <footer class=".footer-section">
