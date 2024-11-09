@@ -5,7 +5,13 @@ from .spotify_util import get_spotify_wrapped_data
 import spotifyWrapped.settings
 from django.contrib.auth import logout
 
+class SpotifyInitialLogin(View):
+    def get(self, request):
+        if request.session.get("spotify_username"):
+            return redirect("spotifyWrapped:home")
+        return render(request, "spotifyWrapped/initialLogin.html")
 
+    
 class SpotifyLoginView(View):
     def get(self, request):
         # Clear previous tokens
@@ -204,5 +210,5 @@ class FriendWrappedView(View):
 
 def logout_view(request):
     logout(request)
-    return redirect('spotifyWrapped:home')
+    return redirect('spotifyWrapped:initial_login')
 
