@@ -12,7 +12,7 @@
     <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
     <header>
         {% if username != "Guest" %}
-            <h1>Welcome {{ username }}'s Spotify Wrapped</h1>
+            <h1>Welcome {{ username }} to Spotify Wrapped!</h1>
             <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button">Log Out</a>
         {% else %}
             <h1>Log in to Get Started!</h1>
