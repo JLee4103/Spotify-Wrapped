@@ -42,3 +42,24 @@ document.getElementById('toggleDarkMode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
     document.body.classList.toggle('light-mode');
 });
+
+// Function to open the modal
+function openModal() {
+    document.querySelector('.modal').style.display = 'flex';
+}
+
+// Function to close the modal
+function closeModal() {
+    document.querySelector('.modal').style.display = 'none';
+}
+
+// Event listener for the close button
+document.querySelector('.close-button').addEventListener('click', closeModal);
+
+// Event listener for the "Escape" key
+document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") {
+        closeModal();
+    }
+});
+
