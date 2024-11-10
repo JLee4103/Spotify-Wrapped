@@ -51,7 +51,7 @@
                             🗑️
                         </button>
                     </div>
-                    <p class="date-generated">Generated on: {{ wrap.date_generated }}</p>
+                    <p class="date-generated">Generated on: {{ wrap.date_generated|date:"F j" }}</p>
                     <div class="tracks-preview">
                         {% for track in wrap.tracks|slice:":3" %}
                         <div class="track-item">
