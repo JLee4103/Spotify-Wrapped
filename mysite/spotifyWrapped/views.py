@@ -259,21 +259,14 @@ class DeleteSlideshowView(View):
            # username = request.session.get('spotify_username')
             # Parse JSON data from request body
             data = json.loads(request.body)
-            period = data.get('period')
 
            # print(f"Delete attempt - Username: {username}, Period: {period}")  # Debug logging
 
 
-            if not period:
-                return JsonResponse({
-                    'success': False,
-                    'error': 'Period not specified'
-                })
 
             # Delete all tracks for this specific period and user
             deleted_count = SpotifyTrack.objects.filter(
               #  username=username,
-                period=period
             ).delete()
             
             print(f"Deleted {deleted_count[0]} tracks")  # Debug logging
