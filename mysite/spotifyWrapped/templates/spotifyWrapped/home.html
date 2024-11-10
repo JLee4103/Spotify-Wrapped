@@ -38,65 +38,245 @@
     <section class="wraps-section">
         <h2>Your Generated Spotify Wraps</h2>
         <div class="grid-container" id="gridContainer">
-            
-            <!-- Always display the Add Card for Time Selection -->
-            <div class="card add-card" id="addCard">
+            <!-- Add Card -->
+            <div class="card add-card" id="addCard" data-slideshow-url="{% url 'spotifyWrapped:slideshow' %}">
                 <span>+</span>
             </div>
 
-            <!-- Display Generated Wraps if available -->
+            <!-- Display Generated Wraps -->
             {% if wraps %}
                 {% for wrap in wraps %}
-                <div class="card">
-                    <h3>{{ wrap.title }}</h3>
-                    <p>Generated on: {{ wrap.date_generated }}</p>
-
-                    <!-- List of Tracks in this Wrap -->
-                    <div class="wrap-tracks">
-                        {% for track in wrap.tracks %}
+                <div class="card wrap-card">
+                    <div class="card-header">
+                        <h3>{{ wrap.title }}</h3>
+                        <button class="delete-button" 
+                                data-period="{{ wrap.period }}"
+                                onclick="deleteSlideshow(this)"
+                                title="Delete this slideshow">
+                            🗑️
+                        </button>
+                    </div>
+                    <p class="date-generated">Generated on: {{ wrap.date_generated }}</p>
+                    <div class="tracks-preview">
+                        {% for track in wrap.tracks|slice:":3" %}
+                        <div class="track-item">
+                            {% if track.album_image %}
+                            <img src="{{ track.album_image }}" alt="{{ track.name }} cover">
+                            {% endif %}
                             <div class="track-info">
-                                <img src="{{ track.album_image }}" alt="{{ track.name }}">
-                                <p><strong>{{ track.name }}</strong> by {{ track.artist }}</p>
-
-                                <!-- Audio Player for Song Preview -->
-                                {% if track.preview_url %}
-                                <audio controls>
-                                    <source src="{{ track.preview_url }}" type="audio/mpeg">
-                                    Your browser does not support the audio element.
-                                </audio>
-                                {% else %}
-                                <p>Preview not available.</p>
-                                {% endif %}
+                                <p class="track-name">{{ track.name }}</p>
+                                <p class="track-artist">{{ track.artist }}</p>
                             </div>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>
                 {% endfor %}
-            {% else %}
-                <p>No wraps have been generated yet. Click on the "+" to create a new Spotify Wrapped!</p>
             {% endif %}
         </div>
     </section>
 
     <!-- Time Period Selection Modal -->
     <div class="modal" id="selectionModal">
-      <div class="selection-modal-content">
-         <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
-         <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
-         <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
-         <button class="close-button" onclick="closeSelectionModal()">Close</button>
-      </div>
+        <div class="selection-modal-content">
+            <button class="time-button" onclick="startWrapped('Past Month')">Past Month</button>
+            <button class="time-button" onclick="startWrapped('Past 6 Months')">Past 6 Months</button>
+            <button class="time-button" onclick="startWrapped('Past Year')">Past Year</button>
+            <button class="close-button" onclick="closeSelectionModal()">Close</button>
+        </div>
     </div>
+
+    <!-- Notification div -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <div class="contact-dev">
+            <h2>Contact the Dev Team</h2>
+            <p>Have any questions or feedback? <a href="mailto:jlee4103@gatech.edu"><i class="fas fa-envelope"></i> Send us an email</a></p>
+        </div>
+    </footer>
+
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .wrap-card {
+            background: #282828;
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .wrap-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .delete-button {
+            background: none;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+
+        .delete-button:hover {
+            transform: scale(1.1);
+        }
+
+        .tracks-preview {
+            margin-top: 15px;
+        }
+
+        .track-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .track-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .track-info {
+            flex-grow: 1;
+        }
+
+        .track-name {
+            font-weight: bold;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .track-artist {
+            font-size: 0.8em;
+            color: #b3b3b3;
+            margin: 2px 0 0 0;
+        }
+
+        .date-generated {
+            color: #b3b3b3;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 25px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification.success {
+            background-color: #1DB954;
+            color: white;
+        }
+
+        .notification.error {
+            background-color: #FF4444;
+            color: white;
+        }
+
+        .light-mode .wrap-card {
+            background: #f5f5f5;
+        }
+
+        .light-mode .track-item {
+            background: rgba(0, 0, 0, 0.1);
+        }
+    </style>
 
     <!-- JavaScript Section -->
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
-</body>
-<!-- Footer Section -->
-<footer class="footer-section">
-    <div class="contact-dev">
-        <h2>Contact the Dev Team</h2>
-        <p>Have any questions or feedback? <a href="mailto:jlee4103@gatech.edu"><i class="fas fa-envelope"></i> Send us an email</a></p>
-    </div>
-</footer>
+    <script>
+        function deleteSlideshow(button) {
+            if (confirm('Are you sure you want to delete this slideshow?')) {
+                const period = button.dataset.period;
+                console.log('Deleting period:', period); // Debug logging
+                
+                fetch("{% url 'spotifyWrapped:delete_slideshow' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        period: period
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Remove the card from the DOM
+                        const card = button.closest('.wrap-card') || button.closest('.card');
+                        if (card) {
+                            card.remove();
+                            showNotification('Slideshow deleted successfully', true);
+                        }
+                    } else {
+                        showNotification('Error deleting slideshow: ' + (data.error || 'Unknown error'), false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Error deleting slideshow: ' + error.message, false);
+                });
+            }
+        }
 
+        function showNotification(message, isSuccess) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${isSuccess ? 'success' : 'error'}`;
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
 </html>

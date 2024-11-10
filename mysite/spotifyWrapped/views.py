@@ -4,6 +4,13 @@ import requests
 from .spotify_util import get_spotify_wrapped_data
 import spotifyWrapped.settings
 from django.contrib.auth import logout
+from .models import SpotifyTrack
+from django.db.models import Max
+from django.db.models.functions import TruncDay
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
 class SpotifyInitialLogin(View):
     def get(self, request):
@@ -89,16 +96,19 @@ class HomeView(View):
         followers = []
         top_tracks, top_artists = [], []
 
+        # Get saved wraps from database
+        saved_wraps = self.get_saved_wraps()
+
         # Only fetch data if user is authenticated with Spotify
         if access_token:
             top_tracks, top_artists = get_spotify_wrapped_data(access_token)
             followers = self.get_spotify_following(access_token)
 
         return render(request, self.template_name, {
-            "username": username,
             "top_tracks": top_tracks,
             "top_artists": top_artists,
             "followers": followers,
+            "wraps": saved_wraps,
         })
 
     def get_spotify_following(self, access_token):
@@ -106,17 +116,52 @@ class HomeView(View):
         headers = {"Authorization": f"Bearer {access_token}"}
 
         following = []
-        while following_url:
+        try:
             response = requests.get(following_url, headers=headers)
             if response.status_code == 200:
                 data = response.json()
-                following.extend(data['artists'])  # 'artists' because 'following' is type 'user' or 'artist'
-                following_url = data.get('next')  # Pagination to get more followings
+                following.extend(data.get('artists', []))
             else:
-                print("Failed to fetch following:", response.json())
-                break
+                print(f"Failed to fetch following: {response.status_code}")
+        except Exception as e:
+            print(f"Error fetching following: {str(e)}")
 
-        return [{'username': user['name']} for user in following]
+        return [{'username': user.get('name', '')} for user in following]
+
+    def get_saved_wraps(self):
+        try:
+            # Group tracks by period and created_at
+            from django.db.models import Max
+            from django.db.models.functions import TruncDay
+
+            wraps = SpotifyTrack.objects.annotate(
+                date=TruncDay('created_at')
+            ).values('date', 'period').annotate(
+                latest=Max('created_at')
+            ).order_by('-date')
+
+            formatted_wraps = []
+            for wrap in wraps:
+                tracks = SpotifyTrack.objects.filter(
+                    created_at__date=wrap['date'],
+                    period=wrap['period']
+                ).order_by('-popularity')
+
+                formatted_wraps.append({
+                    'title': f"Spotify Wrapped - {wrap['period']}",
+                    'date_generated': wrap['date'],
+                    'tracks': [{
+                        'name': track.track_name,
+                        'artist': track.artist_name,
+                        'album_image': track.image_url,
+                        'preview_url': None,
+                    } for track in tracks]
+                })
+
+            return formatted_wraps
+        except Exception as e:
+            print(f"Error getting saved wraps: {str(e)}")
+            return []
 
 class SlideshowView(View):
     template_name = 'spotifyWrapped/slideshow.html'
@@ -124,16 +169,16 @@ class SlideshowView(View):
     def get(self, request):
         period = request.GET.get('period', 'Past Year')
         access_token = request.session.get('access_token')
-
         top_tracks = []
 
         if access_token:
-            # Fetch top tracks using the helper function
             top_tracks, _ = get_spotify_wrapped_data(
                 access_token,
                 period,
                 refresh_access_token_callback=self.refresh_access_token_callback
             )
+            # Remove the automatic saving here
+            # self.save_tracks_to_db(top_tracks, period)
 
         return render(request, self.template_name, {
             "top_tracks": top_tracks,
@@ -165,6 +210,89 @@ class SlideshowView(View):
         else:
             print("Failed to refresh access token:", response.json())
             return None
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class SaveSlideshowView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            tracks = data.get('tracks', [])
+            period = data.get('period', 'Unknown Period')
+           # username = request.session.get('spotify_username', 'Unknown User')
+
+            # Delete existing tracks for this period and user before saving new ones
+            SpotifyTrack.objects.filter(
+              #  username=username,
+                period=period
+            ).delete()
+
+            # Save new tracks
+            for track in tracks:
+                SpotifyTrack.objects.create(
+                  #  username=username,
+                    track_name=track.get('name', ''),
+                    artist_name=track.get('artists', [{}])[0].get('name', ''),
+                    album_name=track.get('album', {}).get('name', ''),
+                    image_url=track.get('album', {}).get('images', [{}])[0].get('url', ''),
+                    spotify_url=track.get('external_urls', {}).get('spotify', ''),
+                    preview_url=track.get('preview_url'),
+                    popularity=track.get('popularity', 0),
+                    period=period
+                )
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Slideshow saved successfully'
+            })
+
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=400)
+            
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteSlideshowView(View):
+    def post(self, request):
+        try:
+            # Get username from session
+           # username = request.session.get('spotify_username')
+            # Parse JSON data from request body
+            data = json.loads(request.body)
+            period = data.get('period')
+
+           # print(f"Delete attempt - Username: {username}, Period: {period}")  # Debug logging
+
+
+            if not period:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Period not specified'
+                })
+
+            # Delete all tracks for this specific period and user
+            deleted_count = SpotifyTrack.objects.filter(
+              #  username=username,
+                period=period
+            ).delete()
+            
+            print(f"Deleted {deleted_count[0]} tracks")  # Debug logging
+            
+            return JsonResponse({
+                'success': True,
+                'message': f'Deleted {deleted_count[0]} tracks'
+            })
+                
+        except json.JSONDecodeError as e:
+            return JsonResponse({
+                'success': False,
+                'error': 'Invalid JSON data'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=400)
 
 
 class SearchFriendView(View):

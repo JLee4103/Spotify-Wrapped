@@ -89,3 +89,5 @@ slideshowContainer.addEventListener('click', function () {
         nextSong();
     }
 });
+
+

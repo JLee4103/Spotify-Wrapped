@@ -439,3 +439,63 @@ h1 {
             margin: 10px 0;
         }
 
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .add-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            background: #f5f5f5;
+            transition: background 0.3s;
+        }
+        
+        .add-card:hover {
+            background: #e0e0e0;
+        }
+        
+        .wrap-tracks {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .track-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .track-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        
+        .track-info audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .empty-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #b3b3b3;
+            padding: 20px;
+            font-style: italic;
+        }
