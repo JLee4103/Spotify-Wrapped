@@ -140,8 +140,8 @@ h1 {
 
 .dark-mode-button {
     position: absolute;
-    top: 20px;       /* Set distance from the top of the viewport */
-    right: 20px;     /* Set distance from the right side */
+    top: 30px;       /* Set distance from the top of the viewport */
+    right: 40px;     /* Set distance from the right side */
     background-color: #1DB954; /* Spotify green */
     color: white;
     padding: 10px 15px;
@@ -351,7 +351,26 @@ h1 {
             background-color: #FFFFFF;
             color: #000000;
         }
-        .logout-button, .dark-mode-button, .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
+
+        .logout-button {
+            position: absolute;
+            top: 40px;       /* Set distance from the top of the viewport */
+            left: 40px;     /* Set distance from the right side */
+            background-color: #1DB954; /* Spotify green */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #17a74b;
+        }
+
+        .dark-mode-button, .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
             background-color: #1DB954;
             color: #FFFFFF;
             border: none;
@@ -361,7 +380,7 @@ h1 {
             margin: 10px 0;
             transition: background-color 0.3s ease;
         }
-        .logout-button, .dark-mode-button:hover, .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
+        .dark-mode-button:hover, .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
             background-color: #1ED760;
         }
         header, .friend-list-container, .wraps-section, .modal {
@@ -404,7 +423,7 @@ h1 {
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
-        .card {
+        .dark-mode .card {
             background-color: #1E1E1E;
             padding: 20px;
             border-radius: 15px;
@@ -453,7 +472,7 @@ h1 {
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .add-card {
+        .light-mode .add-card {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -463,7 +482,7 @@ h1 {
             transition: background 0.3s;
         }
         
-        .add-card:hover {
+        .light-mode .add-card:hover {
             background: #e0e0e0;
         }
         

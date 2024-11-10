@@ -14,11 +14,6 @@
         {% if username != "Guest" %}
             <h1>Welcome {{ username }} to Spotify Wrapped!</h1>
             <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button">Log Out</a>
-        {% else %}
-            <h1>Log in to Get Started!</h1>
-            <div class="button">
-                <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button">Log In With Spotify</a>
-            </div>
         {% endif %}
     </header>
 
@@ -209,7 +204,6 @@
         }
     </style>
 
-// JavaScript Section
 <script src="{% static 'spotifyWrapped/home.js' %}"></script>
 <script>
     function deleteSlideshow(button) {
