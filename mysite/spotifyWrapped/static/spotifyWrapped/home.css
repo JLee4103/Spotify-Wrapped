@@ -175,11 +175,10 @@ h1 {
 .modal {
     display: none;  /* Flex layout for centering */
     position: fixed;
-    top: 0;
-    left: 0;
+    top: -40px;
+    left: -40px;
     width: 100%;  /* Full screen width */
     height: 100%;  /* Full screen height */
-    background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent background */
     justify-content: center;
     align-items: center;
 }
