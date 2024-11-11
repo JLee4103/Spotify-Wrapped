@@ -115,7 +115,7 @@
         }
 
         .notification.success {
-            background-color: #1DB954;
+            background-color: #FF4444;
             color: white;
         }
 
@@ -193,11 +193,10 @@
             document.body.classList.toggle('dark-mode');
             document.body.classList.toggle('light-mode');
         });
-
-        // Add the new save slideshow code here
+    
         document.getElementById('saveSlideshowButton').addEventListener('click', function() {
             const tracks = JSON.parse(document.getElementById('track-data').textContent);
-            
+    
             fetch("{% url 'spotifyWrapped:save_slideshow' %}", {
                 method: 'POST',
                 headers: {
@@ -212,18 +211,29 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Slideshow saved successfully!');
+                    showNotification('Slideshow saved successfully!', 'success');
                 } else {
-                    alert('Error saving slideshow: ' + data.error);
+                    showNotification('Error saving slideshow: ' + data.error, 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error saving slideshow');
+                showNotification('Error saving slideshow', 'error');
             });
         });
-
-        // Add the getCookie function
+    
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+    
+            // Hide the notification after a few seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
