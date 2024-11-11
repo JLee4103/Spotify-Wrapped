@@ -288,47 +288,6 @@ class DeleteSlideshowView(View):
             }, status=400)
 
 
-class SearchFriendView(View):
-    template_name = 'spotifyWrapped/search_friend.html'
-
-    def get(self, request):
-        # Render search page for the friend
-        return render(request, self.template_name)
-
-    def post(self, request):
-        # Get the friend's username or public ID from the form
-        friend_username = request.POST.get("friend_username")
-        
-        if friend_username:
-            # Redirect to view the friend's wrapped
-            return redirect("spotifyWrapped:view_friend_wrapped", friend_username=friend_username)
-
-        return render(request, self.template_name, {'error': 'Please enter a valid Spotify username.'})
-
-
-class FriendWrappedView(View):
-    template_name = 'spotifyWrapped/friend_wrapped.html'
-
-    def get(self, request):
-        friend_username = request.GET.get('friend_username')
-
-        # Fetch friend's data based on username (this could be another API call)
-        # You may need to query your database or fetch friend-specific data here
-
-        # For example, fetching top tracks/artists for the friend
-        access_token = request.session.get('access_token')
-        if access_token and friend_username:
-            top_tracks, top_artists = get_spotify_wrapped_data(access_token)
-        else:
-            top_tracks, top_artists = [], []
-
-        return render(request, self.template_name, {
-            'friend_username': friend_username,
-            'top_tracks': top_tracks,
-            'top_artists': top_artists,
-        })
-    
-
 def logout_view(request):
     logout(request)
     return redirect('spotifyWrapped:initial_login')

@@ -214,64 +214,6 @@ h1 {
     color: white;
 }
 
-/* Friend List Dropdown Container */
-.friend-list-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.friend-list-container label {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    color: #FFFFFF; /* White label text */
-}
-
-#friend-select {
-    width: 200px;
-    padding: 10px;
-    font-size: 1em;
-    background-color: #2a2a2a; /* Dark background */
-    color: white;
-    border: 2px solid #1DB954; /* Spotify green border */
-    border-radius: 5px;
-    transition: background-color 0.3s, border-color 0.3s;
-    cursor: pointer;
-}
-
-#friend-select:focus {
-    outline: none;
-    background-color: #1DB954; /* Light green background on focus */
-    border-color: #128b3f; /* Darker green border on focus */
-}
-
-#friend-select option {
-    background-color: #1a1a1a; /* Darker background for options */
-    color: white;
-}
-
-/* Friend List Button */
-#view-friend-button {
-    background-color: #1DB954; /* Spotify green button */
-    color: white;
-    padding: 12px 18px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-}
-
-#view-friend-button:hover {
-    background-color: #17a74b; /* Darker green on hover */
-}
-
-#view-friend-button:active {
-    background-color: #128b3f; /* Even darker green when clicked */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
 
 /* Responsive Styles for Smaller Screens */
 @media (max-width: 768px) {
