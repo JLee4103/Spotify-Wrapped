@@ -140,20 +140,22 @@ h1 {
 
 .dark-mode-button {
     position: absolute;
-    top: 30px;       /* Set distance from the top of the viewport */
+    top: 40px;       /* Set distance from the top of the viewport */
     right: 40px;     /* Set distance from the right side */
     background-color: #1DB954; /* Spotify green */
     color: white;
     padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1em;
-    transition: background-color 0.3s;
+    transition: background-color 0.7s ease, transform 0.3s ease;
+    text-decoration: none;
 }
 
 .dark-mode-button:hover {
-    background-color: #17a74b;
+    background-color: #303030;
+    transform: translate(0px, -4px);
 }
 
 /* Styles for dark mode */
@@ -167,7 +169,8 @@ h1 {
 }
 
 .dark-mode .dark-mode-button:hover {
-    background-color: #17a74b; /* Hover state for dark mode */
+    background-color: #303030; /* Hover state for dark mode */
+    transform: translate(0px, -4px);
 }
 
 /* Modal styles */
@@ -301,17 +304,19 @@ h1 {
             color: white;
             padding: 10px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 1em;
-            transition: background-color 0.3s;
+            transition: background-color 0.7s ease, transform 0.3s ease;
+            text-decoration: none;
         }
 
         .logout-button:hover {
-            background-color: #17a74b;
+            background-color: #ff2e1f;
+            transform: translate(0px, -4px);
         }
 
-        .dark-mode-button, .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
+        .login-button, #view-friend-button, .time-button, .close-button, #startSlideshowButton {
             background-color: #1DB954;
             color: #FFFFFF;
             border: none;
@@ -321,7 +326,7 @@ h1 {
             margin: 10px 0;
             transition: background-color 0.3s ease;
         }
-        .dark-mode-button:hover, .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
+        .login-button:hover, #view-friend-button:hover, .time-button:hover, .close-button:hover, #startSlideshowButton:hover {
             background-color: #1ED760;
         }
         header, .friend-list-container, .wraps-section, .modal {
