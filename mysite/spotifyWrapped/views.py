@@ -292,3 +292,21 @@ def logout_view(request):
     logout(request)
     return redirect('spotifyWrapped:initial_login')
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from .models import Score
+
+def game_view(request):
+    return render(request, 'spotifyWrapped/game.html')
+
+def save_score(request):
+    if request.method == "POST":
+        player_name = request.POST.get('player_name')
+        score = int(request.POST.get('score'))
+        Score.objects.create(player_name=player_name, score=score)
+        return JsonResponse({'status': 'success'})
+
+def high_scores(request):
+    scores = Score.objects.all().order_by('-score')[:10]
+    data = [{'player_name': s.player_name, 'score': s.score} for s in scores]
+    return JsonResponse({'high_scores': data})

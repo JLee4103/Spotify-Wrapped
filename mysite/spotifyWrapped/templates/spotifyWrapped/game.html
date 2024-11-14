@@ -1,0 +1,27 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Game</title>
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/game.css' %}" />
+</head>
+<body>
+    <!-- Play Game Button -->
+    <div class="play-container">
+        <button id="playButton" class="play-button">Play Game</button>
+    </div>
+
+    <!-- Game Canvas -->
+    <div id="gameContainer" style="display: none;">
+        <canvas id="gameCanvas" width="400" height="600"></canvas>
+        <div id="score">Score: <span id="scoreDisplay">0</span></div>
+    </div>
+
+    <!-- Notification for high scores -->
+    <div id="notification" class="notification"></div>
+
+    <script src="{% static 'spotifyWrapped/game.js' %}"></script>
+</body>
+</html>

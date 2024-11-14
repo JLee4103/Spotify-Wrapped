@@ -1,0 +1,78 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: #111;
+    color: #fff;
+    flex-direction: column;
+}
+
+.play-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.play-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #1DB954; /* Spotify green */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.play-button:hover {
+    background-color: #1ed760; /* Slightly lighter green */
+}
+
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#gameCanvas {
+    background: #222;
+    border: 2px solid #fff;
+}
+
+#score {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 25px;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notification.success {
+    background-color: #1DB954;
+    color: white;
+}
+
+.countdown {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: white;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    display: none;
+}

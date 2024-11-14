@@ -464,3 +464,28 @@ h1 {
             padding: 20px;
             font-style: italic;
         }
+
+        .play-game-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .play-game-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #1DB954; /* Spotify green */
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .play-game-button:hover {
+            background-color: #1ed760; /* Slightly lighter green */
+        }
+
+        

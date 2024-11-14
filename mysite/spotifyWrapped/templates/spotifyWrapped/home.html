@@ -16,7 +16,9 @@
             <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button">Log Out</a>
         {% endif %}
     </header>
-
+    <div class="play-game-container">
+        <a href="{% url 'spotifyWrapped:game' %}" class="play-game-button">Play Rhythm Game</a>
+    </div>
     <!-- Spotify Wraps Section -->
     <section class="wraps-section">
         <h2>Your Generated Spotify Wraps</h2>
