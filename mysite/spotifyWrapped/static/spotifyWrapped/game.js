@@ -168,6 +168,12 @@ document.addEventListener("keydown", (event) => {
 function gameLoop() {
     if (!gameActive) return;
 
+    notes.forEach((note, index) => {
+        if(note.y > bucketHeight + bucketY) {
+            gameActive = false;
+        }
+    })
+
     updateNotes();
     drawNotes();
     requestAnimationFrame(gameLoop);
