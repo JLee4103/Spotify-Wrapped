@@ -154,25 +154,75 @@
         <h1>Spotify Wrapped Slideshow</h1>
     </header>
 
-    <!-- Song Information Container -->
-    <div class="slideshow-container">
-        {% for track in top_tracks %}
-        <div class="song {% if forloop.first %}active{% endif %}">
-            <div class="album-cover">
-                <img src="{{ track.album_image }}" alt="{{ track.name }} Album Cover" />
-            </div>
-            <div class="song-info">
-                <h2>{{ track.name }}</h2>
-                <h3>{{ track.artist }}</h3>
-                <p>Estimated Listening Time: {{ track.estimated_listening_time }} minutes</p>
-            </div>
-            <audio>
-                <source src="{{ track.preview_url }}" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
+ <!-- Slideshow Container -->
+ <div class="slideshow-container">
+    <!-- Slide 1: Intro -->
+    <div class="song {% if forloop.first %}active{% endif %}">
+        <div class="slide-content">
+            <h1>{{ slideshow_data.intro }}</h1>
         </div>
-        {% endfor %}
     </div>
+
+    <!-- Slide 2: Total Listening Time -->
+    <div class="song">
+        <div class="slide-content">
+            <h2>Total Listening Time</h2>
+            <p>{{ slideshow_data.total_listening_time|floatformat:2 }} minutes</p>
+        </div>
+    </div>
+
+    <!-- Slide 3: Sound Town -->
+    <div class="song">
+        <div class="slide-content">
+            <h2>Sound Town</h2>
+            <p>{{ slideshow_data.sound_town }}</p>
+        </div>
+    </div>
+
+    <!-- Slide 4: Listening Character -->
+    <div class="song">
+        <div class="slide-content">
+            <h2>Listening Character</h2>
+            <p>{{ slideshow_data.listening_character }}</p>
+        </div>
+    </div>
+
+    <!-- Slide 5: Top Genres -->
+    <div class="song">
+        <div class="slide-content">
+            <h2>Top Genres</h2>
+            <ul class="slide-genres">
+                {% for genre in slideshow_data.top_genres %}
+                    <li>{{ genre }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 6: Top Artists -->
+    <div class="song">
+        <div class="slide-content">
+            <h2>Top Artists</h2>
+            <ol class="slide-artists">
+                {% for artist in slideshow_data.top_artists %}
+                    <li>{{ artist }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    <!-- Slide 7: Top Tracks -->
+    <div class="song">
+        <div class="slide-content">
+            <h2>Top Tracks</h2>
+            <ol class="slide-tracks">
+                {% for track in slideshow_data.top_tracks %}
+                    <li>{{ track }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</div>
 
     <!-- Buttons Container -->
     <div class="button-container">

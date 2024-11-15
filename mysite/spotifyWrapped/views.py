@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
 import requests
-from .spotify_util import get_spotify_wrapped_data
 import spotifyWrapped.settings
 from django.contrib.auth import logout
 from .models import SpotifyTrack
@@ -11,6 +10,15 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from .spotify_util import (
+    get_total_listening_time,
+    get_sound_town,
+    get_listening_character,
+    get_top_genres,
+    get_top_artists,
+    get_top_tracks,
+    get_spotify_wrapped_data
+)
 
 class SpotifyInitialLogin(View):
     def get(self, request):
@@ -101,15 +109,39 @@ class HomeView(View):
 
         # Only fetch data if user is authenticated with Spotify
         if access_token:
-            top_tracks, top_artists = get_spotify_wrapped_data(access_token)    
+            try:
+                # Use the individual getter functions instead of get_spotify_wrapped_data
+                top_tracks = get_top_tracks(access_token)
+                top_artists = get_top_artists(access_token)
+                followers = self.get_spotify_following(access_token)
+            except Exception as e:
+                print(f"Error fetching Spotify data: {e}")
 
         return render(request, self.template_name, {
+            "username": username,
             "top_tracks": top_tracks,
             "top_artists": top_artists,
             "followers": followers,
-            "wraps": saved_wraps,
         })
 
+    def get_spotify_following(self, access_token):
+        following_url = "https://api.spotify.com/v1/me/following?type=user&limit=50"
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        following = []
+        while following_url:
+            response = requests.get(following_url, headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                following.extend(data['artists'])  # 'artists' because 'following' is type 'user' or 'artist'
+                following_url = data.get('next')  # Pagination to get more followings
+            else:
+                print("Failed to fetch following:", response.json())
+                break
+
+        return [{'username': user['name']} for user in following]
+    
+        
     def get_saved_wraps(self):
         try:
             # Group tracks by period and created_at
@@ -151,19 +183,60 @@ class SlideshowView(View):
     def get(self, request):
         period = request.GET.get('period', 'Past Year')
         access_token = request.session.get('access_token')
-        top_tracks = []
+
+        # Map user-selected period to Spotify API time ranges
+        time_range_map = {
+            'Past Month': 'short_term',
+            'Past 6 Months': 'medium_term',
+            'Past Year': 'long_term'
+        }
+        selected_time_range = time_range_map.get(period, 'long_term')
+
+        # Initialize slides with default/placeholder data
+        slideshow_data = {
+            'intro': f"Here's your Spotify Wrapped for {period}!",
+            'total_listening_time': 0,
+            'sound_town': "Unknown",
+            'listening_character': "Unknown",
+            'top_genres': [],
+            'top_artists': [],
+            'top_tracks': []
+        }
 
         if access_token:
-            top_tracks, _ = get_spotify_wrapped_data(
-                access_token,
-                period,
-                refresh_access_token_callback=self.refresh_access_token_callback
-            )
-            # Remove the automatic saving here
-            # self.save_tracks_to_db(top_tracks, period)
+            try:
+                # Pass the selected time range to all functions
+                slideshow_data['total_listening_time'] = get_total_listening_time(
+                    access_token,
+                    time_range=selected_time_range
+                )
+                slideshow_data['sound_town'] = get_sound_town(
+                    access_token,
+                    time_range=selected_time_range
+                )
+                slideshow_data['listening_character'] = get_listening_character(
+                    access_token,
+                    time_range=selected_time_range
+                )
+                slideshow_data['top_genres'] = get_top_genres(
+                    access_token,
+                    time_range=selected_time_range
+                )
+                slideshow_data['top_artists'] = get_top_artists(
+                    access_token,
+                    time_range=selected_time_range
+                )
+                slideshow_data['top_tracks'] = get_top_tracks(
+                    access_token,
+                    time_range=selected_time_range
+                )
+
+            except Exception as e:
+                # Log the error and keep default values
+                print(f"Error fetching Spotify data: {e}")
 
         return render(request, self.template_name, {
-            "top_tracks": top_tracks,
+            "slideshow_data": slideshow_data,
             "period": period
         })
 
