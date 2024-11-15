@@ -101,8 +101,7 @@ class HomeView(View):
 
         # Only fetch data if user is authenticated with Spotify
         if access_token:
-            top_tracks, top_artists = get_spotify_wrapped_data(access_token)
-            followers = self.get_spotify_following(access_token)
+            top_tracks, top_artists = get_spotify_wrapped_data(access_token)    
 
         return render(request, self.template_name, {
             "top_tracks": top_tracks,
@@ -110,23 +109,6 @@ class HomeView(View):
             "followers": followers,
             "wraps": saved_wraps,
         })
-
-    def get_spotify_following(self, access_token):
-        following_url = "https://api.spotify.com/v1/me/following?type=user&limit=50"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        following = []
-        try:
-            response = requests.get(following_url, headers=headers)
-            if response.status_code == 200:
-                data = response.json()
-                following.extend(data.get('artists', []))
-            else:
-                print(f"Failed to fetch following: {response.status_code}")
-        except Exception as e:
-            print(f"Error fetching following: {str(e)}")
-
-        return [{'username': user.get('name', '')} for user in following]
 
     def get_saved_wraps(self):
         try:
@@ -295,9 +277,29 @@ def logout_view(request):
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Score
+import random
 
-def game_view(request):
-    return render(request, 'spotifyWrapped/game.html')
+class GameView(View):
+    template_name = 'spotifyWrapped/game.html'
+
+    def get(self, request):
+        # Fetch a random song for the game
+        access_token = request.session.get('access_token')
+        song = get_random_song(access_token)
+
+        if song:
+            # If we have a song, pass it to the template
+            return render(request, self.template_name, {
+                'song_name': song.get('name', 'Unknown'),
+                'song_artist': song.get('artist', 'Unknown'),
+                'song_bpm': song.get('bpm', 120),  # Default BPM if not found
+                'preview_url': song.get('preview_url', ''),
+            })
+        else:
+            # Fallback if no song was found
+            return render(request, self.template_name, {
+                'error_message': 'No song found to play in the game.'
+            })
 
 def save_score(request):
     if request.method == "POST":
@@ -310,3 +312,53 @@ def high_scores(request):
     scores = Score.objects.all().order_by('-score')[:10]
     data = [{'player_name': s.player_name, 'score': s.score} for s in scores]
     return JsonResponse({'high_scores': data})
+
+# Function to fetch BPM (Tempo) for a song from Spotify's API
+def get_bpm(track_id, access_token):
+    url = f"https://api.spotify.com/v1/audio-features/{track_id}"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        return data.get('tempo', None)  # 'tempo' contains the BPM
+    else:
+        print(f"Failed to get BPM for track {track_id}")
+        return None
+
+# Get a random song and its BPM
+def get_random_song(access_token, period='Past Year'):
+    top_tracks, _ = get_spotify_wrapped_data(access_token, period)
+    
+    # Randomly pick a song from the top tracks list
+    if top_tracks:
+        random_song = random.choice(top_tracks)
+        track_id = random_song.get('id')  # Get the track's ID
+        bpm = get_bpm(track_id, access_token)
+        
+        # Return the song and its BPM
+        if bpm:
+            random_song['bpm'] = bpm  # Add BPM to the song data
+            return random_song
+        else:
+            print("BPM not available for this track.")
+            return None
+    return None
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SaveScoreView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            player_name = data.get('player_name')
+            score = int(data.get('score'))
+
+            # Save the score to the database
+            Score.objects.create(player_name=player_name, score=score)
+            return JsonResponse({'status': 'success'})
+
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=400)

@@ -13,7 +13,7 @@ urlpatterns = [
     path('delete-slideshow/', views.DeleteSlideshowView.as_view(), name='delete_slideshow'),
     path('logout/', logout_view, name='logout'),
     path("", views.SpotifyInitialLogin.as_view(), name = "initial_login"),
-    path('game/', views.game_view, name='game'),
+    path('game/', views.GameView.as_view(), name='game'),
     path('save_score/', views.save_score, name='save_score'),
     path('high_scores/', views.high_scores, name='high_scores'),
 ]

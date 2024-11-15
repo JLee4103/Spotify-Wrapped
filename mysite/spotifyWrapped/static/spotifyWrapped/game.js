@@ -19,19 +19,28 @@ const lanes = {
     D: canvas.width * 0.5,
     F: canvas.width * 0.7
 };
-const laneWidth = 70;      // Increased width of each lane for larger notes
-const noteHeight = 30;     // Increased height for larger notes
-const hitBarY = canvas.height - 80;   // Y-position of the hit bar
-const hitBarThickness = 20;           // Increased thickness of the hit bar
-const hitTolerance = 30;              // Expanded tolerance range for hitting notes
-const constantNoteSpeed = 1.5;        // Set a constant speed for all notes
-const noteSpacing = 60;               // Distance between each note (in pixels)
+const laneWidth = 70;
+const noteHeight = 70;
+const bucketHeight = 70;
+const bucketY = canvas.height - bucketHeight - 10;
+const constantNoteSpeed = 5;
+const noteSpacing = 60;
 const possibleKeys = ["A", "S", "D", "F"];
+
+// Bucket colors and default/active colors
+const defaultBucketColor = "#2f3542";
+const activeBucketColor = "#1e90ff";
+const bucketColors = {
+    A: defaultBucketColor,
+    S: defaultBucketColor,
+    D: defaultBucketColor,
+    F: defaultBucketColor
+};
 
 // Function to start the countdown
 function startCountdown() {
     countdownDisplay.style.display = "block";
-    playButton.style.display = "none"; // Hide the play button
+    playButton.style.display = "none";
     countdownDisplay.textContent = countdown;
     const countdownInterval = setInterval(() => {
         countdown--;
@@ -47,28 +56,25 @@ function startCountdown() {
 
 // Function to start the game
 function startGame() {
-    gameContainer.style.display = "block"; // Show the game container
+    gameContainer.style.display = "block";
     score = 0;
     notes = [];
     gameActive = true;
     updateScore();
     gameLoop();
 
-    // Spawn notes at fixed intervals (every 2 seconds in this case)
-    setInterval(createNote, 2000);  // Note creation interval set to 2 seconds
+    setInterval(createNote, 500);
 }
 
 // Function to create a new note in a specific lane
 function createNote() {
     const randomKey = possibleKeys[Math.floor(Math.random() * possibleKeys.length)];
-
-    // Calculate the new note's y position (spawn from top, spaced by noteSpacing)
     let newY = notes.filter(note => note.key === randomKey).length * noteSpacing;
 
     const note = {
         x: lanes[randomKey],
         y: newY,
-        speed: constantNoteSpeed,  // Use constant speed for all notes
+        speed: constantNoteSpeed,
         width: laneWidth,
         height: noteHeight,
         key: randomKey
@@ -81,30 +87,49 @@ function updateNotes() {
     notes.forEach(note => {
         note.y += note.speed;
     });
-    notes = notes.filter(note => note.y < canvas.height); // Remove notes that fall off the screen
+    notes = notes.filter(note => note.y < canvas.height);
 }
 
-// Function to draw the notes, lanes, and hit bar
+// Function to draw the notes, lanes, and buckets
 function drawNotes() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the lanes
-    ctx.fillStyle = "#2f3542";
-    Object.values(lanes).forEach(x => {
-        ctx.fillRect(x, 0, laneWidth, canvas.height);
+    // Draw the lanes with outlines
+    Object.keys(lanes).forEach(key => {
+        // Draw lane background
+        ctx.fillStyle = "#2f3542";
+        ctx.fillRect(lanes[key], 0, laneWidth, canvas.height);
+
+        // Draw lane outline
+        ctx.strokeStyle = "#57606f";  // Outline color
+        ctx.lineWidth = 2;
+        ctx.strokeRect(lanes[key], 0, laneWidth, canvas.height);
     });
 
-    // Draw the hit bar at the bottom
-    ctx.fillStyle = "#57606f";
-    ctx.fillRect(0, hitBarY, canvas.width, hitBarThickness);
+    // Draw each bucket with its current color
+    Object.keys(lanes).forEach(key => {
+        ctx.fillStyle = bucketColors[key];
+        ctx.fillRect(lanes[key], bucketY, laneWidth, bucketHeight);  // Draw bucket area
+    });
 
-    // Draw the notes and their assigned keys
+    // Draw the notes and their assigned, stylized keys
     notes.forEach(note => {
+        // Draw the note box
         ctx.fillStyle = "#ff4757";
         ctx.fillRect(note.x, note.y, note.width, note.height);
+
+        // Set the font style and size for the key letter
         ctx.fillStyle = "#fff";
-        ctx.font = "18px Arial";
-        ctx.fillText(note.key, note.x + 20, note.y + 20); // Display the assigned key on the note
+        ctx.font = "bold 20px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        // Calculate the center position for the key letter within the note
+        const textX = note.x + note.width / 2;
+        const textY = note.y + note.height / 2;
+
+        // Draw the key letter
+        ctx.fillText(note.key, textX, textY);
     });
 }
 
@@ -113,18 +138,29 @@ function updateScore() {
     scoreDisplay.textContent = `Score: ${score}`;
 }
 
-// Keydown event listener to hit the notes
+// Keydown event listener to hit the notes and change bucket color
 document.addEventListener("keydown", (event) => {
     if (gameActive) {
         const keyPressed = event.key.toUpperCase();
         notes.forEach((note, index) => {
-            // Check if the correct key is pressed and if the note is within the tolerance range of the hit bar
-            if (keyPressed === note.key && note.y >= hitBarY - hitTolerance && note.y <= hitBarY + hitTolerance) {
+            // Check if the correct key is pressed and if the note intersects with the bucket
+            if (keyPressed === note.key &&
+                note.y + note.height >= bucketY &&
+                note.y <= bucketY + bucketHeight &&
+                note.x === lanes[keyPressed]) {
                 score += 10;
                 updateScore();
-                notes.splice(index, 1); // Remove the note if hit correctly
+                notes.splice(index, 1);
             }
         });
+
+        // Change the bucket color for the key pressed
+        if (bucketColors[keyPressed] !== undefined) {  
+            bucketColors[keyPressed] = activeBucketColor;
+            setTimeout(() => {
+                bucketColors[keyPressed] = defaultBucketColor;
+            }, 200);  
+        }
     }
 });
 

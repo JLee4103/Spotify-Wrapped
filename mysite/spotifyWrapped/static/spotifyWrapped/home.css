@@ -344,19 +344,6 @@ h1 {
             font-size: 2em;
             margin: 0;
         }
-        .friend-list-container label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        .friend-list-container select, .friend-list-container button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #1DB954;
-            background-color: #121212;
-            color: #FFFFFF;
-        }
         .light-mode .friend-list-container select, .light-mode .friend-list-container button {
             background-color: #FFFFFF;
             color: #000000;
