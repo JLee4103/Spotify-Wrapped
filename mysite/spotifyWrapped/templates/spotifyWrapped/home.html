@@ -9,12 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="dark-mode">
-    <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
     <header>
         {% if username != "Guest" %}
-            <h1>Welcome {{ username }} to Spotify Wrapped!</h1>
             <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button">Log Out</a>
+            <h1>Welcome {{ username }} to Spotify Wrapped!</h1>
+        {% else %}
+            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button">Log In</a>
+            <h1>Log In to Get Started!</h1>
+
         {% endif %}
+        <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
     </header>
     <div class="play-game-container">
         <a href="{% url 'spotifyWrapped:game' %}" class="play-game-button">Play Rhythm Game</a>
