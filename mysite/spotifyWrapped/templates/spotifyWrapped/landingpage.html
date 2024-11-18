@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Spotify Wrapped</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #121212;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        p {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+
+        /* Header Section */
+        header {
+            background: linear-gradient(45deg, #1db954, #1ed760);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 2em;
+            color: black;
+        }
+
+        header nav {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        header nav a {
+            color: black;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #1db954;
+            color: black;
+            text-align: center;
+            padding: 100px 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .hero h2 {
+            font-size: 3em;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+        }
+
+        .hero button {
+            background: black;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .hero button:hover {
+            background: #333;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 50px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            background: #1ed760;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            animation: slideUp 1.5s ease-in-out;
+        }
+
+        .feature i {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: black;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Spotify Wrapped 2.0</h1>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#connect">Connect</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Discover Your Music Journey</h2>
+        <p>Get personalized insights into your listening habits for the past 1, 6, or 12 months.</p>
+        <button>Connect Spotify</button>
+    </section>
+
+    <section id="features" class="features">
+        <div class="feature">
+            <i class="fas fa-chart-line"></i>
+            <h3>Custom Timeframes</h3>
+            <p>Choose from 1, 6, or 12 months to see your music trends.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-headphones"></i>
+            <h3>Top Artists & Tracks</h3>
+            <p>Discover your favorite artists and most played tracks.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-clock"></i>
+            <h3>Listening Times</h3>
+            <p>See your peak listening hours and days.</p>
+        </div>
+    </section>
+
+    <section id="how-it-works">
+        <h2>How It Works</h2>
+        <p>Simply connect your Spotify account and let our app analyze your listening data. 
+           We provide fun and interactive visualizations for your music habits. Share your stats on social media with one click!</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Spotify Wrapped 2.0. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

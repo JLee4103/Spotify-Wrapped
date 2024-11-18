@@ -613,3 +613,40 @@ h1 {
         background: rgba(0, 0, 0, 0.1);
     }
 
+    .translate-widget {
+        position: fixed;
+        bottom: 10px; /* Align just above the footer */
+        left: 20px; /* Keep it on the bottom-left corner */
+        z-index: 1000; /* Ensure it stays on top of other elements */
+        background-color: #ff5722; /* A bold orange for contrast */
+        color: white; /* White text for readability */
+        padding: 10px 15px; /* Padding for a noticeable size */
+        border-radius: 25px; /* Rounded corners for a button feel */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        font-size: 1em; /* Font size for visibility */
+        text-align: center; /* Center align text */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+    }
+    
+    .translate-widget:hover {
+        background-color: #e64a19; /* Slightly darker orange on hover */
+        transform: translateY(-4px); /* Upward movement on hover */
+    }
+    
+    .translate-widget select {
+        background: none; /* Match the button background */
+        color: white; /* Ensure text contrast */
+        border: none; /* Remove border */
+        font-size: 1em; /* Keep font consistent */
+        cursor: pointer; /* Pointer cursor */
+        appearance: none; /* Remove default dropdown styles */
+        padding: 5px 10px; /* Padding for usability */
+        border-radius: 5px; /* Match the overall style */
+    }
+    
+    .translate-widget select:focus {
+        outline: none; /* Remove focus outline */
+        background-color: #d84315; /* Highlight background on focus */
+    }
+    
