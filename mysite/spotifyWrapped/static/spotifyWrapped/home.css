@@ -1,16 +1,9 @@
 /* Your existing styles */
 
-body {
-    margin: 0;
-    padding: 20px;
-    background-color: #000000; 
-    font-family: Arial, sans-serif;
-    color: white; 
-}
 
 .dark-mode {
-    background-color: #ffffff; 
-    color: #000000; 
+    background-color: #ffffff;
+    color: #000000;
 }
 
 h1 {
@@ -510,4 +503,113 @@ h1 {
         background-color: #1ed760; /* Slightly lighter green */
     }
 
-        
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .wrap-card {
+        background: #282828;
+        border-radius: 10px;
+        padding: 15px;
+        transition: transform 0.3s ease;
+    }
+
+    .wrap-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .delete-button {
+        background: none;
+        border: none;
+        color: #ff4444;
+        cursor: pointer;
+        font-size: 1.2em;
+        padding: 5px;
+        transition: transform 0.2s;
+    }
+
+    .delete-button:hover {
+        transform: scale(1.1);
+    }
+
+    .tracks-preview {
+        margin-top: 15px;
+    }
+
+    .track-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .track-item img {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .track-info {
+        flex-grow: 1;
+    }
+
+    .track-name {
+        font-weight: bold;
+        margin: 0;
+        font-size: 0.9em;
+    }
+
+    .track-artist {
+        font-size: 0.8em;
+        color: #b3b3b3;
+        margin: 2px 0 0 0;
+    }
+
+    .date-generated {
+        color: #b3b3b3;
+        font-size: 0.9em;
+        margin: 5px 0;
+    }
+
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 25px;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .notification.success {
+        background-color: #FF4444;
+        color: white;
+    }
+
+    .notification.error {
+        background-color: #FF4444;
+        color: white;
+    }
+
+    .light-mode .wrap-card {
+        background: #f5f5f5;
+    }
+
+    .light-mode .track-item {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
