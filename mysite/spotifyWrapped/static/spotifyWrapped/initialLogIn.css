@@ -1,75 +1,184 @@
+/* General Styling */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body, html {
-    margin: 0;
-    padding: 0;
     height: 100%;
-    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
-body {
-    font-family: 'Hiragino Kaku Gothic Std', sans-serif;
-}
-
-.v7_5 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;      /* Vertically center the content */
-    align-items: center;          /* Horizontally center the content */
+section {
     width: 100%;
-    height: 100vh;                /* Full viewport height */
-    background: rgba(0, 0, 0, 1); /* Black background */
-    position: relative;
-}
-
-button.v8_18 {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 543px;                /* Default width */
-    height: 134px;               /* Default height */
-    background: rgba(50, 250, 50, 1); /* Green background */
-    border-radius: 16px;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(to bottom, #121212, #1DB954);
+    color: white;
+    position: relative;
+    padding: 80px 20px;
+}
+
+.hero-content {
+    max-width: 800px;
+    text-align: center;
+    animation: fadeInDown 1.5s ease-in-out;
+}
+
+.title {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.description {
+    font-size: 20px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+}
+
+.login-button {
+    display: inline-block;
+    padding: 15px 40px;
+    background: #1DB954;
+    border-radius: 50px;
     border: none;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
     cursor: pointer;
-    margin-top: 20px;           /* Space between the heading and button */
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.login-button:hover {
+    background: #14833B;
+    transform: scale(1.1);
+}
+
+.scroll-down {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    animation: bounce 2s infinite;
+}
+
+.scroll-down:hover {
+    text-decoration: underline;
+}
+
+/* About Section */
+.about {
+    background: #ffffff;
+    color: #333;
+    padding: 60px 20px;
+}
+
+.about-content {
+    max-width: 800px;
+    text-align: center;
+    animation: fadeInUp 1.5s ease;
+}
+
+.about h2 {
     font-size: 36px;
-    font-weight: bold;
-    color: rgba(0, 0, 0, 1);
-    text-align: center;
-    font-family: 'Hiragino Kaku Gothic Std', sans-serif;
+    margin-bottom: 20px;
+    font-weight: 700;
 }
 
-button.v8_18:hover {
-    background-color: rgba(40, 200, 40, 1); /* Darker green on hover */
+.about p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 30px;
 }
 
-.v37_6 {
-    color: rgba(255, 255, 255, 1);
-    font-size: 128px;            /* Default font size */
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;         /* Space between the heading and the button */
+.loginButtonDiv {
+    display: flex;
+    flex-direction: column;
 }
 
-a.login-button {
-    background-color: #1DB954;
-    border-radius: 30px;
-    line-height: 60px;
+.back-to-top {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1DB954;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-/* Media Queries for Mobile Adjustments */
-@media (max-width: 600px) {
-    button.v8_18 {
-        width: 90%;              
-        height: auto;            
-        padding: 20px;           
-        font-size: 24px;        
+.back-to-top:hover {
+    color: #14833B;
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .title {
+        font-size: 48px;
     }
 
-    .v37_6 {
-        font-size: 64px;  
+    .description {
+        font-size: 16px;
+    }
+
+    .login-button {
+        font-size: 16px;
+        padding: 10px 30px;
+    }
+
+    .about h2 {
+        font-size: 28px;
+    }
+
+    .about p {
+        font-size: 16px;
     }
 }

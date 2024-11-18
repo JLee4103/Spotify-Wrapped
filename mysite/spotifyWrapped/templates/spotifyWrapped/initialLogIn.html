@@ -1,39 +1,43 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet" />
-    <link href="{% static 'spotifyWrapped/initialLogIn.css' %}" rel="stylesheet" />
     <title>Spotify Wrapped</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="{% static 'spotifyWrapped/initialLogIn.css' %}" rel="stylesheet">
 </head>
 <body>
-    <div class="v7_5">
-        <span class="v37_6">Spotify Wrapped</span>
-        <button class="v8_18" onclick="redirectToSpotify()">
-            Log In with Spotify
-        </button>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="title">Spotify Wrapped</h1>
+            <p class="description">
+                Discover your top songs, artists, and playlists of the year. Log in to experience your personalized journey.
+            </p>
+            <div class="loginButtonDiv">
+                <button class="login-button" onclick="redirectToSpotify()">Log In with Spotify</button>
+                <a href="#about" class="scroll-down">Learn More ↓</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <h2>What is Spotify Wrapped?</h2>
+            <p>
+                Spotify Wrapped summarizes your music journey with top songs, favorite artists, and genres that made your year unique. Log in to create and share your own story!
+            </p>
+            <a href="#home" class="back-to-top">↑ Back to Top</a>
+        </div>
+    </section>
 
     <script>
         function redirectToSpotify() {
-            // Redirect to Spotify Authorization URL
             window.location.href = "{% url 'spotifyWrapped:spotify_login' %}";
         }
     </script>
-
-
-<script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<div id="google_translate_element"></div>
-<script>
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-    }
-</script>
-
 </body>
 </html>
