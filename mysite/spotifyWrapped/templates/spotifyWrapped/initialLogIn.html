@@ -8,15 +8,54 @@
     <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet" />
     <link href="{% static 'spotifyWrapped/initialLogIn.css' %}" rel="stylesheet" />
     <title>Spotify Wrapped</title>
+    <style>
+        body {
+            background: rgb(1,30,55); /* Spotify green background */
+            font-family: 'Hiragino Kaku Gothic Std', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+        .login-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .login-button:hover {
+            color: #f0f0f0; /* Slightly lighter white on hover */
+        }
+        .container {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .container span {
+            font-size: 3.5rem;
+            font-weight: 700;
+        }
+        .container img {
+            width: 325px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <div class="v7_5">
-        <span class="v37_6">Spotify Wrapped</span>
-        <button class="v8_18" onclick="redirectToSpotify()">
-            Log In with Spotify
-        </button>
+    <button class="login-button" onclick="redirectToSpotify()">Log in with Spotify</button>
+    <div class="container">
+        <span class="OYPEnA" style="font-weight: 400; font-style: normal; color: rgb(255, 255, 255); font-kerning: none; text-decoration: none;">Spotify Wrapped</span>
+        <img class="paNqSg" src="{% static 'spotifyWrapped/waveform.gif' %}" alt="Waveform Animation" >
     </div>
-
     <script>
         function redirectToSpotify() {
             // Redirect to Spotify Authorization URL

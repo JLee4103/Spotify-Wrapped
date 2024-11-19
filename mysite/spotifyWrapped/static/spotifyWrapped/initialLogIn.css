@@ -73,3 +73,11 @@ a.login-button {
         font-size: 64px;  
     }
 }
+
+.paNqSg {
+    -webkit-touch-callout: none;
+    left: 0;
+    object-fit: fill;
+    position: absolute;
+    top: 0;
+}
