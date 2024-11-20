@@ -27,20 +27,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px; /* Spacing between elements */
+            justify-content: center; /* Ensure vertical centering */
+            gap: 20px; /* Space between title, GIF, and links */
         }
 
         .title-and-gif {
             display: flex;
             align-items: center;
-            gap: 20px; /* Spacing between title and GIF */
+            justify-content: center; /* Center the title and GIF */
+            gap: 20px; /* Space between title and GIF */
         }
 
         .title {
             font-size: 3.5rem;
             font-weight: bold;
             color: white;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8); /* Added text shadow */
         }
 
         .gif {
@@ -48,40 +50,48 @@
             height: auto;
         }
 
-        .login-button {
-            padding: 15px 30px;
-            background-color: #b98803;
-            border: none;
-            border-radius: 20px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
+        .links {
+            display: flex; /* Align links side by side */
+            align-items: center;
+            gap: 20px; /* Space between the links */
         }
 
-        .login-button:hover {
-            background-color: #8a6f03;
-            transform: scale(1.05);
+        /* Styling for the links */
+        .link {
+            font-size: 1.2rem;
+            color: white;
+            text-decoration: none; /* Remove underline */
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        /* Hover effects for links */
+        .link:hover {
+            color: #FFCC00; /* Change color on hover */
+            transform: scale(1.1);
+        }
+
+        /* Vertical divider between the links */
+        .divider {
+            width: 2px;
+            height: 40px;
+            background-color: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Title and GIF in the center -->
+        <!-- Title and GIF horizontally aligned -->
         <div class="title-and-gif">
             <span class="title">Spotify Wrapped</span>
             <img class="gif" src="{% static 'spotifyWrapped/waveform.gif' %}" alt="Waveform Animation">
         </div>
-        <!-- Login Button centered below -->
-        <button class="login-button" onclick="redirectToSpotify()">Log in with Spotify</button>
+        
+        <!-- Links Container with Divider -->
+        <div class="links">
+            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Log in with Spotify</a>
+            <div class="divider"></div> <!-- Vertical divider -->
+            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Register</a>
+        </div>
     </div>
-
-    <script>
-        function redirectToSpotify() {
-            // Redirect to Spotify Authorization URL
-            window.location.href = "{% url 'spotifyWrapped:spotify_login' %}";
-        }
-    </script>
 </body>
 </html>
