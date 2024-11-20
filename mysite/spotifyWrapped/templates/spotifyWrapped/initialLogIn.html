@@ -10,60 +10,73 @@
     <title>Spotify Wrapped</title>
     <style>
         body {
-            background: rgb(1,30,55); /* Spotify green background */
+            background: linear-gradient(120deg, #003057, #191414);
             font-family: 'Hiragino Kaku Gothic Std', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+            color: white;
             height: 100vh;
-            color: white;
+            overflow: hidden;
         }
-        .login-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .login-button:hover {
-            color: #f0f0f0; /* Slightly lighter white on hover */
-        }
+
         .container {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* Spacing between elements */
+        }
+
+        .title-and-gif {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 20px; /* Spacing between title and GIF */
         }
-        .container span {
-    font-size: 3.5rem;
-    font-weight: bold;
-    color: #D4AF37; /* Rich gold base */
-    text-shadow: 
-        1px 1px 0px #C49B2A,  /* Bright gold */
-        2px 2px 0px #B58621,  /* Mid-tone gold */
-        3px 3px 1px #A5751A,  /* Darker gold */
-        4px 4px 1px #8E5E12,  /* Deep golden-brown */
-        5px 5px 5px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-}
 
-        .container img {
-            width: 325px;
+        .title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .gif {
+            width: 330px; 
             height: auto;
+        }
+
+        .login-button {
+            padding: 15px 30px;
+            background-color: #b98803;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .login-button:hover {
+            background-color: #8a6f03;
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <button class="login-button" onclick="redirectToSpotify()">Log in with Spotify</button>
     <div class="container">
-        <span class="OYPEnA" style="font-weight: 400; font-style: normal; color: rgb(255, 255, 255); font-kerning: none; text-decoration: none;">Spotify Wrapped</span>
-        <img class="paNqSg" src="{% static 'spotifyWrapped/waveform.gif' %}" alt="Waveform Animation" >
+        <!-- Title and GIF in the center -->
+        <div class="title-and-gif">
+            <span class="title">Spotify Wrapped</span>
+            <img class="gif" src="{% static 'spotifyWrapped/waveform.gif' %}" alt="Waveform Animation">
+        </div>
+        <!-- Login Button centered below -->
+        <button class="login-button" onclick="redirectToSpotify()">Log in with Spotify</button>
     </div>
+
     <script>
         function redirectToSpotify() {
             // Redirect to Spotify Authorization URL
