@@ -71,6 +71,7 @@ def make_spotify_api_call(request, endpoint):
         return None
 
 
+
 # Views
 class SpotifyInitialLogin(View):
     def get(self, request):
@@ -138,6 +139,7 @@ class HomeView(View):
             "top_tracks": top_tracks.get("items", []) if top_tracks else [],
             "top_artists": top_artists.get("items", []) if top_artists else [],
         })
+
 
 
 class SlideshowView(View):
@@ -223,18 +225,10 @@ class GameView(View):
     def get(self, request):
         access_token = request.session.get("access_token")
         if not access_token:
-            return redirect("spotifyWrapped:spotify_login")
+            return redirect("spotifyWrapped:spotify_login")  # Redirect if no access token
 
-        random_song = get_random_song(access_token)
-        if random_song:
-            return render(request, self.template_name, {
-                "song_name": random_song.get("name", "Unknown"),
-                "song_artist": random_song.get("artist", "Unknown"),
-                "song_bpm": random_song.get("bpm", 120),
-                "preview_url": random_song.get("preview_url", ""),
-            })
-        else:
-            return render(request, self.template_name, {"error_message": "No song found to play in the game."})
+        # Render the game.html template if access token is available
+        return render(request, self.template_name)
 
 
 def logout_view(request):

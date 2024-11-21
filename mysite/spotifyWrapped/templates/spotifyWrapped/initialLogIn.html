@@ -78,6 +78,18 @@
     <link href="{% static 'spotifyWrapped/initialLogIn.css' %}" rel="stylesheet">
 </head>
 <body>
+    <!-- Translate Button -->
+<div class="translate-button" onclick="openTranslateModal()">Translate</div>
+
+<!-- Translate Modal -->
+<div id="translateModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeTranslateModal()">&times;</span>
+        <h3>Select Language</h3>
+        <div id="google_translate_element"></div>
+    </div>
+</div>
+
     <div class="container">
         <!-- Title and GIF horizontally aligned -->
         <div class="title-and-gif">
@@ -97,6 +109,22 @@
         function redirectToSpotify() {
             window.location.href = "{% url 'spotifyWrapped:spotify_login' %}";
         }
+    // Open the modal
+    function openTranslateModal() {
+        document.getElementById("translateModal").style.display = "block";
+    }
+
+    // Close the modal
+    function closeTranslateModal() {
+        document.getElementById("translateModal").style.display = "none";
+    }
+
+    // Google Translate
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    }
+
     </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

@@ -5,148 +5,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet" />
-    <link href="{% static 'spotifyWrapped/initialLogIn.css' %}" rel="stylesheet" />
-    <title>Spotify Wrapped</title>
+    <title>Spotify Wrapped Slideshow</title>
+    <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet">
     <style>
+        /* General Styles */
         body {
             background: linear-gradient(120deg, #003057, #191414);
             font-family: 'Hiragino Kaku Gothic Std', sans-serif;
+            color: white;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            color: white;
             height: 100vh;
             overflow: hidden;
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Ensure vertical centering */
-            gap: 20px; /* Space between title, GIF, and button */
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .title-and-gif {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Center the title and GIF */
-            gap: 20px; /* Space between title and GIF */
+        .slideshow-container {
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
         }
 
-        .title {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease;
         }
 
-        .gif {
-            width: 330px; 
-            height: auto;
+        .slide.active {
+            display: block;
         }
 
-        .login-button {
-            padding: 15px 30px;
-            background-color: #8a6600;
-            border: none;
-            border-radius: 25px;
+        .slide-content {
+            margin: 20px 0;
+        }
+
+        .slide h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .slide p {
             font-size: 1.2rem;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
         }
 
-        .login-button:hover {
-            background-color: #b49003;
-            transform: scale(1.05);
+        .slide ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .slide ul li {
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #1DB954;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #14833B;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
-<body class="dark-mode">
-    <!-- Dark Mode Toggle Button -->
-    <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
-    
-    <!-- Back to Home Button -->
-    <a href="{% url 'spotifyWrapped:home' %}" class="back-home-button">Back to Home</a>
-
+<body>
     <header>
         <h1>Spotify Wrapped Slideshow</h1>
     </header>
 
- <!-- Slideshow Container -->
- <div class="slideshow-container">
-    <!-- Slide 1: Intro -->
-    <div class="song {% if forloop.first %}active{% endif %}">
-        <div class="slide-content">
-            <h1>{{ slideshow_data.intro }}</h1>
+    <!-- Slideshow Container -->
+    <div class="slideshow-container">
+        <!-- Slide 1: Intro -->
+        <div class="slide active" id="slide-1">
+            <div class="slide-content">
+                <h1>{{ slideshow_data.intro }}</h1>
+            </div>
         </div>
-    </div>
 
-    <!-- Slide 2: Total Listening Time -->
-    <div class="song">
-        <div class="slide-content">
-            <h2>Average Daily Listening Time</h2>
-            <p>{{ slideshow_data.total_listening_time|floatformat:2 }} minutes</p>
+        <!-- Slide 2: Total Listening Time -->
+        <div class="slide" id="slide-2">
+            <div class="slide-content">
+                <h2>Average Daily Listening Time</h2>
+                <p>{{ slideshow_data.total_listening_time|floatformat:2 }} minutes</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Slide 3: Sound Town -->
-    <div class="song">
-        <div class="slide-content">
-            <h2>Sound Town</h2>
-            <p>{{ slideshow_data.sound_town }}</p>
+        <!-- Slide 3: Sound Town -->
+        <div class="slide" id="slide-3">
+            <div class="slide-content">
+                <h2>Sound Town</h2>
+                <p>{{ slideshow_data.sound_town }}</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Slide 4: Listening Character -->
-    <div class="song">
-        <div class="slide-content">
-            <h2>Listening Character</h2>
-            <p>{{ slideshow_data.listening_character }}</p>
+        <!-- Slide 4: Listening Character -->
+        <div class="slide" id="slide-4">
+            <div class="slide-content">
+                <h2>Listening Character</h2>
+                <p>{{ slideshow_data.listening_character }}</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Slide 5: Top Genres -->
-    <div class="song">
-        <div class="slide-content">
-            <h2>Top Genres</h2>
-            <ul class="slide-genres">
-                {% for genre in slideshow_data.top_genres %}
-                    <li>{{ genre }}</li>
-                {% endfor %}
-            </ul>
+        <!-- Slide 5: Top Genres -->
+        <div class="slide" id="slide-5">
+            <div class="slide-content">
+                <h2>Top Genres</h2>
+                <ul class="slide-genres">
+                    {% for genre in slideshow_data.top_genres %}
+                        <li>{{ genre }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
-        {% endfor %}
-    </div>
 
-    <!-- Buttons Container -->
+        <!-- Slide 6: Top Songs -->
+<!-- Slide 6: Top Songs -->
+<div class="slide" id="slide-6">
+    <div class="slide-content">
+        <h2>Top Songs</h2>
+        <ul class="slide-tracks">
+            {% for track in slideshow_data.top_tracks %}
+                <li>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <!-- Display the album cover image -->
+                        <img src="{{ track.album_cover|default:'/static/default-placeholder.jpg' }}" alt="{{ track.title }}" class="track-image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                        <p>{{ track.title }}</p>
+                        <span>{{ track.title }} - {{ track.artist }}</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+        <!-- Slide 7: Top Artists -->
+<div class="slide" id="slide-7">
+    <div class="slide-content">
+        <h2>Top Artists</h2>
+        <ul class="slide-artists">
+            {% for artist in slideshow_data.top_artists %}
+                <li>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <img src="{{ artist.image }}" alt="{{ artist.name }}" style="width: 50px; height: 50px; border-radius: 50%;">
+                        <span>{{ artist.name }}</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+    <!-- Navigation Buttons -->
     <div class="button-container">
-        <button id="startSlideshowButton">Start Slideshow</button>
-        <button id="saveSlideshowButton">Save Slideshow</button>
+        <button id="prevSlideButton" disabled>Previous</button>
+        <button id="nextSlideButton">Next</button>
     </div>
 
+    <!-- JavaScript -->
     <script>
-        function redirectToSpotify() {
-            // Redirect to Spotify Authorization URL
-            window.location.href = "{% url 'spotifyWrapped:spotify_login' %}";
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        const prevButton = document.getElementById('prevSlideButton');
+        const nextButton = document.getElementById('nextSlideButton');
+
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                slide.style.display = 'none';
+            });
+
+            slides[currentSlide].classList.add('active');
+            slides[currentSlide].style.display = 'block';
+
+            prevButton.disabled = currentSlide === 0;
+            nextButton.disabled = currentSlide === slides.length - 1;
         }
+
+        prevButton.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlides();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            }
+        });
+
+        updateSlides();
     </script>
-
-<script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<div id="google_translate_element"></div>
-<script>
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-    }
-</script>
-
 </body>
 </html>
