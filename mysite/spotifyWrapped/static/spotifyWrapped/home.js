@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('darkMode') || localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
     }
-
+//hi
     addCard.addEventListener('click', () => {
         selectionModal.style.display = 'flex';
     });

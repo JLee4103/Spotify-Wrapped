@@ -8,13 +8,90 @@
     <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet" />
     <link href="{% static 'spotifyWrapped/initialLogIn.css' %}" rel="stylesheet" />
     <title>Spotify Wrapped</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #003057, #191414);
+            font-family: 'Hiragino Kaku Gothic Std', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Ensure vertical centering */
+            gap: 20px; /* Space between title, GIF, and links */
+        }
+
+        .title-and-gif {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the title and GIF */
+            gap: 20px; /* Space between title and GIF */
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8); /* Added text shadow */
+        }
+
+        .gif {
+            width: 330px; 
+            height: auto;
+        }
+
+        .links {
+            display: flex; /* Align links side by side */
+            align-items: center;
+            gap: 20px; /* Space between the links */
+        }
+
+        /* Styling for the links */
+        .link {
+            font-size: 1.2rem;
+            color: white;
+            text-decoration: none; /* Remove underline */
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        /* Hover effects for links */
+        .link:hover {
+            color: #FFCC00; /* Change color on hover */
+            transform: scale(1.1);
+        }
+
+        /* Vertical divider between the links */
+        .divider {
+            width: 2px;
+            height: 40px;
+            background-color: white;
+        }
+    </style>
 </head>
 <body>
-    <div class="v7_5">
-        <span class="v37_6">Spotify Wrapped</span>
-        <button class="v8_18" onclick="redirectToSpotify()">
-            Log In with Spotify
-        </button>
+    <div class="container">
+        <!-- Title and GIF horizontally aligned -->
+        <div class="title-and-gif">
+            <span class="title">Spotify Wrapped</span>
+            <img class="gif" src="{% static 'spotifyWrapped/waveform.gif' %}" alt="Waveform Animation">
+        </div>
+        
+        <!-- Links Container with Divider -->
+        <div class="links">
+            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Log in with Spotify</a>
+            <div class="divider"></div> <!-- Vertical divider -->
+            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Register</a>
+        </div>
     </div>
 
     <script>

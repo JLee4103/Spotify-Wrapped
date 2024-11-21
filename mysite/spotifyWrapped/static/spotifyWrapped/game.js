@@ -16,16 +16,16 @@ let countdown = 3;
 const lanes = {
     A: canvas.width * 0.1,
     S: canvas.width * 0.3,
-    D: canvas.width * 0.5,
-    F: canvas.width * 0.7
+    K: canvas.width * 0.5,
+    L: canvas.width * 0.7
 };
 const laneWidth = 70;
 const noteHeight = 70;
 const bucketHeight = 70;
 const bucketY = canvas.height - bucketHeight - 10;
-const constantNoteSpeed = 5;
+const constantNoteSpeed = 7;
 const noteSpacing = 60;
-const possibleKeys = ["A", "S", "D", "F"];
+const possibleKeys = ["A", "S", "K", "L"];
 
 // Bucket colors and default/active colors
 const defaultBucketColor = "#2f3542";
@@ -33,8 +33,8 @@ const activeBucketColor = "#1e90ff";
 const bucketColors = {
     A: defaultBucketColor,
     S: defaultBucketColor,
-    D: defaultBucketColor,
-    F: defaultBucketColor
+    K: defaultBucketColor,
+    L: defaultBucketColor
 };
 
 // Function to start the countdown
@@ -63,13 +63,13 @@ function startGame() {
     updateScore();
     gameLoop();
 
-    setInterval(createNote, 500);
+    setInterval(createNote, 300);
 }
 
 // Function to create a new note in a specific lane
 function createNote() {
     const randomKey = possibleKeys[Math.floor(Math.random() * possibleKeys.length)];
-    let newY = notes.filter(note => note.key === randomKey).length * noteSpacing;
+    let newY = notes.filter(note => note.key === randomKey).length * noteSpacing - 250;
 
     const note = {
         x: lanes[randomKey],
@@ -167,6 +167,12 @@ document.addEventListener("keydown", (event) => {
 // Function for the game loop
 function gameLoop() {
     if (!gameActive) return;
+
+    notes.forEach((note, index) => {
+        if(note.y > bucketHeight + bucketY) {
+            gameActive = false;
+        }
+    })
 
     updateNotes();
     drawNotes();
