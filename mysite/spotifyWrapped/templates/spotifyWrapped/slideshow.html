@@ -101,9 +101,37 @@
                 opacity: 1;
             }
         }
+        /* Style for Back Button */
+/* Style for Back Button */
+.back-button-container {
+    position: absolute; /* Use absolute positioning */
+    top: 20px;  /* Distance from the top of the page */
+    left: 20px;  /* Distance from the left of the page */
+    z-index: 10;  /* Ensure it is above other elements */
+}
+
+.back-button {
+    background-color: #1db954;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #1aa34a;
+}
+
+
     </style>
 </head>
 <body>
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">Back to Spotify Home</button>
+    </div>
     <header>
         <h1>Spotify Wrapped Slideshow</h1>
     </header>
@@ -232,6 +260,10 @@
                 updateSlides();
             }
         });
+
+        function goBack() {
+        window.history.back();
+    }
 
         updateSlides();
     </script>

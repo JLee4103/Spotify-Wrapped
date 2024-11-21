@@ -88,4 +88,4 @@ slideshowContainer.addEventListener('click', function () {
     if (isSlideshowRunning) {
         nextSong();
     }
-});dsfnakslj`lkj;`
+});
