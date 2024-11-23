@@ -166,6 +166,29 @@ h1 {
     transform: translate(0px, -4px);
 }
 
+.ocean-mode {
+    background-color: #B9541D;
+    color: #FFF3E0;
+}
+
+.ocean-mode .navbar {
+    background-color: #913F13;  /* Slightly darker than background */
+}
+
+.ocean-mode .card {
+    background-color: #913F13;  /* Slightly darker than background */
+}
+
+.ocean-mode .dark-mode-button {
+    background-color: #1DB954;
+    color: white;
+}
+
+.ocean-mode .dark-mode-button:hover {
+    background-color: #1ed760;
+    transform: translate(0px, -4px);
+}
+
 /* Modal styles */
 /* Modal styles */
 .modal {

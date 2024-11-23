@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('darkMode') || localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
     }
-//hi
+
     addCard.addEventListener('click', () => {
         selectionModal.style.display = 'flex';
     });
@@ -17,15 +17,26 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     toggleDarkMode.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        
-        // Save preference to localStorage
-        if (document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            localStorage.setItem('darkMode', 'disabled');
-        }
-    });
+    const body = document.body;
+
+    // Remove all theme classes first
+    body.classList.remove('dark-mode', 'light-mode', 'ocean-mode');
+
+    // Get current theme from localStorage
+    const currentTheme = localStorage.getItem('theme') || 'light';
+
+    // Cycle through themes
+    if (currentTheme === 'light') {
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+    } else if (currentTheme === 'dark') {
+        body.classList.add('ocean-mode');
+        localStorage.setItem('theme', 'ocean');
+    } else {
+        body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+    }
+});
 
     // When a time period is selected, navigate to the slideshow view with the selected period
     window.startWrapped = function(period) {
@@ -36,11 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = slideshowUrl;
     };
     
-});
-
-document.getElementById('toggleDarkMode').addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-    document.body.classList.toggle('light-mode');
 });
 
 // Function to open the modal
