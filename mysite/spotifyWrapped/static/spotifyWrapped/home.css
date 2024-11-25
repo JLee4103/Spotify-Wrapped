@@ -190,24 +190,37 @@ header {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
 }
 
-.time-button,
-.close-button {
+/* Popup Modal Buttons */
+.time-button, .close-button {
     display: block;
+    width: 100%;
+    max-width: 200px;
     margin: 10px auto;
-    padding: 10px 20px;
-    background-color: #f8b400;
-    color: #243b55;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+    padding: 12px 20px;
     font-size: 1.2em;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: 600;
+    color: #243b55; /* Dark background for text contrast */
+    background: linear-gradient(135deg, #f8b400, #ffdd57); /* Stylish gradient */
+    border: none;
+    border-radius: 30px; /* Smooth pill-shaped buttons */
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-.time-button:hover,
-.close-button:hover {
-    background-color: #ffdd57;
-    transform: scale(1.05);
+.time-button:hover, .close-button:hover {
+    background: linear-gradient(135deg, #ffcc33, #ffe680); /* Brighter hover effect */
+    transform: translateY(-3px) scale(1.05); /* Lift effect */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+}
+
+/* Spacing and Alignment for Buttons */
+.selection-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Add spacing between buttons */
 }
 /* Add-Card (Modal Trigger) Styles */
 .add-card {
