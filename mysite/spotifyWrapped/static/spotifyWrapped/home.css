@@ -51,6 +51,104 @@ h1 {
     transform: translateY(0);
 }
 
+.footer-section a {
+    color: #f8b400;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #ffdd57;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes backgroundShift {
+    from {
+        background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+    }
+    to {
+        background: linear-gradient(120deg, #293d5a, #1e3c72, #0f2027);
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Background overlay */
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.selection-modal-content {
+    background-color: #243b55;
+    color: #f8b400;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    width: 400px;
+    max-width: 95%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* Popup Modal Buttons */
+.time-button, .close-button {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #243b55; /* Dark background for text contrast */
+    background: linear-gradient(135deg, #f8b400, #ffdd57); /* Stylish gradient */
+    border: none;
+    border-radius: 30px; /* Smooth pill-shaped buttons */
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.time-button:hover, .close-button:hover {
+    background: linear-gradient(135deg, #ffcc33, #ffe680); /* Brighter hover effect */
+    transform: translateY(-3px) scale(1.05); /* Lift effect */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+}
+
+/* Spacing and Alignment for Buttons */
+.selection-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Add spacing between buttons */
+}
+/* Add-Card (Modal Trigger) Styles */
 .add-card {
     font-size: 40px;
     font-weight: bold;
