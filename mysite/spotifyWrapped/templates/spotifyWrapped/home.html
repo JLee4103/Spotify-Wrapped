@@ -4,134 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Wrapped Grid</title>
+    <title>Spotify Wrapped</title>
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        /* Add this CSS to make the image spin */
-        .rotated-image {
-            animation: spin 10s linear infinite; /* 10s duration, infinite loop */
-        }
-
-        /* Define the keyframes for the rotation */
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg); /* Start from 0 degrees */
-            }
-            100% {
-                transform: rotate(360deg); /* Rotate to 360 degrees */
-            }
-        }
-
-        /* Styling for record player button */
-        .record-player-button {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .record-player-button:hover {
-            transform: scale(1.05);
-        }
-
-        .record-player-button:before {
-            content: '🎶';
-            font-size: 50px;
-            color: white;
-        }
-
-        .card-header h3 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .wrap-card {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .wrap-card:hover {
-            transform: scale(1.05);
-        }
-
-        .wraps-section {
-            padding: 20px;
-        }
-
-        .empty-message {
-            text-align: center;
-            font-size: 18px;
-            color: #888;
-        }
-
-        .notification {
-            display: none;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .notification.success {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .notification.error {
-            background-color: #f44336;
-            color: white;
-        }
-
-        /* Center the generate wrapped button */
-        .center-button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
-    </style>
 </head>
-<body class="dark-mode">
+<body>
     <header>
-        {% if username != "Guest" %}
-            <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button">Log Out</a>
-            <h1>Welcome {{ username }} to Spotify Wrapped!</h1>
-        {% else %}
-            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button">Log In</a>
-            <h1>Log In to Get Started!</h1>
-        {% endif %}
-        <button class="dark-mode-button" id="toggleDarkMode">Toggle Dark Mode</button>
+        <div class="header-content">
+            <h1>Welcome, {{ username }}!</h1>
+            <div class="header-buttons">
+                {% if username != "Guest" %}
+                    <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button header-button">Log Out</a>
+                {% else %}
+                    <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button header-button">Log In</a>
+                {% endif %}
+                <button class="dark-mode-button header-button" id="toggleDarkMode">Toggle Dark Mode</button>
+            </div>
+        </div>
     </header>
 
-    <div class="play-game-container">
-        <a href="{% url 'spotifyWrapped:game' %}" class="play-game-button">Play Rhythm Game</a>
-    </div>
-
-    <!-- Spotify Wraps Section -->
     <section class="wraps-section">
         <h2>Your Generated Spotify Wraps</h2>
         <div class="grid-container" id="gridContainer">
-            <div class="card add-card" id="addCard" data-slideshow-url="{% url 'spotifyWrapped:slideshow' %}">
-                <!-- Centered Record Player Button -->
+            <div class="card add-card" id="addCard">
                 <div class="center-button-container">
-                    <div class="record-player-button" onclick="openSelectionModal()"></div>
+                    <div class="record-player-button" onclick="openSelectionModal()">+</div>
                 </div>
             </div>
             {% if wraps %}
@@ -176,8 +72,6 @@
         </div>
     </div>
 
-    <div id="notification" class="notification"></div>
-
     <footer class="footer-section">
         <div class="contact-dev">
             <h2>Contact the Dev Team</h2>
@@ -186,79 +80,5 @@
     </footer>
 
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
-    <script>
-        function deleteSlideshow(button) {
-            if (confirm('Are you sure you want to delete this slideshow?')) {
-                const period = button.dataset.period;
-                console.log('Attempting to delete period:', period);
-
-                fetch("{% url 'spotifyWrapped:delete_slideshow' %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify({
-                        period: period
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        const card = button.closest('.wrap-card') || button.closest('.card');
-                        if (card) {
-                            card.remove();
-                            showNotification('Slideshow deleted successfully', true);
-                        }
-                    } else {
-                        showNotification('Error deleting slideshow: ' + (data.error || 'Unknown error'), false);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Error deleting slideshow: ' + error.message, false);
-                });
-            }
-        }
-
-        function showNotification(message, isSuccess) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${isSuccess ? 'success' : 'error'}`;
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        function openSelectionModal() {
-            document.getElementById('selectionModal').style.display = 'block';
-        }
-
-        function closeSelectionModal() {
-            document.getElementById('selectionModal').style.display = 'none';
-        }
-    </script>
-
 </body>
 </html>
