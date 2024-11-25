@@ -3,7 +3,7 @@ body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom, #0d1b2a, #1b263b);
+    background: linear-gradient(120deg, #1e3c72, #2a5298); /* Consistent blue gradient */
     color: #f0f0f0;
     display: flex;
     flex-direction: column;
@@ -17,53 +17,53 @@ body {
 header {
     width: 100%;
     padding: 20px;
-    background-color: rgba(13, 27, 42, 0.95);
+    background: rgba(15, 32, 39, 0.85); /* Semi-transparent overlay */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: fixed;
     top: 0;
     z-index: 1000;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center; /* Center the header content horizontally */
+    align-items: center; /* Align content vertically in the center */
     text-align: center;
 }
 
-.header-title {
-    font-size: 2.6em;
-    color: #f8b400;
-    margin: 0;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-    text-transform: uppercase;
+.header-content {
+    display: flex;
+    flex-direction: column; /* Stack the welcome text and buttons vertically */
+    align-items: center;
+    gap: 10px; /* Add spacing between elements */
 }
 
 .header-buttons {
     display: flex;
-    gap: 20px;
-    margin-top: 15px;
+    gap: 15px; /* Add spacing between buttons */
+    justify-content: center;
 }
 
 .header-button {
     color: #f8b400;
     text-decoration: none;
     font-size: 1em;
-    background-color: #1b263b;
+    background-color: rgba(32, 58, 67, 0.85);
     padding: 10px 20px;
     border-radius: 30px;
-    transition: all 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 .header-button:hover {
+    transform: scale(1.08);
     background-color: #f8b400;
-    color: #1b263b;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    color: #203a43;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Wraps Section */
+/* Section styles */
 .wraps-section {
-    margin-top: 180px;
+    margin-top: 140px;
     padding: 60px 20px;
     width: 100%;
     max-width: 1200px;
@@ -75,126 +75,64 @@ header {
 }
 
 .wraps-section h2 {
-    font-size: 3em;
+    font-size: 2.5rem;
     margin-bottom: 40px;
-    color: #ffffff;
+    color: #f8f8f8;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
+    letter-spacing: 1px;
+    text-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
 }
 
-/* Grid container for cards */
+/* Cards grid */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
     width: 100%;
     max-width: 1000px;
     justify-content: center;
-    align-items: start;
+    animation: fadeInSlideUp 1.2s ease-out;
 }
 
 /* Cards */
 .card {
-    background-color: #243b55;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    background: rgba(15, 32, 39, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     text-align: center;
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     animation: fadeIn 1s ease-in-out;
 }
 
 .card:hover {
-    transform: translateY(-15px) scale(1.05);
+    transform: translateY(-8px) scale(1.03);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
 }
 
-.add-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3.5em;
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: #ffffff;
-    border: 3px dashed #ffffff;
-    transition: transform 0.4s ease, border 0.4s ease, background-color 0.4s ease;
-}
-
-.add-card:hover {
-    border: 3px solid #f8b400;
-    transform: scale(1.15);
-}
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.7s;
-    z-index: 1001;
-}
-
-.selection-modal-content {
-    background-color: #243b55;
-    color: #f8b400;
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    width: 400px;
-    max-width: 95%;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
-    animation: slideIn 0.5s ease;
-}
-
-.time-button, .close-button {
-    display: block;
-    width: 100%;
-    margin: 20px 0;
-    padding: 15px;
-    background-color: #f8b400;
-    color: #243b55;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 1.2em;
-    font-weight: bold;
-    transition: background-color 0.4s ease, transform 0.4s ease;
-}
-
-.time-button:hover, .close-button:hover {
-    background-color: #ffdd57;
-    transform: translateY(-5px);
-}
-
-/* Footer Styles */
+/* Footer styles */
 .footer-section {
-    background-color: rgba(13, 27, 42, 0.95);
+    background: rgba(15, 32, 39, 0.9);
     color: #ffffff;
-    padding: 30px 0;
+    padding: 20px 0;
     text-align: center;
     width: 100%;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.4);
     position: relative;
     margin-top: auto;
     flex-shrink: 0;
+    animation: fadeInSlideUp 1.5s ease-out;
 }
 
 .footer-section a {
-    color: #ffdd57;
+    color: #f8b400;
     text-decoration: underline;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
 .footer-section a:hover {
-    color: #f8b400;
+    color: #ffdd57;
 }
 
 /* Animations */
@@ -207,24 +145,116 @@ header {
     }
 }
 
-@keyframes slideIn {
+@keyframes fadeInSlideUp {
     from {
-        transform: translateY(-40px);
         opacity: 0;
+        transform: translateY(20px);
     }
     to {
-        transform: translateY(0);
         opacity: 1;
+        transform: translateY(0);
     }
 }
 
-@keyframes fadeInSlideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(40px);
+@keyframes backgroundShift {
+    from {
+        background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
     }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
+    to {
+        background: linear-gradient(120deg, #293d5a, #1e3c72, #0f2027);
     }
 }
+
+/* Modal Styles */
+.modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Background overlay */
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.selection-modal-content {
+    background-color: #243b55;
+    color: #f8b400;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    width: 400px;
+    max-width: 95%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+
+.time-button,
+.close-button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background-color: #f8b400;
+    color: #243b55;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.time-button:hover,
+.close-button:hover {
+    background-color: #ffdd57;
+    transform: scale(1.05);
+}
+/* Add-Card (Modal Trigger) Styles */
+.add-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    background: linear-gradient(135deg, #38ef7d, #11998e); /* Cleaner gradient */
+    color: #ffffff;
+    width: 150px; /* Adjust to make it more square */
+    height: 150px; /* Height equal to width for a square */
+    border: 3px solid #ffffff;
+    border-radius: 10px; /* Slightly rounded edges */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.add-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+    border-color: #f8b400;
+}
+
+/* Center-button-container */
+.center-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* + Button Design */
+.record-player-button {
+    font-size: 3rem;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.record-player-button:hover {
+    color: #f8b400;
+    transform: scale(1.2);
+}
+
