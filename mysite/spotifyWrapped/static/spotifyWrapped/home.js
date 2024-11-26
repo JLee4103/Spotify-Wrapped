@@ -1,25 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const addCard = document.getElementById('addCard');
-    const selectionModal = document.getElementById('selectionModal');
     const themeToggleButton = document.getElementById('toggleDarkMode');
 
-    // Apply saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-    }
+    // Define the available themes
+    const themes = ['light', 'dark', 'vibrant'];
+    let currentThemeIndex = themes.indexOf(localStorage.getItem('theme')) || 0;
 
-    // Handle dark mode toggle
+    // Function to apply a theme
+    const applyTheme = (theme) => {
+        const body = document.body;
+        body.classList.remove(...themes); // Remove all theme classes
+        body.classList.add(theme); // Add the selected theme class
+        localStorage.setItem('theme', theme); // Save the selected theme
+    };
+
+    // Apply saved theme preference on load
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    // Handle theme toggle
     if (themeToggleButton) {
         themeToggleButton.addEventListener('click', () => {
-            const body = document.body;
-            if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            }
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length; // Cycle through themes
+            applyTheme(themes[currentThemeIndex]);
         });
     }
 

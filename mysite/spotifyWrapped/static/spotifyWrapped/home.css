@@ -271,3 +271,41 @@ header {
     color: #f8b400;
     transform: scale(1.2);
 }
+
+/* Light theme */
+body.light {
+    background: linear-gradient(120deg, #f0f8ff, #b0e0e6); /* Soft light blues */
+    color: #000000;
+}
+
+/* Dark theme */
+body.dark {
+    background: linear-gradient(120deg, #1e3c72, #2a5298); /* Deep dark blues */
+    color: #f0f0f0;
+}
+
+/* Vibrant theme */
+body.vibrant {
+    background: linear-gradient(120deg, #ff7e5f, #feb47b); /* Vibrant warm tones */
+    color: #ffffff;
+}
+
+/* Adjust header and button colors for all themes */
+body.light header, body.vibrant header, body.dark header {
+    background: rgba(15, 32, 39, 0.85); /* Ensure header contrast */
+}
+
+body.light .header-button {
+    background-color: rgba(240, 240, 240, 0.85);
+    color: #000000;
+}
+
+body.vibrant .header-button {
+    background-color: rgba(255, 110, 64, 0.85);
+    color: #ffffff;
+}
+
+body.dark .header-button {
+    background-color: rgba(32, 58, 67, 0.85);
+    color: #f8b400;
+}

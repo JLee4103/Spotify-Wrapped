@@ -7,7 +7,7 @@
     <title>Spotify Wrapped</title>
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}">
 </head>
-<body>
+<body class ="{{ savedTheme|default:'light '}}">
     <header>
         <div class="header-content">
             <h1>Welcome, {{ username }}!</h1>
