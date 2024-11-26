@@ -62,4 +62,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Expose necessary functions
     window.closeSelectionModal = closeSelectionModal;
     window.startWrapped = startWrapped;
+
+    const wrapCount = document.getElementById('wrapCount');
+    const currentWraps = document.querySelectorAll('.wrap-card').length;
+    wrapCount.textContent = currentWraps;
+    if (currentWraps > 0) {
+        document.querySelector('.add-card').classList.remove('pulse');
+    }
+
+    function startWrapped(period) {
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback-message';
+        feedback.textContent = `Generating Spotify Wrap for: ${period}`;
+        document.body.appendChild(feedback);
+    
+        setTimeout(() => {
+            // Simulate redirection
+            feedback.textContent = `Redirecting to your new Spotify Wrap...`;
+            setTimeout(() => window.location.href = `/spotifyWrapped/slideshow?period=${encodeURIComponent(period)}`, 1000);
+        }, 2000);
+    }
+    
+
 });

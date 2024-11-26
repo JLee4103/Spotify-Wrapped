@@ -17,10 +17,16 @@
                 {% else %}
                     <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button header-button">Log In</a>
                 {% endif %}
-                <button class="dark-mode-button header-button" id="toggleDarkMode">Toggle Dark Mode</button>
+                <button class="header-button" id="toggleDarkMode">
+                    Toggle Dark Mode
+                    <span class="tooltip-text">Switch between themes</span>
+                </button>
+                
             </div>
         </div>
     </header>
+    
+    <div class="section-divider"></div>
 
     <section class="wraps-section">
         <h2>Your Generated Spotify Wraps</h2>
@@ -58,7 +64,10 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <p class="empty-message">No Spotify Wraps generated yet. Click + to start!</p>
+            <div class="progress-tracker">
+                <p>You’ve created <span id="wrapCount">0</span> Spotify Wraps!</p>
+            </div>
+            
             {% endif %}
         </div>
     </section>
@@ -71,6 +80,7 @@
             <button class="close-button" onclick="closeSelectionModal()">Close</button>
         </div>
     </div>
+    <div class="section-divider"></div>
 
     <footer class="footer-section">
         <div class="contact-dev">

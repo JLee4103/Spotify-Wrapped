@@ -19,13 +19,26 @@ header {
     padding: 20px;
     background: rgba(15, 32, 39, 0.85); /* Semi-transparent overlay */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: fixed;
+    position: relative; /* Remove fixed positioning */
     top: 0;
     z-index: 1000;
     display: flex;
     justify-content: center; /* Center the header content horizontally */
     align-items: center; /* Align content vertically in the center */
     text-align: center;
+    animation: fadeInSlideDown 0.8s ease-in-out;
+}
+
+/* Optional: Add a subtle slide-down animation for the header on page load */
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .header-content {
@@ -63,8 +76,8 @@ header {
 
 /* Section styles */
 .wraps-section {
-    margin-top: 140px;
-    padding: 60px 20px;
+    margin-top: 1px;
+    padding: 10px;
     width: 100%;
     max-width: 1200px;
     display: flex;
@@ -76,7 +89,7 @@ header {
 
 .wraps-section h2 {
     font-size: 2.5rem;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     color: #f8f8f8;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -308,4 +321,73 @@ body.vibrant .header-button {
 body.dark .header-button {
     background-color: rgba(32, 58, 67, 0.85);
     color: #f8b400;
+}
+
+.progress-tracker {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.progress-tracker span {
+    color: #f8b400;
+    font-weight: bold;
+}
+
+.add-card {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(0, 255, 127, 0.7);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+    }
+}
+
+.header-button:hover, .time-button:hover, .close-button:hover {
+    box-shadow: 0 0 15px rgba(255, 223, 0, 0.8);
+}
+
+.header-button {
+    position: relative;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.header-button:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.section-divider {
+    width: 90%;
+    height: 2px;
+    margin: 30px auto;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 223, 0, 0.8), rgba(0, 0, 0, 0));
 }
