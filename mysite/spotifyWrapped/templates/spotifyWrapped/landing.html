@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Spotify Wrapped</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #191414;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .landing-container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            background-color: rgba(29, 185, 84, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #1DB954;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background-color: #1DB954;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #191414;
+        }
+
+        .btn-primary:hover {
+            background-color: #1ed760;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <h1>Welcome to Spotify Wrapped</h1>
+        <div class="auth-buttons">
+            <a href="{% url 'spotifyWrapped:register' %}" class="btn btn-primary">Register</a>
+            <a href="{% url 'spotifyWrapped:login' %}" class="btn btn-secondary">Login</a>
+        </div>
+    </div>
+</body>
+</html>

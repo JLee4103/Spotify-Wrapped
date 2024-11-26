@@ -22,6 +22,29 @@ from spotifyWrapped.settings import (
     SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI
 )
+from django.contrib.auth import login, authenticate
+from .forms import RegisterForm
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import UserCreationForm
+from .models import Slideshow
+from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log the user in automatically after registration
+            return redirect('spotifyWrapped:initial_login')  # Redirect after registration
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'register.html', {'form': form})
+
+def custom_login(request):
+    return auth_views.LoginView.as_view()(request)
 
 
 # Utility: Refresh Access Token
@@ -128,16 +151,24 @@ class HomeView(View):
         username = request.session.get("spotify_username", "Guest")
         access_token = request.session.get("access_token")
 
-        if not access_token:
-            return redirect("spotifyWrapped:spotify_login")
+        # Check if the user is authenticated
+        if not access_token or isinstance(request.user, AnonymousUser):
+            return redirect("spotifyWrapped:spotify_login")  # Redirect to login if no access token or user is anonymous
 
+        # If the user is authenticated, proceed with fetching data
         top_tracks = make_spotify_api_call(request, "me/top/tracks?limit=10")
         top_artists = make_spotify_api_call(request, "me/top/artists?limit=10")
+
+        # Now that we know the user is authenticated, filter by the user
+        wraps = Slideshow.objects.filter(user=request.user)  # Filter slideshows by the authenticated user
+        wrap_count = wraps.count()  # Count the number of saved slideshows
 
         return render(request, self.template_name, {
             "username": username,
             "top_tracks": top_tracks.get("items", []) if top_tracks else [],
             "top_artists": top_artists.get("items", []) if top_artists else [],
+            "wraps": wraps,  # Pass the slideshows to the template
+            "wrap_count": wrap_count,  # Pass the count of slideshows to the template
         })
 
 
@@ -177,11 +208,23 @@ class SlideshowView(View):
                 "top_artists": get_top_artists(access_token, selected_time_range),
                 "top_tracks": get_top_tracks(access_token, selected_time_range),
             })
+
+            # Save the slideshow data to the database
+            slideshow = Slideshow.objects.create(
+                user=request.user,
+                title=f"Spotify Wrapped - {period}",
+                total_listening_time=slideshow_data["total_listening_time"],
+                sound_town=slideshow_data["sound_town"],
+                listening_character=slideshow_data["listening_character"],
+                top_genres=slideshow_data["top_genres"],
+                top_artists=slideshow_data["top_artists"],
+                top_tracks=slideshow_data["top_tracks"],
+                period=period,
+            )
         except Exception as e:
             print(f"Error fetching slideshow data: {e}")
 
         return render(request, self.template_name, {"slideshow_data": slideshow_data, "period": period})
-
 
 @method_decorator(csrf_exempt, name="dispatch")
 class SaveSlideshowView(View):
@@ -191,10 +234,16 @@ class SaveSlideshowView(View):
             period = data.get("period", "Unknown Period")
             tracks = data.get("tracks", [])
 
-            SpotifyTrack.objects.filter(period=period).delete()
+            # Ensure the user is logged in
+            user = request.user  # This will get the logged-in user from the request
 
+            # Delete previous tracks for the user and period
+            SpotifyTrack.objects.filter(user=user, period=period).delete()
+
+            # Save the new tracks
             for track in tracks:
                 SpotifyTrack.objects.create(
+                    user=user,  # Associate the track with the logged-in user
                     track_name=track.get("name", ""),
                     artist_name=track.get("artists", [{}])[0].get("name", ""),
                     album_name=track.get("album", {}).get("name", ""),
@@ -204,9 +253,11 @@ class SaveSlideshowView(View):
                     popularity=track.get("popularity", 0),
                     period=period,
                 )
+
             return JsonResponse({"success": True, "message": "Slideshow saved successfully"})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=400)
+
 
 
 @method_decorator(csrf_exempt, name="dispatch")

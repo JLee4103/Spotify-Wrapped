@@ -6,127 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Wrapped Slideshow</title>
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/slideshow.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Hiragino+Kaku+Gothic+Std&display=swap" rel="stylesheet">
-    <style>
-        /* General Styles */
-        body {
-            background: linear-gradient(120deg, #003057, #191414);
-            font-family: 'Hiragino Kaku Gothic Std', sans-serif;
-            color: white;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .slideshow-container {
-            width: 90%;
-            max-width: 600px;
-            text-align: center;
-        }
-
-        .slide {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .slide.active {
-            display: block;
-        }
-
-        .slide-content {
-            margin: 20px 0;
-        }
-
-        .slide h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-
-        .slide p {
-            font-size: 1.2rem;
-        }
-
-        .slide ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .slide ul li {
-            font-size: 1.1rem;
-            margin: 5px 0;
-        }
-
-        .button-container {
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #1DB954;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 0 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #14833B;
-        }
-
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        /* Style for Back Button */
-/* Style for Back Button */
-.back-button-container {
-    position: absolute; /* Use absolute positioning */
-    top: 20px;  /* Distance from the top of the page */
-    left: 20px;  /* Distance from the left of the page */
-    z-index: 10;  /* Ensure it is above other elements */
-}
-
-.back-button {
-    background-color: #1db954;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-size: 18px;
-    border-radius: 5px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-.back-button:hover {
-    background-color: #1aa34a;
-}
-
-
-    </style>
 </head>
 <body>
     <div class="back-button-container">
@@ -224,6 +105,7 @@
     <div class="button-container">
         <button id="prevSlideButton" disabled>Previous</button>
         <button id="nextSlideButton">Next</button>
+        <button onclick="saveSlideshow()" class="save-button">Save Slideshow</button>
     </div>
 
     <!-- JavaScript -->
@@ -266,6 +148,33 @@
     }
 
         updateSlides();
+
+        function saveSlideshow() {
+            const slideshowData = {
+                period: "2024", // Or dynamically set this based on your needs
+                tracks: {{ slideshow_data.top_tracks|safe }}
+            };
+        
+            fetch('{% url "spotifyWrapped:save_slideshow" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(slideshowData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Slideshow saved successfully!');
+                } else {
+                    alert('Error saving slideshow: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving slideshow');
+            });
+        }
     </script>
 </body>
 </html>

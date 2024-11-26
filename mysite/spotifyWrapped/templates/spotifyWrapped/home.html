@@ -7,7 +7,7 @@
     <title>Spotify Wrapped</title>
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}">
 </head>
-<body class ="{{ savedTheme|default:'light '}}">
+<body class="{{ savedTheme|default:'light' }}">
     <header>
         <div class="header-content">
             <h1>Welcome, {{ username }}!</h1>
@@ -21,7 +21,6 @@
                     Toggle Dark Mode
                     <span class="tooltip-text">Switch between themes</span>
                 </button>
-                
             </div>
         </div>
     </header>
@@ -37,38 +36,37 @@
                 </div>
             </div>
             {% if wraps %}
-                {% for wrap in wraps %}
-                <div class="card wrap-card">
-                    <div class="card-header">
-                        <h3>{{ wrap.title }}</h3>
-                        <button class="delete-button" 
-                                data-period="{{ wrap.period }}"
-                                onclick="deleteSlideshow(this)">
-                            🗑️
-                        </button>
-                    </div>
-                    <p class="date-generated">Generated on: {{ wrap.date_generated|date:"F j" }}</p>
-                    <div class="tracks-preview">
-                        {% for track in wrap.tracks|slice:":3" %}
-                        <div class="track-item">
-                            {% if track.album_image %}
-                            <img src="{{ track.album_image }}" alt="{{ track.name }} cover">
-                            {% endif %}
-                            <div class="track-info">
-                                <p class="track-name">{{ track.name }}</p>
-                                <p class="track-artist">{{ track.artist }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+            {% for wrap in wraps %}
+            <div class="card wrap-card">
+                <div class="card-header">
+                    <h3>{{ wrap.title }}</h3>
+                    <button class="delete-button" 
+                            data-period="{{ wrap.period }}"
+                            onclick="deleteSlideshow(this)">
+                        🗑️
+                    </button>
                 </div>
-                {% endfor %}
-            {% else %}
-            <div class="progress-tracker">
-                <p>You’ve created <span id="wrapCount">0</span> Spotify Wraps!</p>
+                <p class="date-generated">Generated on: {{ wrap.date_generated|date:"F j" }}</p>
+                <div class="tracks-preview">
+                    {% for track in wrap.top_tracks|slice:":3" %}
+                    <div class="track-item">
+                        {% if track.album_image %}
+                        <img src="{{ track.album_image }}" alt="{{ track.name }} cover">
+                        {% endif %}
+                        <div class="track-info">
+                            <p class="track-name">{{ track.name }}</p>
+                            <p class="track-artist">{{ track.artist }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            
-            {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="progress-tracker">
+                <p>You've created <span id="wrapCount">{{ wrap_count }}</span> Spotify Wraps!</p>
+            </div>
+        {% endif %}
         </div>
     </section>
 
