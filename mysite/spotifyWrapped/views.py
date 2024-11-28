@@ -98,9 +98,13 @@ def make_spotify_api_call(request, endpoint):
 # Views
 class SpotifyInitialLogin(View):
     def get(self, request):
+        # Check if Spotify username exists in session
         if request.session.get("spotify_username"):
-            return redirect("spotifyWrapped:home")
+            return redirect("spotifyWrapped:home")  # Go to home if already connected
+
+        # If not, show the initial login page
         return render(request, "spotifyWrapped/initialLogin.html")
+
 
 
 class SpotifyLoginView(View):
@@ -118,9 +122,15 @@ class SpotifyLoginView(View):
         return redirect(auth_url)
 
 
+from django.contrib.auth import get_user_model
+
 class SpotifyCallbackView(View):
     def get(self, request):
         auth_code = request.GET.get("code")
+        if not auth_code:
+            print("No authorization code received.")
+            return redirect("spotifyWrapped:spotify_login")
+
         url = "https://accounts.spotify.com/api/token"
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         data = {
@@ -141,35 +151,56 @@ class SpotifyCallbackView(View):
             if profile_data:
                 request.session["spotify_username"] = profile_data.get("display_name")
 
+                # Optionally associate the Spotify account with a Django user
+                User = get_user_model()
+                user, created = User.objects.get_or_create(username=profile_data["id"])
+                if created:
+                    user.set_unusable_password()  # Or set a default password if necessary
+                    user.save()
+
+                login(request, user)  # Log in the user
+
         return redirect("spotifyWrapped:home")
+
+
 
 
 class HomeView(View):
     template_name = "spotifyWrapped/home.html"
 
     def get(self, request):
+        # Ensure the user is authenticated
+        if not request.user.is_authenticated:
+            print("User is not authenticated. Redirecting to Spotify login.")
+            return redirect("spotifyWrapped:spotify_login")
+
         username = request.session.get("spotify_username", "Guest")
         access_token = request.session.get("access_token")
 
-        # Check if the user is authenticated
-        if not access_token or isinstance(request.user, AnonymousUser):
-            return redirect("spotifyWrapped:spotify_login")  # Redirect to login if no access token or user is anonymous
+        if not access_token:
+            print("Access token missing. Attempting to refresh...")
+            access_token = refresh_access_token(request)
 
-        # If the user is authenticated, proceed with fetching data
+        if not access_token:
+            print("Access token could not be refreshed. Redirecting to Spotify login.")
+            return redirect("spotifyWrapped:spotify_login")
+
+        # Query only for authenticated users
+        wraps = Slideshow.objects.filter(user=request.user)  # Filter slideshows by the authenticated user
+        wrap_count = wraps.count()
+
+        # Fetch Spotify data
         top_tracks = make_spotify_api_call(request, "me/top/tracks?limit=10")
         top_artists = make_spotify_api_call(request, "me/top/artists?limit=10")
-
-        # Now that we know the user is authenticated, filter by the user
-        wraps = Slideshow.objects.filter(user=request.user)  # Filter slideshows by the authenticated user
-        wrap_count = wraps.count()  # Count the number of saved slideshows
 
         return render(request, self.template_name, {
             "username": username,
             "top_tracks": top_tracks.get("items", []) if top_tracks else [],
             "top_artists": top_artists.get("items", []) if top_artists else [],
-            "wraps": wraps,  # Pass the slideshows to the template
-            "wrap_count": wrap_count,  # Pass the count of slideshows to the template
+            "wraps": wraps,
+            "wrap_count": wrap_count,
         })
+
 
 
 
