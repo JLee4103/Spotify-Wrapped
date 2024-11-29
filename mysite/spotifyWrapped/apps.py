@@ -1,3 +1,4 @@
+#HELLO WoRLD
 from django.apps import AppConfig
 
 
