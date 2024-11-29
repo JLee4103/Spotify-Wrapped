@@ -151,9 +151,14 @@
         updateSlides();
 
         function saveSlideshow() {
+            console.log('Save button clicked');
+            
+            const tracks = {{ slideshow_data.top_tracks_json|safe }};
+            console.log('Tracks:', tracks);
+        
             const slideshowData = {
-                period: "2024", // Or dynamically set this based on your needs
-                tracks: {{ slideshow_data.top_tracks|safe }}
+                period: "{{ period }}",
+                tracks: tracks
             };
         
             fetch('{% url "spotifyWrapped:save_slideshow" %}', {
@@ -168,14 +173,15 @@
                 if (data.success) {
                     alert('Slideshow saved successfully!');
                 } else {
-                    alert('Error saving slideshow: ' + data.error);
+                    alert('Error saving slideshow: ' + (data.error || 'Unknown error'));
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error saving slideshow');
+                alert('Failed to save slideshow. Please try again.');
             });
         }
+        
     </script>
 </body>
 </html>

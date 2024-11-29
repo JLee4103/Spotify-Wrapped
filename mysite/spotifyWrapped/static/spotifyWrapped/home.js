@@ -1,3 +1,72 @@
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function deleteSlideshow(button) {
+    if (!confirm('Are you sure you want to delete this slideshow?')) {
+        return;
+    }
+
+    const slideshowId = button.getAttribute('data-slideshow-id');
+    const card = button.closest('.wrap-card');
+
+    fetch(`/spotifyWrapped/delete-slideshow/${slideshowId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            card.remove();
+            updateWrapCount();
+            alert('Slideshow deleted successfully');
+        } else {
+            alert('Error deleting slideshow: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to delete slideshow: ' + error.message);
+    });
+}
+
+function updateWrapCount() {
+    const wrapCount = document.getElementById('wrapCount');
+    if (wrapCount) {
+        const currentWraps = document.querySelectorAll('.wrap-card').length;
+        wrapCount.textContent = currentWraps;
+        
+        if (currentWraps === 0) {
+            const gridContainer = document.getElementById('gridContainer');
+            const progressTracker = document.createElement('div');
+            progressTracker.className = 'progress-tracker';
+            progressTracker.innerHTML = '<p>You\'ve created <span id="wrapCount">0</span> Spotify Wraps!</p>';
+            gridContainer.appendChild(progressTracker);
+        }
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const themeToggleButton = document.getElementById('toggleDarkMode');
 
@@ -64,10 +133,16 @@ document.addEventListener('DOMContentLoaded', () => {
     window.startWrapped = startWrapped;
 
     const wrapCount = document.getElementById('wrapCount');
-    const currentWraps = document.querySelectorAll('.wrap-card').length;
-    wrapCount.textContent = currentWraps;
-    if (currentWraps > 0) {
-        document.querySelector('.add-card').classList.remove('pulse');
+    if (wrapCount) {  // Only proceed if element exists
+        const currentWraps = document.querySelectorAll('.wrap-card').length;
+        wrapCount.textContent = currentWraps;
+        
+        if (currentWraps > 0) {
+            const addCard = document.querySelector('.add-card');
+            if (addCard) {
+                addCard.classList.remove('pulse');
+            }
+        }
     }
 
     function startWrapped(period) {
