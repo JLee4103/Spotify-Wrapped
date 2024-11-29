@@ -62,45 +62,37 @@
             </div>
         </div>
 
-        <!-- Slide 6: Top Songs -->
-<!-- Slide 6: Top Songs -->
-<div class="slide" id="slide-6">
-    <div class="slide-content">
+<!-- Slide: Top Songs -->
+<div class="slide">
+    <div class="card">
         <h2>Top Songs</h2>
-        <ul class="slide-tracks">
+        <ul>
             {% for track in slideshow_data.top_tracks %}
                 <li>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <img src="{{ track.album_image|default:'/static/default-placeholder.jpg' }}" 
-                             alt="{{ track.name }}" 
-                             class="track-image" 
-                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                        <span>{{ track.name }} - {{ track.artist }}</span>
-                    </div>
+                    <img src="{{ track.album_image|default:'/static/default-placeholder.jpg' }}" alt="{{ track.name }}">
+                    <span>{{ track.name }}</span>
+                    <small>{{ track.artist }}</small>
                 </li>
             {% endfor %}
         </ul>
     </div>
 </div>
 
-
-        <!-- Slide 7: Top Artists -->
-<div class="slide" id="slide-7">
-    <div class="slide-content">
+<!-- Slide: Top Artists -->
+<div class="slide">
+    <div class="card">
         <h2>Top Artists</h2>
-        <ul class="slide-artists">
+        <ul>
             {% for artist in slideshow_data.top_artists %}
                 <li>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <img src="{{ artist.image }}" alt="{{ artist.name }}" style="width: 50px; height: 50px; border-radius: 50%;">
-                        <span>{{ artist.name }}</span>
-                    </div>
+                    <img src="{{ artist.image }}" alt="{{ artist.name }}">
+                    <span>{{ artist.name }}</span>
                 </li>
             {% endfor %}
         </ul>
     </div>
 </div>
-    
+
 <div class="slide" id="genre-persona-slide">
     <h2>Your Music Persona</h2>
     <ul class="slide-7">

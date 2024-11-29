@@ -30,20 +30,69 @@ header h1 {
 }
 
 .slide.active {
+    display: block;
+}
+
+.card {
+    width: 600px; /* Fixed width for all slides */
+    min-height: 250px; /* Minimum height for smaller slides */
+    padding: 20px;
+    margin: 0 auto;
+    background-color: #0d1117;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
+    gap: 15px;
+}
+
+.card h2 {
+    color: #FFD700;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; /* Ensures items wrap to the next line if they don't fit */
+    justify-content: center;
+    gap: 15px;
+}
+
+.card ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+    color: white;
+    max-width: 150px; /* Limits individual item width */
+    text-align: center;
+}
+
+.card ul li img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .slide-content {
     background-color: #0d1117;
     border-radius: 20px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    width: 80%;
-    max-width: 500px;
+    width: 500px; /* Fixed width for consistent size */
+    height: 300px; /* Fixed height for consistent size */
     padding: 30px;
     text-align: center;
     color: white;
+    overflow: hidden; /* Prevent content overflow */
     transition: all 0.3s ease-in-out;
 }
 
@@ -113,4 +162,14 @@ button:disabled {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
