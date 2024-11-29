@@ -19,6 +19,7 @@ from .spotify_util import (
     get_top_genres,
     get_top_artists,
     get_top_tracks,
+    generate_genre_persona,
     get_spotify_wrapped_data
 )
 from spotifyWrapped.settings import (
@@ -221,6 +222,7 @@ class SlideshowView(View):
             "top_genres": [],
             "top_artists": [],
             "top_tracks": [],
+            "genre_persona": "Unknown",
         }
 
         try:
@@ -231,6 +233,7 @@ class SlideshowView(View):
                 "top_genres": get_top_genres(access_token, selected_time_range),
                 "top_artists": get_top_artists(access_token, selected_time_range),
                 "top_tracks": get_top_tracks(access_token, selected_time_range),
+                "genre_persona": generate_genre_persona(access_token, selected_time_range),
             })
         except Exception as e:
             print(f"Error fetching slideshow data: {e}")
