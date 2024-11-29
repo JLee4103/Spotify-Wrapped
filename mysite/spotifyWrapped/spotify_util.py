@@ -214,12 +214,12 @@ def get_top_tracks(access_token, time_range='long_term'):
 
 
 def generate_genre_persona(access_token, time_range='long_term'):
-    """
-    Generate a personalized description of a user's music personality
-    based on their top genres using an AI-powered approach.
-    """
-    # First, get the top genres
+    return "To test LLM API, comment first line in generate_genre_persona from spotify_util.py"
+
+    # First, get the info
     top_genres = get_top_genres(access_token, time_range)
+    top_songs = get_top_tracks(access_token, time_range)
+    top_artists = get_top_artists(access_token, time_range)
 
     if not top_genres:
         return "A music lover with a unique taste that defies easy categorization."
@@ -227,9 +227,9 @@ def generate_genre_persona(access_token, time_range='long_term'):
     # Construct a prompt based on top genres
     prompt = f"""
     I listen to music primarily in these genres: {', '.join(top_genres)}. 
-    Create a vivid, witty description of how someone with these musical tastes 
-    might dress, act, and think. Make it fun, slightly tongue-in-cheek, 
-    and no more than 50 words. Focus on personality and style.
+    Specifically, I listen to these songs: {', '.join([song['name'] for song in top_songs])}; 
+    and these artists: {', '.join([artist['name'] for artist in top_artists])}. 
+    How do you think I would dress, think, and act? Keep your response to less than 100 words.
     """
 
     try:
@@ -237,13 +237,13 @@ def generate_genre_persona(access_token, time_range='long_term'):
             api_key=os.environ.get('ANTHROPIC_API_KEY')
         )
         message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
+            model="claude-3-haiku-20240307",
             max_tokens=256,
             messages=[
                 {"role": "user", "content": prompt}
             ]
         )
-        return message.content
+        return message.content[0].text
     except Exception as e:
         print(f"Error generating persona: {e}")
         return "A music lover with an eclectic and unpredictable spirit."
