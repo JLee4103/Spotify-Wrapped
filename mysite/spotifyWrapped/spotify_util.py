@@ -1,5 +1,7 @@
+import anthropic
 import requests
-from spotifyWrapped.settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
+from spotifyWrapped.settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, ANTHROPIC_API_KEY
+import os
 
 def make_spotify_request(url, headers):
     """
@@ -174,7 +176,7 @@ def get_top_artists(access_token, time_range='long_term'):
     Fetch the user's top artists based on the selected time range.
     """
     headers = {"Authorization": f"Bearer {access_token}"}
-    url = f"https://api.spotify.com/v1/me/top/artists?limit=10&time_range={time_range}"
+    url = f"https://api.spotify.com/v1/me/top/artists?limit=5&time_range={time_range}"
     artists_data = make_spotify_request(url, headers)
 
     if not artists_data:
@@ -194,7 +196,7 @@ def get_top_tracks(access_token, time_range='long_term'):
     Fetch the user's top tracks based on the selected time range.
     """
     headers = {"Authorization": f"Bearer {access_token}"}
-    url = f"https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}"
+    url = f"https://api.spotify.com/v1/me/top/tracks?limit=5&time_range={time_range}"
     tracks_data = make_spotify_request(url, headers)
 
     if not tracks_data:
@@ -209,3 +211,39 @@ def get_top_tracks(access_token, time_range='long_term'):
         }
         for track in tracks_data.get('items', [])
     ]
+
+
+def generate_genre_persona(access_token, time_range='long_term'):
+    """
+    Generate a personalized description of a user's music personality
+    based on their top genres using an AI-powered approach.
+    """
+    # First, get the top genres
+    top_genres = get_top_genres(access_token, time_range)
+
+    if not top_genres:
+        return "A music lover with a unique taste that defies easy categorization."
+
+    # Construct a prompt based on top genres
+    prompt = f"""
+    I listen to music primarily in these genres: {', '.join(top_genres)}. 
+    Create a vivid, witty description of how someone with these musical tastes 
+    might dress, act, and think. Make it fun, slightly tongue-in-cheek, 
+    and no more than 50 words. Focus on personality and style.
+    """
+
+    try:
+        client = anthropic.Anthropic(
+            api_key=os.environ.get('ANTHROPIC_API_KEY')
+        )
+        message = client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=256,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return message.content
+    except Exception as e:
+        print(f"Error generating persona: {e}")
+        return "A music lover with an eclectic and unpredictable spirit."

@@ -38,6 +38,7 @@ class Slideshow(models.Model):
     top_genres = models.JSONField(default=list)
     top_artists = models.JSONField(default=list)
     top_tracks = models.JSONField(default=list)
+    genre_persona = models.TextField(null=True, blank=True)
     period = models.CharField(max_length=50)
 
     def __str__(self):
