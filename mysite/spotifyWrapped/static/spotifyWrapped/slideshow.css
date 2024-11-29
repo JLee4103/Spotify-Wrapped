@@ -26,12 +26,17 @@ header h1 {
 
 .slide {
     display: none;
-    animation: fadeIn 0.5s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .slide.active {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
+
 
 .card {
     width: 600px; /* Fixed width for all slides */
@@ -97,16 +102,12 @@ header h1 {
 }
 
 .slide-content h2 {
-    font-size: 1.8rem;
-    color: #FFD700;
-    margin-bottom: 15px;
+    font-size: 2rem;
+    animation: fadeIn 0.8s ease-in-out;
 }
-
 .slide-content p,
 .slide-content ul {
-    font-size: 1.2rem;
-    margin: 10px 0;
-    color: #cfcfcf;
+    animation: slideUp 0.8s ease-in-out 0.3s; /* Delay for staggered effect */
 }
 
 .slide-content ul {
@@ -171,5 +172,165 @@ button:disabled {
     }
     to {
         opacity: 1;
+    }
+}
+
+/* Slide-up animation */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Interactive hover effects for items */
+.slide ul li:hover {
+    color: #1DB954;
+    transform: scale(1.05);
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Track and artist image animations */
+.track img,
+.artist img {
+    animation: zoomIn 0.8s ease-in-out;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Genre List Animations */
+.slide-genres li {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInFromLeft 0.6s ease forwards;
+}
+
+.slide-genres li:nth-child(1) {
+    animation-delay: 0.2s;
+}
+.slide-genres li:nth-child(2) {
+    animation-delay: 0.4s;
+}
+.slide-genres li:nth-child(3) {
+    animation-delay: 0.6s;
+}
+.slide-genres li:nth-child(4) {
+    animation-delay: 0.8s;
+}
+.slide-genres li:nth-child(5) {
+    animation-delay: 1s;
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Song List Animations */
+.slide-tracks li {
+    opacity: 0;
+    transform: scale(0.9);
+    animation: fadeInScaleUp 0.5s ease forwards;
+}
+
+.slide-tracks li:nth-child(1) {
+    animation-delay: 0.2s;
+}
+.slide-tracks li:nth-child(2) {
+    animation-delay: 0.4s;
+}
+.slide-tracks li:nth-child(3) {
+    animation-delay: 0.6s;
+}
+.slide-tracks li:nth-child(4) {
+    animation-delay: 0.8s;
+}
+.slide-tracks li:nth-child(5) {
+    animation-delay: 1s;
+}
+
+@keyframes fadeInScaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Artist List Animations */
+.slide-artists li {
+    opacity: 0;
+    transform: rotateY(30deg);
+    animation: rotateIn 0.6s ease forwards;
+}
+
+.slide-artists li:nth-child(1) {
+    animation-delay: 0.2s;
+}
+.slide-artists li:nth-child(2) {
+    animation-delay: 0.4s;
+}
+.slide-artists li:nth-child(3) {
+    animation-delay: 0.6s;
+}
+.slide-artists li:nth-child(4) {
+    animation-delay: 0.8s;
+}
+.slide-artists li:nth-child(5) {
+    animation-delay: 1s;
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotateY(30deg);
+    }
+    to {
+        opacity: 1;
+        transform: rotateY(0);
+    }
+}
+
+/* Common Animation */
+.card-content {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px); /* Start slightly lower */
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Fade In Up Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+        visibility: hidden;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
     }
 }

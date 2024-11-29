@@ -26,72 +26,69 @@
             </div>
         </div>
 
-        <!-- Slide 2: Total Listening Time -->
-        <div class="slide" id="slide-2">
-            <div class="slide-content">
-                <h2>Average Daily Listening Time</h2>
-                <p>{{ slideshow_data.total_listening_time|floatformat:2 }} minutes</p>
-            </div>
+        <!-- Average Daily Listening Time Slide -->
+<div class="slide">
+    <div class="card">
+        <div class="card-content">
+            <h2>Average Daily Listening Time</h2>
+            <p>{{ slideshow_data.total_listening_time|floatformat:2 }} minutes</p>
         </div>
+    </div>
+</div>
 
-        <!-- Slide 3: Sound Town -->
-        <div class="slide" id="slide-3">
-            <div class="slide-content">
-                <h2>Sound Town</h2>
-                <p>{{ slideshow_data.sound_town }}</p>
-            </div>
+<!-- Sound Town Slide -->
+<div class="slide">
+    <div class="card">
+        <div class="card-content">
+            <h2>Sound Town</h2>
+            <p>{{ slideshow_data.sound_town }}</p>
         </div>
+    </div>
+</div>
 
-        <!-- Slide 4: Listening Character -->
-        <div class="slide" id="slide-4">
-            <div class="slide-content">
-                <h2>Listening Character</h2>
-                <p>{{ slideshow_data.listening_character }}</p>
-            </div>
+<!-- Listening Character Slide -->
+<div class="slide">
+    <div class="card">
+        <div class="card-content">
+            <h2>Listening Character</h2>
+            <p>{{ slideshow_data.listening_character }}</p>
         </div>
+    </div>
+</div>
 
-        <!-- Slide 5: Top Genres -->
-        <div class="slide" id="slide-5">
-            <div class="slide-content">
-                <h2>Top Genres</h2>
-                <ul class="slide-genres">
-                    {% for genre in slideshow_data.top_genres %}
-                        <li>{{ genre }}</li>
+        
+        <div class="slide">
+            <div class="card">
+                <h2>Top Songs</h2>
+                <ul class="slide-tracks">
+                    {% for track in slideshow_data.top_tracks %}
+                        <li>
+                            <div class="track">
+                                <img src="{{ track.album_image|default:'/static/default-placeholder.jpg' }}" alt="{{ track.name }}" class="track-image">
+                                <span>{{ track.name }} - {{ track.artist }}</span>
+                            </div>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
-
-<!-- Slide: Top Songs -->
-<div class="slide">
-    <div class="card">
-        <h2>Top Songs</h2>
-        <ul>
-            {% for track in slideshow_data.top_tracks %}
-                <li>
-                    <img src="{{ track.album_image|default:'/static/default-placeholder.jpg' }}" alt="{{ track.name }}">
-                    <span>{{ track.name }}</span>
-                    <small>{{ track.artist }}</small>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
-
-<!-- Slide: Top Artists -->
-<div class="slide">
-    <div class="card">
-        <h2>Top Artists</h2>
-        <ul>
-            {% for artist in slideshow_data.top_artists %}
-                <li>
-                    <img src="{{ artist.image }}" alt="{{ artist.name }}">
-                    <span>{{ artist.name }}</span>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
+        
+        <div class="slide">
+            <div class="card">
+                <h2>Top Artists</h2>
+                <ul class="slide-artists">
+                    {% for artist in slideshow_data.top_artists %}
+                        <li>
+                            <div class="artist">
+                                <img src="{{ artist.image }}" alt="{{ artist.name }}" class="artist-image">
+                                <span>{{ artist.name }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
 
 <div class="slide" id="genre-persona-slide">
     <h2>Your Music Persona</h2>
@@ -116,49 +113,21 @@
 
     <!-- JavaScript -->
     <script>
-        const slides = document.querySelectorAll('.slide');
-        let currentSlide = 0;
+// JavaScript for Slideshow
+const slides = document.querySelectorAll('.slide');
+let currentSlide = 0;
 
-        const prevButton = document.getElementById('prevSlideButton');
-        const nextButton = document.getElementById('nextSlideButton');
-
-        function updateSlides() {
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active');
-                slide.style.display = 'none';
-            });
-
-            slides[currentSlide].classList.add('active');
-            slides[currentSlide].style.display = 'block';
-
-            prevButton.disabled = currentSlide === 0;
-            nextButton.disabled = currentSlide === slides.length - 1;
-        }
-
-        prevButton.addEventListener('click', () => {
-            if (currentSlide > 0) {
-                currentSlide--;
-                updateSlides();
-            }
-        });
-
-        nextButton.addEventListener('click', () => {
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                updateSlides();
-            }
-        });
-
-        function goBack() {
+const prevButton = document.getElementById('prevSlideButton');
+const nextButton = document.getElementById('nextSlideButton');
+const autoplayInterval = 5000; // Time in milliseconds (5 seconds)
+function goBack() {
         window.history.back();
     }
 
-        updateSlides();
-
-        function saveSlideshow() {
-            console.log('Save button clicked');
+function saveSlideshow() {
+    console.log('Save button clicked');
             
-            const tracks = {{ slideshow_data.top_tracks_json|safe }};
+    const tracks = {{ slideshow_data.top_tracks_json|safe }};
             console.log('Tracks:', tracks);
         
             const slideshowData = {
@@ -186,6 +155,80 @@
                 alert('Failed to save slideshow. Please try again.');
             });
         }
+        
+function updateSlides() {
+    slides.forEach((slide, index) => {
+        slide.classList.remove('active');
+        slide.style.display = 'none';
+    });
+
+    const activeSlide = slides[currentSlide];
+    activeSlide.classList.add('active');
+    activeSlide.style.display = 'block';
+
+    prevButton.disabled = currentSlide === 0;
+    nextButton.disabled = currentSlide === slides.length - 1;
+
+    // Trigger animations for genres, songs, and artists
+    const genres = activeSlide.querySelectorAll('.slide-genres li');
+    const tracks = activeSlide.querySelectorAll('.slide-tracks li');
+    const artists = activeSlide.querySelectorAll('.slide-artists li');
+
+    genres.forEach((genre, index) => {
+        genre.style.animationDelay = `${index * 0.2}s`;
+        genre.classList.add('animate');
+    });
+
+    tracks.forEach((track, index) => {
+        track.style.animationDelay = `${index * 0.2}s`;
+        track.classList.add('animate');
+    });
+
+    artists.forEach((artist, index) => {
+        artist.style.animationDelay = `${index * 0.2}s`;
+        artist.classList.add('animate');
+    });
+}
+
+
+function nextSlide() {
+    if (currentSlide < slides.length - 1) {
+        currentSlide++;
+    } else {
+        currentSlide = 0; // Loop back to the first slide
+    }
+    updateSlides();
+}
+
+function prevSlide() {
+    if (currentSlide > 0) {
+        currentSlide--;
+    } else {
+        currentSlide = slides.length - 1; // Loop back to the last slide
+    }
+    updateSlides();
+}
+
+// Event Listeners for manual navigation
+prevButton.addEventListener('click', prevSlide);
+nextButton.addEventListener('click', nextSlide);
+
+// Autoplay functionality
+let autoplay = setInterval(nextSlide, autoplayInterval);
+
+// Pause autoplay on hover
+document.querySelector('.slideshow-container').addEventListener('mouseenter', () => {
+    clearInterval(autoplay);
+});
+
+// Resume autoplay when hover ends
+document.querySelector('.slideshow-container').addEventListener('mouseleave', () => {
+    autoplay = setInterval(nextSlide, autoplayInterval);
+});
+
+// Initialize the slideshow
+updateSlides();
+
         
     </script>
 </body>
