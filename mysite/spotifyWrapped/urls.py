@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
-from .views import SpotifyLoginView, SpotifyCallbackView, SlideshowView, logout_view, SpotifyInitialLogin
+from .views import DeleteSlideshowView, SpotifyLoginView, SpotifyCallbackView, SlideshowView, logout_view, SpotifyInitialLogin
 
 app_name = "spotifyWrapped"
 
@@ -23,7 +23,7 @@ urlpatterns = [
     path('home/', views.HomeView.as_view(), name='home'),
     path('slideshow/', SlideshowView.as_view(), name='slideshow'),
     path('save-slideshow/', views.SaveSlideshowView.as_view(), name='save_slideshow'),
-    path('delete-slideshow/', views.DeleteSlideshowView.as_view(), name='delete_slideshow'),
+    path('delete-slideshow/<int:slideshow_id>/', DeleteSlideshowView.as_view(), name='delete_slideshow'),
     path('logout/', logout_view, name='logout'),
 
     # Game-related URLs

@@ -41,7 +41,7 @@
                 <div class="card-header">
                     <h3>{{ wrap.title }}</h3>
                     <button class="delete-button" 
-                            data-period="{{ wrap.period }}"
+                            data-slideshow-id="{{ wrap.id }}"
                             onclick="deleteSlideshow(this)">
                         🗑️
                     </button>
@@ -50,12 +50,12 @@
                 <div class="tracks-preview">
                     {% for track in wrap.top_tracks|slice:":3" %}
                     <div class="track-item">
-                        {% if track.album_image %}
-                        <img src="{{ track.album_image }}" alt="{{ track.name }} cover">
+                        {% if track.album.images.0.url %}
+                        <img src="{{ track.album.images.0.url }}" alt="{{ track.name }} cover">
                         {% endif %}
                         <div class="track-info">
                             <p class="track-name">{{ track.name }}</p>
-                            <p class="track-artist">{{ track.artist }}</p>
+                            <p class="track-artist">{{ track.artists.0.name }}</p>
                         </div>
                     </div>
                     {% endfor %}

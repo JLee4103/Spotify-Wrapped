@@ -6,7 +6,11 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
+from django.utils import timezone
 import random
+from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib.auth import get_user_model
+from django.db import transaction
 from .models import SpotifyTrack, Score
 from .spotify_util import (
     get_total_listening_time,
@@ -15,7 +19,7 @@ from .spotify_util import (
     get_top_genres,
     get_top_artists,
     get_top_tracks,
-    generate_genre_persona,
+#    generate_genre_persona,
     get_spotify_wrapped_data
 )
 from spotifyWrapped.settings import (
@@ -108,22 +112,31 @@ class SpotifyInitialLogin(View):
 
 
 
+from urllib.parse import urlencode
+
 class SpotifyLoginView(View):
     def get(self, request):
-        request.session.flush()  # Clear session data
+        request.session.flush()
         spotify_auth_url = "https://accounts.spotify.com/authorize"
-        scope = "user-top-read user-follow-read"
-
-        auth_url = (
-            f"{spotify_auth_url}?client_id={SPOTIFY_CLIENT_ID}"
-            f"&response_type=code"
-            f"&redirect_uri={SPOTIFY_REDIRECT_URI}"
-            f"&scope={scope}"
+        scope = (
+            "user-top-read "
+            "user-follow-read "
+            "user-library-read "
+            "user-read-private "
+            "playlist-read-private "
+            "user-read-recently-played "
+            "user-read-playback-state "
+            "user-modify-playback-state"
         )
+        query_params = {
+            'client_id': SPOTIFY_CLIENT_ID,
+            'response_type': 'code',
+            'redirect_uri': SPOTIFY_REDIRECT_URI,
+            'scope': scope
+        }
+        auth_url = f"{spotify_auth_url}?{urlencode(query_params)}"
         return redirect(auth_url)
 
-
-from django.contrib.auth import get_user_model
 
 class SpotifyCallbackView(View):
     def get(self, request):
@@ -170,39 +183,19 @@ class HomeView(View):
     template_name = "spotifyWrapped/home.html"
 
     def get(self, request):
-        # Ensure the user is authenticated
         if not request.user.is_authenticated:
-            print("User is not authenticated. Redirecting to Spotify login.")
             return redirect("spotifyWrapped:spotify_login")
 
         username = request.session.get("spotify_username", "Guest")
-        access_token = request.session.get("access_token")
-
-        if not access_token:
-            print("Access token missing. Attempting to refresh...")
-            access_token = refresh_access_token(request)
-
-        if not access_token:
-            print("Access token could not be refreshed. Redirecting to Spotify login.")
-            return redirect("spotifyWrapped:spotify_login")
-
-        # Query only for authenticated users
-        wraps = Slideshow.objects.filter(user=request.user)  # Filter slideshows by the authenticated user
-        wrap_count = wraps.count()
-
-        # Fetch Spotify data
-        top_tracks = make_spotify_api_call(request, "me/top/tracks?limit=10")
-        top_artists = make_spotify_api_call(request, "me/top/artists?limit=10")
+        
+        # Get all slideshows for the user
+        wraps = Slideshow.objects.filter(user=request.user).order_by('-date_generated')
 
         return render(request, self.template_name, {
             "username": username,
-            "top_tracks": top_tracks.get("items", []) if top_tracks else [],
-            "top_artists": top_artists.get("items", []) if top_artists else [],
             "wraps": wraps,
-            "wrap_count": wrap_count,
+            "wrap_count": wraps.count(),
         })
-
-
 
 
 class SlideshowView(View):
@@ -229,7 +222,7 @@ class SlideshowView(View):
             "top_genres": [],
             "top_artists": [],
             "top_tracks": [],
-            "genre_persona": "Unknown",
+#            "genre_persona": "Unknown",
         }
 
         try:
@@ -240,69 +233,95 @@ class SlideshowView(View):
                 "top_genres": get_top_genres(access_token, selected_time_range),
                 "top_artists": get_top_artists(access_token, selected_time_range),
                 "top_tracks": get_top_tracks(access_token, selected_time_range),
-                "genre_persona": generate_genre_persona(access_token, selected_time_range),
+#                "genre_persona": generate_genre_persona(access_token, selected_time_range),
             })
-
-            # Save the slideshow data to the database
-            slideshow = Slideshow.objects.create(
-                user=request.user,
-                title=f"Spotify Wrapped - {period}",
-                total_listening_time=slideshow_data["total_listening_time"],
-                sound_town=slideshow_data["sound_town"],
-                listening_character=slideshow_data["listening_character"],
-                top_genres=slideshow_data["top_genres"],
-                top_artists=slideshow_data["top_artists"],
-                top_tracks=slideshow_data["top_tracks"],
-                genre_persona=slideshow_data["genre_persona"],
-                period=period,
-            )
         except Exception as e:
             print(f"Error fetching slideshow data: {e}")
 
-        return render(request, self.template_name, {"slideshow_data": slideshow_data, "period": period})
+        # Serialize the top_tracks data
+        slideshow_data['top_tracks_json'] = json.dumps(slideshow_data['top_tracks'], cls=DjangoJSONEncoder)
+
+        return render(
+            request, 
+            self.template_name, 
+            {
+                "slideshow_data": slideshow_data, 
+                "period": period
+            }
+        )
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class SaveSlideshowView(View):
     def post(self, request):
         try:
+            if not request.user.is_authenticated:
+                return JsonResponse({
+                    "success": False, 
+                    "error": "User not authenticated"
+                }, status=401)
+
             data = json.loads(request.body)
             period = data.get("period", "Unknown Period")
             tracks = data.get("tracks", [])
 
-            # Ensure the user is logged in
-            user = request.user  # This will get the logged-in user from the request
+            if not tracks:
+                return JsonResponse({
+                    "success": False,
+                    "error": "No tracks provided"
+                }, status=400)
 
-            # Delete previous tracks for the user and period
-            SpotifyTrack.objects.filter(user=user, period=period).delete()
+            # Create a single slideshow entry
+            slideshow = Slideshow.objects.create(
+                user=request.user,
+                title=f"Spotify Wrapped - {period}",
+                period=period,
+                top_tracks=tracks,  # This will be saved in the JSONField
+                date_generated=timezone.now()
+            )
 
-            # Save the new tracks
-            for track in tracks:
-                SpotifyTrack.objects.create(
-                    user=user,  # Associate the track with the logged-in user
-                    track_name=track.get("name", ""),
-                    artist_name=track.get("artists", [{}])[0].get("name", ""),
-                    album_name=track.get("album", {}).get("name", ""),
-                    image_url=track.get("album", {}).get("images", [{}])[0].get("url", ""),
-                    spotify_url=track.get("external_urls", {}).get("spotify", ""),
-                    preview_url=track.get("preview_url"),
-                    popularity=track.get("popularity", 0),
-                    period=period,
-                )
+            return JsonResponse({
+                "success": True,
+                "message": "Slideshow saved successfully",
+                "slideshow_id": slideshow.id
+            })
 
-            return JsonResponse({"success": True, "message": "Slideshow saved successfully"})
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
-
-
+            print(f"Error saving slideshow: {str(e)}")
+            return JsonResponse({
+                "success": False,
+                "error": "An error occurred while saving the slideshow"
+            }, status=500)
 
 @method_decorator(csrf_exempt, name="dispatch")
 class DeleteSlideshowView(View):
-    def post(self, request):
+    def post(self, request, slideshow_id):
         try:
-            deleted_count = SpotifyTrack.objects.all().delete()
-            return JsonResponse({"success": True, "message": f"Deleted {deleted_count[0]} tracks"})
+            if not request.user.is_authenticated:
+                return JsonResponse({
+                    "success": False, 
+                    "error": "User not authenticated"
+                }, status=401)
+
+            # Delete the specific slideshow
+            slideshow = Slideshow.objects.get(id=slideshow_id, user=request.user)
+            slideshow.delete()
+
+            return JsonResponse({
+                "success": True,
+                "message": "Slideshow deleted successfully"
+            })
+        except Slideshow.DoesNotExist:
+            return JsonResponse({
+                "success": False,
+                "error": "Slideshow not found"
+            }, status=404)
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
+            print(f"Error in DeleteSlideshowView: {str(e)}")
+            return JsonResponse({
+                "success": False,
+                "error": str(e)
+            }, status=400)
 
 
 class GameView(View):
