@@ -54,41 +54,44 @@
             <p>{{ slideshow_data.listening_character }}</p>
         </div>
     </div>
+    
 </div>
 
         
-        <div class="slide">
-            <div class="card">
-                <h2>Top Songs</h2>
-                <ul class="slide-tracks">
-                    {% for track in slideshow_data.top_tracks %}
-                        <li>
-                            <div class="track">
-                                <img src="{{ track.album_image|default:'/static/default-placeholder.jpg' }}" alt="{{ track.name }}" class="track-image">
-                                <span>{{ track.name }} - {{ track.artist }}</span>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        
-        <div class="slide">
-            <div class="card">
-                <h2>Top Artists</h2>
-                <ul class="slide-artists">
-                    {% for artist in slideshow_data.top_artists %}
-                        <li>
-                            <div class="artist">
-                                <img src="{{ artist.image }}" alt="{{ artist.name }}" class="artist-image">
-                                <span>{{ artist.name }}</span>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        
+ <!-- Top Songs Slide -->
+<div class="slide">
+    <div class="card">
+        <h2>Top Songs</h2>
+        <ul>
+            {% for track in slideshow_data.top_tracks %}
+                <li class="track">
+                    <img src="{{ track.album_image|default:'/static/default-placeholder.jpg' }}" 
+                         alt="{{ track.name }}" 
+                         class="track-image">
+                    <div class="track-text">{{ track.name }} - {{ track.artist }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Top Artists Slide -->
+<div class="slide">
+    <div class="card">
+        <h2>Top Artists</h2>
+        <ul>
+            {% for artist in slideshow_data.top_artists %}
+                <li class="artist">
+                    <img src="{{ artist.image }}" 
+                         alt="{{ artist.name }}" 
+                         class="artist-image">
+                    <div class="artist-text">{{ artist.name }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
 
 <div class="slide" id="genre-persona-slide">
     <h2>Your Music Persona</h2>
