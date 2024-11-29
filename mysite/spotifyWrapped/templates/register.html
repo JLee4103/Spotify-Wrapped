@@ -2,15 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Wrapped - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #003057, #191414);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #0d1117;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            width: 600px; /* Clean, centered width */
+            text-align: center;
+        }
+
+        .form-container h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* Consistent spacing between elements */
+        }
+
+        label {
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #cfcfcf;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #161b22;
+            color: white;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1DB954;
+            box-shadow: 0 0 5px #1DB954;
+        }
+
+        .password-requirements {
+            font-size: 0.9rem;
+            text-align: left;
+            color: #a5a5a5;
+        }
+
+        .password-requirements ul {
+            margin: 5px 0 0;
+            padding-left: 1.2rem;
+            list-style: disc;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 1rem;
+            color: white;
+            background-color: #1DB954;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #14833B;
+            transform: scale(1.03);
+        }
+
+        p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #cfcfcf;
+        }
+
+        p a {
+            color: #FFD700;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'spotifyWrapped:login' %}">Login</a></p>
+    <div class="form-container">
+        <h2>Create Your Account</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="password-requirements">
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="{% url 'spotifyWrapped:login' %}">Login</a></p>
+    </div>
 </body>
 </html>
