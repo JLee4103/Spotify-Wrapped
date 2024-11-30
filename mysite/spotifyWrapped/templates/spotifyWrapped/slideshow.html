@@ -26,6 +26,13 @@
             </div>
         </div>
 
+        <div class="slide transition-slide">
+            <div class="card">
+                <h2>Up Next: Average Daily Listening Time</h2>
+            </div>
+        </div>
+        
+
         <!-- Average Daily Listening Time Slide -->
 <div class="slide">
     <div class="card">
@@ -36,6 +43,11 @@
     </div>
 </div>
 
+<div class="slide transition-slide">
+    <div class="card">
+        <h2>Up Next: Sound Town</h2>
+    </div>
+</div>
 <!-- Sound Town Slide -->
 <div class="slide">
     <div class="card">
@@ -43,6 +55,12 @@
             <h2>Sound Town</h2>
             <p>{{ slideshow_data.sound_town }}</p>
         </div>
+    </div>
+</div>
+
+<div class="slide transition-slide">
+    <div class="card">
+        <h2>Up Next: Listening Character</h2>
     </div>
 </div>
 
@@ -54,7 +72,12 @@
             <p>{{ slideshow_data.listening_character }}</p>
         </div>
     </div>
-    
+</div>
+
+<div class="slide transition-slide">
+    <div class="card">
+        <h2>Up Next: Top Songs</h2>
+    </div>
 </div>
 
         
@@ -75,6 +98,12 @@
     </div>
 </div>
 
+<div class="slide transition-slide">
+    <div class="card">
+        <h2>Up Next: Top Artists</h2>
+    </div>
+</div>
+
 <!-- Top Artists Slide -->
 <div class="slide">
     <div class="card">
@@ -91,7 +120,11 @@
         </ul>
     </div>
 </div>
-
+<div class="slide transition-slide">
+    <div class="card">
+        <h2>Up Next: Music Persona</h2>
+    </div>
+</div>
 
 <div class="slide" id="genre-persona-slide">
     <h2>Your Music Persona</h2>
@@ -119,10 +152,26 @@
 // JavaScript for Slideshow
 const slides = document.querySelectorAll('.slide');
 let currentSlide = 0;
+const transitionDelay = 2000; // Transition slide duration in milliseconds
 
 const prevButton = document.getElementById('prevSlideButton');
 const nextButton = document.getElementById('nextSlideButton');
 const autoplayInterval = 5000; // Time in milliseconds (5 seconds)
+
+function showSlide(index) {
+    slides.forEach((slide, i) => {
+        slide.style.display = i === index ? 'block' : 'none';
+    });
+
+    const isTransitionSlide = slides[index].classList.contains('transition-slide');
+    if (isTransitionSlide) {
+        setTimeout(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, transitionDelay);
+    }
+}
+
 function goBack() {
         window.history.back();
     }

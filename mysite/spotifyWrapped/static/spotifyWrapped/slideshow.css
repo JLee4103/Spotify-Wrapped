@@ -334,3 +334,25 @@ button:disabled {
         visibility: visible;
     }
 }
+
+
+.transition-slide {
+    display: none;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.transition-slide.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
