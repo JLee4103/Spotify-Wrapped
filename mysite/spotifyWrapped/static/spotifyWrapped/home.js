@@ -66,6 +66,33 @@ function updateWrapCount() {
     }
 }
 
+function shareToCommunity(button) {
+    const slideshowId = button.getAttribute('data-slideshow-id');
+    
+    fetch(`/spotifyWrapped/share-to-community/${slideshowId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Successfully shared to community!');
+            button.disabled = true;
+            button.textContent = 'Shared';
+        } else {
+            alert('Error sharing slideshow: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to share slideshow');
+    });
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const themeToggleButton = document.getElementById('toggleDarkMode');

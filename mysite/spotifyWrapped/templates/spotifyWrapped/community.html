@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Wrapped Community</title>
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}">
+</head>
+<body class="{{ savedTheme|default:'light' }}">
+    <header>
+        <div class="header-content">
+            <h1>Spotify Wrapped Community</h1>
+            <div class="header-buttons">
+                <a href="{% url 'spotifyWrapped:home' %}" class="header-button">Back to Home</a>
+                <button class="header-button" id="toggleDarkMode">
+                    Toggle Dark Mode
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="section-divider"></div>
+
+    <section class="community-section">
+        <h2>Community Shared Wraps</h2>
+        <div class="grid-container">
+            {% if shared_slideshows %}
+                {% for slideshow in shared_slideshows %}
+                <div class="card wrap-card">
+                    <div class="card-header">
+                        <h3>{{ slideshow.original_slideshow.title }}</h3>
+                        <p>Shared by: {{ slideshow.shared_by.username }}</p>
+                    </div>
+                    <p class="date-generated">Shared on: {{ slideshow.shared_date|date:"F j" }}</p>
+                    <div class="tracks-preview">
+                        {% for track in slideshow.original_slideshow.top_tracks|slice:":3" %}
+                        <div class="track-item">
+                            {% if track.album.images.0.url %}
+                            <img src="{{ track.album.images.0.url }}" alt="{{ track.name }} cover">
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No slideshows have been shared yet.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <script src="{% static 'spotifyWrapped/home.js' %}"></script>
+</body>
+</html>

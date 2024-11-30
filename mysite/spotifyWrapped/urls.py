@@ -26,6 +26,9 @@ urlpatterns = [
     path('delete-slideshow/<int:slideshow_id>/', DeleteSlideshowView.as_view(), name='delete_slideshow'),
     path('logout/', logout_view, name='logout'),
 
+    path('community/', views.CommunityView.as_view(), name='community'),
+    path('share-to-community/<int:slideshow_id>/', views.ShareSlideshowView.as_view(), name='share_to_community'),
+    
     # Game-related URLs
     path('game/', views.GameView.as_view(), name='game'),
     path('save_score/', views.save_score, name='save_score'),

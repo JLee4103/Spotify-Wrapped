@@ -1,4 +1,4 @@
-import anthropic
+#import anthropic
 import requests
 from spotifyWrapped.settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, ANTHROPIC_API_KEY
 import os
