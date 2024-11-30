@@ -160,3 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const wrapImages = document.querySelectorAll('.wrap-cover-image');
+
+    wrapImages.forEach((img) => {
+        img.onerror = () => {
+            img.style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.classList.add('no-cover-placeholder');
+            placeholder.textContent = 'No Cover Available';
+            img.parentNode.appendChild(placeholder);
+        };
+    });
+});

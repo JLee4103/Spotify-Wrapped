@@ -271,12 +271,14 @@ class SaveSlideshowView(View):
                     "error": "No tracks provided"
                 }, status=400)
 
-            # Create a single slideshow entry
+            # Extract the album image of the first track for the cover
+            album_image = tracks[0].get("album_image") if tracks else None
+
             slideshow = Slideshow.objects.create(
                 user=request.user,
                 title=f"Spotify Wrapped - {period}",
                 period=period,
-                top_tracks=tracks,  # This will be saved in the JSONField
+                top_tracks=album_image,  # Save the album image URL
                 date_generated=timezone.now()
             )
 

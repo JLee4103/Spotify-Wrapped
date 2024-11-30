@@ -392,3 +392,35 @@ body.dark .header-button {
     background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 223, 0, 0.8), rgba(0, 0, 0, 0));
 }
 
+
+/* Style for the card cover image */
+.card-cover {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.wrap-cover-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    object-fit: cover;
+}
+
+.no-cover-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #ffcc00;
+    height: 150px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+
+.wrap-cover-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.7);
+}
+
+

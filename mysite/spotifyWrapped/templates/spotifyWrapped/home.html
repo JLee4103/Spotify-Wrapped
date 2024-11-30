@@ -46,6 +46,15 @@
                         🗑️
                     </button>
                 </div>
+                <div class="card-cover">
+                    {% if wrap.top_tracks %}
+                        <img src="{{ wrap.top_tracks }}" alt="Top Song Cover" class="wrap-cover-image">
+                    {% else %}
+                        <div class="no-cover-placeholder">No Cover Available</div>
+                    {% endif %}
+                </div>
+                
+                
                 <p class="date-generated">Generated on: {{ wrap.date_generated|date:"F j" }}</p>
                 <div class="tracks-preview">
                     {% for track in wrap.top_tracks|slice:":3" %}
@@ -53,10 +62,6 @@
                         {% if track.album.images.0.url %}
                         <img src="{{ track.album.images.0.url }}" alt="{{ track.name }} cover">
                         {% endif %}
-                        <div class="track-info">
-                            <p class="track-name">{{ track.name }}</p>
-                            <p class="track-artist">{{ track.artists.0.name }}</p>
-                        </div>
                     </div>
                     {% endfor %}
                 </div>
