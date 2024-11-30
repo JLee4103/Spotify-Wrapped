@@ -109,10 +109,12 @@ header {
 
 /* Cards */
 .card {
-    background: rgba(15, 32, 39, 0.9);
+    width: 250px; /* Reduce the card width */
+    height: 350px; /* Adjust height proportionally */
+    background: rgba(15, 32, 39, 0.9); /* Keep the existing background */
     border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
@@ -400,11 +402,11 @@ body.dark .header-button {
 }
 
 .wrap-cover-image {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    width: 200px; /* Adjust the image width */
+    height: 200px; /* Adjust the height proportionally */
     object-fit: cover;
+    border-radius: 10px; /* Rounded corners */
+    margin-bottom: 10px; /* Add spacing below the image */
 }
 
 .no-cover-placeholder {
@@ -418,9 +420,10 @@ body.dark .header-button {
     font-size: 1.2rem;
 }
 
-.wrap-cover-image:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.7);
+/* Hover effects for the card */
+.wrap-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
 }
 
 
