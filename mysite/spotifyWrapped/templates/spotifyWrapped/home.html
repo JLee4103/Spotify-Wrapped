@@ -12,6 +12,7 @@
         <div class="header-content">
             <h1>Welcome, {{ username }}!</h1>
             <div class="header-buttons">
+                <a href="{% url 'spotifyWrapped:community' %}" class="header-button">Community</a>
                 {% if username != "Guest" %}
                     <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button header-button">Log Out</a>
                 {% else %}
@@ -44,6 +45,11 @@
                             data-slideshow-id="{{ wrap.id }}"
                             onclick="deleteSlideshow(this)">
                             &#x2716;
+                    </button>
+                    <button class="share-button" 
+                            data-slideshow-id="{{ wrap.id }}"
+                            onclick="shareToCommunity(this)">
+                        Share to Community
                     </button>
                 </div>
                 <div class="card-cover">

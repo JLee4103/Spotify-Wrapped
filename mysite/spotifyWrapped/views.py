@@ -11,7 +11,7 @@ import random
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from .models import SpotifyTrack, Score
+from .models import CommunitySlideshow, SpotifyTrack, Score
 from .spotify_util import (
     get_total_listening_time,
     get_sound_town,
@@ -390,3 +390,31 @@ class ContactDevTeamView(View):
                 return render(request, 'spotifyWrapped/contact_error.html', {"error": f"Failed to send message. Error: {e}"})
         else:
             return render(request, 'spotifyWrapped/contact_error.html', {"error": "All fields are required!"})
+
+
+class ShareSlideshowView(View):
+    def post(self, request, slideshow_id):
+        try:
+            slideshow = Slideshow.objects.get(id=slideshow_id)
+            CommunitySlideshow.objects.create(
+                original_slideshow=slideshow,
+                shared_by=request.user
+            )
+            return JsonResponse({
+                "success": True,
+                "message": "Slideshow shared to community"
+            })
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "error": str(e)
+            }, status=400)
+            
+class CommunityView(View):
+    template_name = "spotifyWrapped/community.html"
+    
+    def get(self, request):
+        shared_slideshows = CommunitySlideshow.objects.all()
+        return render(request, self.template_name, {
+            "shared_slideshows": shared_slideshows
+        })

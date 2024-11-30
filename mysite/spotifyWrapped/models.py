@@ -10,7 +10,7 @@ class SpotifyTrack(models.Model):
     album_name = models.CharField(max_length=200)
     image_url = models.URLField(max_length=500, null=True, blank=True)
     spotify_url = models.URLField(max_length=500)
-    preview_url = models.URLField(max_length=500, null=True, blank=True)  # Add this field
+    preview_url = models.URLField(max_length=500, null=True, blank=True)
     popularity = models.IntegerField(default=0)
     period = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -20,8 +20,6 @@ class SpotifyTrack(models.Model):
 
     def __str__(self):
         return f"{self.track_name} - {self.artist_name}"
-    
-    from django.db import models
 
 class Score(models.Model):
     player_name = models.CharField(max_length=100)
@@ -43,3 +41,15 @@ class Slideshow(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.user.username}"
+
+class CommunitySlideshow(models.Model):
+    original_slideshow = models.ForeignKey(Slideshow, on_delete=models.CASCADE)
+    shared_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    shared_date = models.DateTimeField(auto_now_add=True)
+    likes = models.IntegerField(default=0)
+    
+    class Meta:
+        ordering = ['-shared_date']
+
+    def __str__(self):
+        return f"Shared by {self.shared_by.username} on {self.shared_date}"
