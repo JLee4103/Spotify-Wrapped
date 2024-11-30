@@ -95,6 +95,35 @@ function shareToCommunity(button) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Add click handler for wrap cards
+    document.querySelectorAll('.wrap-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Don't trigger if clicking a button or sharing elements
+            if (e.target.closest('button') || 
+                e.target.closest('.share-button') || 
+                e.target.closest('.delete-button')) {
+                return;
+            }
+            
+            const period = this.querySelector('h3').textContent.split(' - ')[1];
+            if (period) {
+                window.location.href = `/spotifyWrapped/slideshow/?period=${encodeURIComponent(period)}`;
+            }
+        });
+    });
+
+    // Add hover styles to your CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        .wrap-card {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .wrap-card:hover {
+            transform: scale(1.02);
+        }
+    `;
+    document.head.appendChild(style);
     const themeToggleButton = document.getElementById('toggleDarkMode');
 
     // Define the available themes
