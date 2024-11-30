@@ -38,7 +38,7 @@
             </div>
             {% if wraps %}
             {% for wrap in wraps %}
-            <div class="card wrap-card">
+            <div class="card wrap-card" data-slideshow-id="{{ wrap.id }}" style="cursor: pointer;">
                 <div class="card-header">
                     <h3>{{ wrap.title }}</h3>
                     <button class="delete-button" 

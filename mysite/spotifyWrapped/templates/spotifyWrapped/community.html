@@ -30,7 +30,7 @@
                 <div class="card wrap-card">
                     <div class="card-header">
                         <h3>{{ slideshow.original_slideshow.title }}</h3>
-                        <p>Shared by: {{ slideshow.shared_by.username }}</p>
+                        <p class="shared-by">Shared by: {{ slideshow.shared_by.username }}</p>
                     </div>
                     <p class="date-generated">Shared on: {{ slideshow.shared_date|date:"F j" }}</p>
                     <div class="tracks-preview">

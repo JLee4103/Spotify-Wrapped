@@ -414,7 +414,10 @@ class CommunityView(View):
     template_name = "spotifyWrapped/community.html"
     
     def get(self, request):
-        shared_slideshows = CommunitySlideshow.objects.all()
+        # Fetch ALL shared slideshows, not just the current user's
+        shared_slideshows = CommunitySlideshow.objects.all().order_by('-shared_date')
+        
         return render(request, self.template_name, {
-            "shared_slideshows": shared_slideshows
+            "shared_slideshows": shared_slideshows,
+            "username": request.session.get("spotify_username", "Guest")
         })
