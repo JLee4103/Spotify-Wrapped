@@ -56,6 +56,7 @@
                 
                 
                 <p class="date-generated">Generated on: {{ wrap.date_generated|date:"F j" }}</p>
+                <button class="share-button" onclick="shareOnSocialMedia('{{ wrap.unique_id }}')">Share</button>
                 <div class="tracks-preview">
                     {% for track in wrap.top_tracks|slice:":3" %}
                     <div class="track-item">
@@ -83,6 +84,18 @@
             <button class="close-button" onclick="closeSelectionModal()">Close</button>
         </div>
     </div>
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <h2>Share your Spotify Wrapped</h2>
+            <div class="share-buttons">
+                <a href="https://twitter.com/intent/tweet?url={{ wrap.unique_id }}" target="_blank" class="social-button twitter">Twitter</a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ wrap.unique_id }}" target="_blank" class="social-button facebook">Facebook</a>
+                <button onclick="generateImageFromSlideshow('{{ wrap.unique_id }}')" class="social-button image">Download Image</button>
+            </div>
+            <button onclick="closeModal()" class="close-button">Close</button>
+        </div>
+    </div>
+    
     <div class="section-divider"></div>
 
     <footer class="footer-section">
@@ -93,5 +106,7 @@
     </footer>
 
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </body>
 </html>

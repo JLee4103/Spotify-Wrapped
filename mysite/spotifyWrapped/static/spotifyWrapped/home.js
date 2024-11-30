@@ -173,3 +173,57 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     });
 });
+
+function shareOnSocialMedia(uniqueId) {
+    const baseUrl = window.location.origin; // Get base URL
+    const shareUrl = `${baseUrl}/spotifyWrapped/shared-slideshow/${uniqueId}/`;
+
+    // Open a modal or use navigator.share for sharing
+    if (navigator.share) {
+        navigator.share({
+            title: 'Check out my Spotify Wrapped!',
+            text: 'Here are my Spotify Wrapped stats!',
+            url: shareUrl,
+        }).then(() => {
+            console.log('Thanks for sharing!');
+        }).catch(err => {
+            console.error('Error sharing:', err);
+        });
+    } else {
+        // Fallback: Copy the URL and alert
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            alert('Link copied to clipboard! Share it on your favorite platform.');
+        }).catch(err => {
+            console.error('Error copying link:', err);
+            alert('Failed to copy link. Please try again.');
+        });
+    }
+}
+
+function generateImageFromSlideshow(uniqueId) {
+    const slideshowElement = document.querySelector(`[data-slideshow-id="${uniqueId}"]`);
+
+    if (slideshowElement) {
+        html2canvas(slideshowElement).then(canvas => {
+            const image = canvas.toDataURL('image/png');
+            
+            // Open the image in a new tab or allow downloading
+            const link = document.createElement('a');
+            link.download = 'spotify-wrapped.png';
+            link.href = image;
+            link.click();
+        }).catch(err => {
+            console.error('Error generating image:', err);
+            alert('Failed to generate image. Please try again.');
+        });
+    }
+}
+function openModal() {
+    const modal = document.getElementById('shareModal');
+    modal.style.display = 'flex';
+}
+
+function closeModal() {
+    const modal = document.getElementById('shareModal');
+    modal.style.display = 'none';
+}
