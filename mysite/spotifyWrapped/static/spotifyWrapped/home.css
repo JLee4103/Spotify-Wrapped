@@ -99,26 +99,31 @@ header {
 /* Cards grid */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 30px; /* Increased gap for better spacing */
     width: 100%;
-    max-width: 1000px;
-    justify-content: center;
-    animation: fadeInSlideUp 1.2s ease-out;
+    max-width: 1200px; /* Limit the container width */
+    margin: auto; /* Center the grid container */
+    padding: 20px; /* Add padding around the grid */
+    justify-content: center; /* Align items horizontally */
+    align-content: start; /* Ensure vertical alignment */
+    box-sizing: border-box;
 }
 
 /* Cards */
 .card {
-    width: 250px; /* Reduce the card width */
-    height: 350px; /* Adjust height proportionally */
-    background: rgba(15, 32, 39, 0.9); /* Keep the existing background */
+    background: rgba(15, 32, 39, 0.9);
     border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    animation: fadeIn 1s ease-in-out;
+    min-width: 200px;
+    max-width: 250px; /* Constrain the card width */
+    width: 100%; /* Ensure the card adjusts within the grid */
+    height: auto; /* Let the card adjust dynamically */
+    margin: 10px; /* Additional margin for spacing */
 }
 
 .card:hover {
