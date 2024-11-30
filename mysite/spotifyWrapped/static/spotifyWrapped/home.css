@@ -29,6 +29,15 @@ header {
     animation: fadeInSlideDown 0.8s ease-in-out;
 }
 
+h1 {
+    display: block;
+    font-size: 2.5em;
+    color: #f8f8f8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+}
+
 /* Optional: Add a subtle slide-down animation for the header on page load */
 @keyframes fadeInSlideDown {
     from {
@@ -452,6 +461,25 @@ body.dark .header-button {
 .wrap-card:hover {
     transform: translateY(-5px) scale(1.02);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+}
+
+.share-button {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #38ef7d, #11998e);
+    padding: 8px;
+    border-radius: 30px;
+    cursor: pointer;
+    border: none;
+    margin: 5px;
+    transition: transform 0.2s ease;
+
+}
+
+.share-button:hover {
+    transform: scale(1.05);
 }
 
 
