@@ -305,15 +305,17 @@ class DeleteSlideshowView(View):
                     "error": "User not authenticated"
                 }, status=401)
 
-            # Delete the specific slideshow
+            print(f"Attempting to delete slideshow ID: {slideshow_id} for user: {request.user}")
             slideshow = Slideshow.objects.get(id=slideshow_id, user=request.user)
             slideshow.delete()
+            print(f"Slideshow ID: {slideshow_id} deleted successfully.")
 
             return JsonResponse({
                 "success": True,
                 "message": "Slideshow deleted successfully"
             })
         except Slideshow.DoesNotExist:
+            print(f"Slideshow ID: {slideshow_id} not found for user: {request.user}")
             return JsonResponse({
                 "success": False,
                 "error": "Slideshow not found"
@@ -324,6 +326,7 @@ class DeleteSlideshowView(View):
                 "success": False,
                 "error": str(e)
             }, status=400)
+
 
 
 class GameView(View):

@@ -19,7 +19,6 @@ function deleteSlideshow(button) {
     }
 
     const slideshowId = button.getAttribute('data-slideshow-id');
-    const card = button.closest('.wrap-card');
 
     fetch(`/spotifyWrapped/delete-slideshow/${slideshowId}/`, {
         method: 'POST',
@@ -37,9 +36,9 @@ function deleteSlideshow(button) {
     })
     .then(data => {
         if (data.success) {
-            card.remove();
-            updateWrapCount();
-            alert('Slideshow deleted successfully');
+            alert('Slideshow deleted successfully.');
+            // Refresh the page after successful deletion
+            window.location.reload();
         } else {
             alert('Error deleting slideshow: ' + data.error);
         }
@@ -49,6 +48,7 @@ function deleteSlideshow(button) {
         alert('Failed to delete slideshow: ' + error.message);
     });
 }
+
 
 function updateWrapCount() {
     const wrapCount = document.getElementById('wrapCount');

@@ -210,37 +210,40 @@ function goBack() {
         window.history.back();
     }
 
-function saveSlideshow() {
+    function saveSlideshow() {
     console.log('Save button clicked');
             
     const tracks = {{ slideshow_data.top_tracks_json|safe }};
-            console.log('Tracks:', tracks);
-        
-            const slideshowData = {
-                period: "{{ period }}",
-                tracks: tracks
-            };
-        
-            fetch('{% url "spotifyWrapped:save_slideshow" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(slideshowData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Slideshow saved successfully!');
-                } else {
-                    alert('Error saving slideshow: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to save slideshow. Please try again.');
-            });
+    console.log('Tracks:', tracks);
+
+    const slideshowData = {
+        period: "{{ period }}",
+        tracks: tracks
+    };
+
+    fetch('{% url "spotifyWrapped:save_slideshow" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(slideshowData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Slideshow saved successfully!');
+            // Redirect to home and refresh the page
+            window.location.href = "{% url 'spotifyWrapped:home' %}";
+        } else {
+            alert('Error saving slideshow: ' + (data.error || 'Unknown error'));
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to save slideshow. Please try again.');
+    });
+}
+
         
 function updateSlides() {
     slides.forEach((slide, index) => {
