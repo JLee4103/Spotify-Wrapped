@@ -55,3 +55,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jlee020705@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'dlwoals!@#123QWEqwe#'  # Replace with your password or use an environment variable

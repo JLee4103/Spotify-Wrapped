@@ -45,12 +45,25 @@
                     <p>UI/UX Designer</p>
                     <p>Ensures everything is smooth and beautiful.</p>
                 </div>
+                <div class="dev-card">
+                    <img src="{% static 'spotifyWrapped/images/dev4.jpg' %}" alt="Developer 4" class="dev-image">
+                    <h3>Michael Brown</h3>
+                    <p>Data Specialist</p>
+                    <p>Handles analytics and insights.</p>
+                </div>
+                <div class="dev-card">
+                    <img src="{% static 'spotifyWrapped/images/dev5.jpg' %}" alt="Developer 5" class="dev-image">
+                    <h3>Emily Davis</h3>
+                    <p>Testing Expert</p>
+                    <p>Ensures the product is bug-free and efficient.</p>
+                </div>
             </div>
         </section>
 
         <section class="contact-section">
             <h2>Contact Us</h2>
-            <form id="contactForm">
+            <form method="POST" action="{% url 'spotifyWrapped:contact_dev_team' %}" id="contactForm">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="name">Your Name:</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required>
@@ -71,7 +84,5 @@
     <footer class="dev-footer">
         <p>© 2024 Spotify Wrapped Dev Team | All rights reserved.</p>
     </footer>
-
-    <script src="{% static 'spotifyWrapped/devteam.js' %}"></script>
 </body>
 </html>

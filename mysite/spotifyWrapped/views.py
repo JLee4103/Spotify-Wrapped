@@ -360,3 +360,33 @@ from django.views.generic import TemplateView
 
 class DevTeamView(TemplateView):
     template_name = 'spotifyWrapped/devteam.html'
+
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views import View
+from django.shortcuts import render
+
+class ContactDevTeamView(View):
+    def post(self, request):
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        if name and email and message:
+            subject = f"New Message from {name}"
+            body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+            dev_team_email = "jlee4103@gatech.edu"
+
+            try:
+                send_mail(
+                    subject,
+                    body,
+                    email,  # Sender's email
+                    [dev_team_email],  # Receiver's email
+                    fail_silently=False,
+                )
+                return render(request, 'spotifyWrapped/contact_success.html', {"message": "Your message has been sent successfully!"})
+            except Exception as e:
+                return render(request, 'spotifyWrapped/contact_error.html', {"error": f"Failed to send message. Error: {e}"})
+        else:
+            return render(request, 'spotifyWrapped/contact_error.html', {"error": "All fields are required!"})
