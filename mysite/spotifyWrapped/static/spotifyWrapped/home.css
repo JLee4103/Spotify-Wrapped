@@ -427,3 +427,19 @@ body.dark .header-button {
 }
 
 
+.delete-button {
+    background-color: transparent; /* No background */
+    color: #ff4d4d; /* Bright red color for the X */
+    font-size: 1.2rem; /* Slightly larger for visibility */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    position: absolute; /* Position at the top-right */
+    top: 10px;
+    right: 10px;
+    transition: transform 0.2s ease, color 0.3s ease; /* Add hover effects */
+}
+
+.delete-button:hover {
+    color: #ff1a1a; /* Darker red on hover */
+    transform: scale(1.2); /* Slightly enlarge the X */
+}
