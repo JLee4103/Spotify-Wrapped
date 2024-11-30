@@ -355,3 +355,8 @@ def high_scores(request):
     scores = Score.objects.all().order_by("-score")[:10]
     data = [{"player_name": s.player_name, "score": s.score} for s in scores]
     return JsonResponse({"high_scores": data})
+
+from django.views.generic import TemplateView
+
+class DevTeamView(TemplateView):
+    template_name = 'spotifyWrapped/devteam.html'
