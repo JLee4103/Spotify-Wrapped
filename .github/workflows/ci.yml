@@ -33,9 +33,9 @@ jobs:
 #          pylint $(git ls-files '*.py')  # Lint all Python files
 
 
-      - name: Run database migrations
-        run: |
-          python manage.py migrate
+      - name: Run migrations
+        run: python mysite/manage.py migrate
+
 
       - name: Run tests
         run: |
