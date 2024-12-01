@@ -63,9 +63,42 @@ header h1 {
     padding: 0;
     margin: 0;
     display: flex;
-    flex-wrap: wrap; /* Ensures items wrap to the next line if they don't fit */
+    flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
+}
+
+@media screen and (max-width: 768px) {
+    .card ul {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        overflow-y: auto;
+        max-height: 400px;
+        padding-right: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .card ul li {
+        width: 100%;
+        max-width: none;
+        flex: 0 0 auto;
+        margin: 5px 0;
+    }
+
+    /* Custom scrollbar for mobile */
+    .card ul::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .card ul::-webkit-scrollbar-thumb {
+        background: #1DB954;
+        border-radius: 92px;
+    }
+
+    .card ul::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 92px;
+    }
 }
 
 .card ul li {

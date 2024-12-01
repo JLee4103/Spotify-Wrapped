@@ -20,9 +20,11 @@
     <!-- Slideshow Container -->
     <div class="slideshow-container">
         <!-- Slide 1: Intro -->
-        <div class="slide active" id="slide-1">
-            <div class="slide-content">
-                <h1>{{ slideshow_data.intro }}</h1>
+        <div class="slide">
+            <div class="card">
+                <div class="card-content">
+                    <h1>{{ slideshow_data.intro }}</h1>
+                </div>
             </div>
         </div>
 
@@ -161,68 +163,68 @@
     </div>
 </div>
 
-<div class="slide" id="genre-persona-slide">
-    <h2>Your Music Persona</h2>
-    <ul class="slide-7">
-        <div class="slide-content">
-            <div class="persona-section">
-                <div class="persona-text">
-                    {{ slideshow_data.genre_persona }}
-                </div>
-            </div>
-        </div>
-    </ul>
-</div>
-
-<!-- General Summary Slide -->
-<div class="slide" id="summary-slide">
-    <div class="card summary-card">
-        <h2>Spotify Wrapped Summary</h2>
-
-        <div class="summary-section">
-            <p><strong>Period:</strong> {{ slideshow_data.period }}</p>
-            <p><strong>Total Listening Time:</strong> {{ slideshow_data.total_listening_time|floatformat:2 }} minutes</p>
-            <p><strong>Sound Town:</strong> {{ slideshow_data.sound_town }}</p>
-            <p><strong>Listening Character:</strong> {{ slideshow_data.listening_character }}</p>
-        </div>
-
-        <div class="summary-section">
-            <h3>Top Genres</h3>
-            <div class="genre-container">
-                {% for genre in slideshow_data.top_genres %}
-                    <span class="genre-badge">{{ genre }}</span>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="summary-section">
-            <h3>Top Artists</h3>
-            <div class="artist-container">
-                {% for artist in slideshow_data.top_artists|slice:":5" %}
-                    <div class="artist-card">
-                        <img src="{{ artist.image|default:'/static/placeholder.png' }}" alt="{{ artist.name }}" class="artist-image">
-                        <p class="artist-name">{{ artist.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="summary-section">
-            <h3>Top Tracks</h3>
-            <div class="track-container">
-                {% for track in slideshow_data.top_tracks|slice:":5" %}
-                    <div class="track-card">
-                        <img src="{{ track.album_image|default:'/static/placeholder.png' }}" alt="{{ track.name }}" class="track-image">
-                        <div class="track-info">
-                            <p class="track-name">{{ track.name }}</p>
-                            <p class="track-artist">{{ track.artist }}</p>
-                        </div>
-                    </div>
-                {% endfor %}
+<div class="slide">
+    <div class="card">
+        <h2>Your Music Persona</h2>
+        <div class="persona-section">
+            <div class="persona-text">
+                {{ slideshow_data.genre_persona }}
             </div>
         </div>
     </div>
 </div>
+    
+<div class="slide">
+    <div class="card">
+        <h2>Spotify Wrapped Summary</h2>
+        <ul>
+            <div class="summary-section">
+                <p><strong>Period:</strong> {{ slideshow_data.period }}</p>
+                <p><strong>Total Listening Time:</strong> {{ slideshow_data.total_listening_time|floatformat:2 }} minutes</p>
+                <p><strong>Sound Town:</strong> {{ slideshow_data.sound_town }}</p>
+                <p><strong>Listening Character:</strong> {{ slideshow_data.listening_character }}</p>
+            </div>
+
+            <div class="summary-section">
+                <h3>Top Genres</h3>
+                <div class="genre-container">
+                    {% for genre in slideshow_data.top_genres %}
+                        <span class="genre-badge">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h3>Top Artists</h3>
+                <div class="artist-container">
+                    {% for artist in slideshow_data.top_artists|slice:":5" %}
+                        <div class="artist-card">
+                            <img src="{{ artist.image|default:'/static/placeholder.png' }}" alt="{{ artist.name }}" class="artist-image">
+                            <p class="artist-name">{{ artist.name }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h3>Top Tracks</h3>
+                <div class="track-container">
+                    {% for track in slideshow_data.top_tracks|slice:":5" %}
+                        <div class="track-card">
+                            <img src="{{ track.album_image|default:'/static/placeholder.png' }}" alt="{{ track.name }}" class="track-image">
+                            <div class="track-info">
+                                <p class="track-name">{{ track.name }}</p>
+                                <p class="track-artist">{{ track.artist }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </ul>
+    </div>
+</div>
+
+
 
 
 
