@@ -2,7 +2,6 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from .views import DeleteSlideshowView, SpotifyLoginView, SpotifyCallbackView, SlideshowView, logout_view, SpotifyInitialLogin
-from .views import ContactDevTeamView
 
 app_name = "spotifyWrapped"
 
@@ -36,5 +35,5 @@ urlpatterns = [
     path('high_scores/', views.high_scores, name='high_scores'),
 
     path('dev-team/', views.DevTeamView.as_view(), name='dev_team'),
-     path('contact-dev-team/', ContactDevTeamView.as_view(), name='contact_dev_team'),
+
 ]

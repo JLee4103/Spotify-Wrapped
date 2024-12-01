@@ -5,27 +5,31 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
 
         const formData = new FormData(contactForm);
-        const name = formData.get("name");
-        const email = formData.get("email");
-        const message = formData.get("message");
+        const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
-        alert(`Thank you, ${name}! Your message has been sent successfully.`);
-
-        // Optional: Send the data to a server
-        fetch('/contact-dev/', {
-            method: 'POST',
+        fetch("{% url 'spotifyWrapped:contact_dev_team' %}", {
+            method: "POST",
             headers: {
-                'X-CSRFToken': getCookie('csrftoken'), // Ensure CSRF protection
+                "X-CSRFToken": csrfToken,
             },
             body: formData,
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
-
-        contactForm.reset(); // Clear the form
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("Your message has been sent successfully!");
+                    contactForm.reset(); // Clear the form
+                } else {
+                    alert("Failed to send message: " + data.error);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("An unexpected error occurred. Please try again.");
+            });
     });
 });
+
 
 // Utility function to get CSRF token
 function getCookie(name) {
@@ -38,3 +42,4 @@ function getCookie(name) {
     }
     return null;
 }
+

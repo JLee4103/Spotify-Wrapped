@@ -50,7 +50,7 @@
                 </div>
                 <div class="dev-card">
                     <img src="{% static 'spotifyWrapped/jaden.png' %}" alt="Developer 4" class="dev-image">
-                    <h3>Jaden Lee</h3>
+                    <h3>Jayden Lee</h3>
                     <p>UI Design</p>
                     <p>Slideshow Functionality</p>
                     <p>Homepage Functionality</p>
@@ -67,8 +67,7 @@
 
         <section class="contact-section">
             <h2>Contact Us</h2>
-            <form method="POST" action="{% url 'spotifyWrapped:contact_dev_team' %}" id="contactForm">
-                {% csrf_token %}
+            <form id="contactForm" onsubmit="openEmailApp(event)">
                 <div class="form-group">
                     <label for="name">Your Name:</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required>
@@ -89,5 +88,21 @@
     <footer class="dev-footer">
         <p>© 2024 Spotify Wrapped Dev Team | All rights reserved.</p>
     </footer>
+    <script>
+                function openEmailApp(event) {
+            event.preventDefault();
+
+            // Get the form input values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // Construct the mailto link
+            const mailtoLink = `mailto:jlee4103@gatech.edu?subject=Message from ${encodeURIComponent(name)} (${encodeURIComponent(email)})&body=${encodeURIComponent(message)}`;
+
+            // Open the mailto link
+            window.location.href = mailtoLink;
+        }
+    </script>
 </body>
 </html>
