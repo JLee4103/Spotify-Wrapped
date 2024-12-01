@@ -140,29 +140,6 @@ h1 {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
 }
 
-/* Footer styles */
-.footer-section {
-    background: rgba(15, 32, 39, 0.9);
-    color: #ffffff;
-    padding: 20px 0;
-    text-align: center;
-    width: 100%;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.4);
-    position: relative;
-    margin-top: auto;
-    flex-shrink: 0;
-    animation: fadeInSlideUp 1.5s ease-out;
-}
-
-.footer-section a {
-    color: #f8b400;
-    text-decoration: underline;
-    transition: color 0.3s ease;
-}
-
-.footer-section a:hover {
-    color: #ffdd57;
-}
 
 /* Animations */
 @keyframes fadeIn {
@@ -324,44 +301,6 @@ h1 {
     transform: scale(1.2);
 }
 
-/* Light theme */
-body.light {
-    background: linear-gradient(120deg, #f0f8ff, #b0e0e6); /* Soft light blues */
-    color: #000000;
-}
-
-/* Dark theme */
-body.dark {
-    background: linear-gradient(120deg, #1e3c72, #2a5298); /* Deep dark blues */
-    color: #f0f0f0;
-}
-
-/* Vibrant theme */
-body.vibrant {
-    background: linear-gradient(120deg, #ff7e5f, #feb47b); /* Vibrant warm tones */
-    color: #ffffff;
-}
-
-/* Adjust header and button colors for all themes */
-body.light header, body.vibrant header, body.dark header {
-    background: rgba(15, 32, 39, 0.85); /* Ensure header contrast */
-}
-
-body.light .header-button {
-    background-color: rgba(240, 240, 240, 0.85);
-    color: #000000;
-}
-
-body.vibrant .header-button {
-    background-color: rgba(255, 110, 64, 0.85);
-    color: #ffffff;
-}
-
-body.dark .header-button {
-    background-color: rgba(32, 58, 67, 0.85);
-    color: #f8b400;
-}
-
 .progress-tracker {
     margin-top: 20px;
     font-size: 1.2rem;
@@ -498,41 +437,4 @@ body.dark .header-button {
 .delete-button:hover {
     color: #ff1a1a; /* Darker red on hover */
     transform: scale(1.2); /* Slightly enlarge the X */
-}
-
-.translate-widget {
-    position: fixed;
-    bottom: 10px; /* Align just above the footer */
-    left: 20px; /* Keep it on the bottom-left corner */
-    z-index: 1000; /* Ensure it stays on top of other elements */
-    background-color: #ff5722; /* A bold orange for contrast */
-    color: white; /* White text for readability */
-    padding: 10px 15px; /* Padding for a noticeable size */
-    border-radius: 25px; /* Rounded corners for a button feel */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    font-size: 1em; /* Font size for visibility */
-    text-align: center; /* Center align text */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
-}
-
-.translate-widget:hover {
-    background-color: #e64a19; /* Slightly darker orange on hover */
-    transform: translateY(-4px); /* Upward movement on hover */
-}
-
-.translate-widget select {
-    background: none; /* Match the button background */
-    color: white; /* Ensure text contrast */
-    border: none; /* Remove border */
-    font-size: 1em; /* Keep font consistent */
-    cursor: pointer; /* Pointer cursor */
-    appearance: none; /* Remove default dropdown styles */
-    padding: 5px 10px; /* Padding for usability */
-    border-radius: 5px; /* Match the overall style */
-}
-
-.translate-widget select:focus {
-    outline: none; /* Remove focus outline */
-    background-color: #d84315; /* Highlight background on focus */
 }

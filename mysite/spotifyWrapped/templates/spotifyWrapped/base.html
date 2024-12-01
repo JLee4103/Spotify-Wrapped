@@ -1,0 +1,105 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="{{ savedTheme|default:'light' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Spotify Wrapped{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/base.css' %}">
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/light-theme.css' %}" id="theme-stylesheet">
+    {% block extra_head %}{% endblock %}
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        .wrapper {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 32, 39, 0.85);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="{{ savedTheme|default:'light' }}">
+    <header>
+        <div class="dark-mode-toggle">
+            <button id="toggle-theme" class="theme-button">Toggle Dark Mode</button>
+        </div>
+        <div class="header-content">
+            <div class="header-buttons">
+                {% block header_buttons %}{% endblock %}
+            </div>
+        </div>
+    </header>
+
+    <div class="wrapper">
+        <div class="section-divider"></div>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <div class="translate-widget">
+            <div id="google_translate_element"></div>
+        </div>
+    </div>
+
+    <footer class="footer-section">
+        {% block footer %}
+        <div class="contact-dev">
+            <h2>Contact the Dev Team</h2>
+            <p>Questions? <a href="{% url 'spotifyWrapped:dev_team' %}"><i class="fas fa-envelope"></i> Meet the Team</a></p>
+        </div>
+        {% endblock %}
+    </footer>
+
+    <script>
+        const themes = ['light', 'dark', 'vibrant'];
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        const body = document.body;
+        const themeStylesheet = document.getElementById('theme-stylesheet');
+        const toggleButton = document.getElementById('toggle-theme');
+
+        const applyTheme = (theme) => {
+            localStorage.setItem('theme', theme);
+            body.className = theme;
+            themeStylesheet.href = `{% static 'spotifyWrapped/' %}${theme}-theme.css`;
+        };
+
+        applyTheme(currentTheme);
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', () => {
+                currentTheme = themes[(themes.indexOf(currentTheme) + 1) % themes.length];
+                applyTheme(currentTheme);
+            });
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="{% static 'spotifyWrapped/base.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

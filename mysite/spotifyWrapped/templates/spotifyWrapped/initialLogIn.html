@@ -1,15 +1,14 @@
+{% extends 'spotifyWrapped/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Wrapped</title>
+
+{% block title %}Spotify Wrapped{% endblock %}
+
+{% block extra_head %}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="{% static 'spotifyWrapped/initialLogIn.css' %}" rel="stylesheet">
-</head>
-<body class="byd">
-<div class="header">
+{% endblock %}
+
+{% block content %}
     <div class="audioControls">
         <button id="playPauseBtn">Play</button>
         <br>
@@ -25,41 +24,28 @@
         >
     </div>
 
-    <!-- Translate Button -->
-    <div class="translate-button" onclick="openTranslateModal()">Translate</div>
-</div>
-
-
-<!-- Translate Modal -->
-<div id="translateModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeTranslateModal()">&times;</span>
-        <h3>Select Language</h3>
-        <div id="google_translate_element"></div>
+<div class="container">
+    <!-- Title and GIF horizontally aligned -->
+    <div class="title-and-gif">
+        <span class="title">Spotify Wrapped</span>
+        <img class="gif" src="{% static 'spotifyWrapped/waveform.gif' %}" alt="Waveform Animation">
+    </div>
+    
+    <!-- Links Container with Divider -->
+    <div class="links">
+        <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Log in with Spotify</a>
+        <div class="divider"></div> <!-- Vertical divider -->
+        <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Register</a>
     </div>
 </div>
 
-    <div class="container">
-        <!-- Title and GIF horizontally aligned -->
-        <div class="title-and-gif">
-            <span class="title">Spotify Wrapped</span>
-            <img class="gif" src="{% static 'spotifyWrapped/waveform.gif' %}" alt="Waveform Animation">
-        </div>
-        
-        <!-- Links Container with Divider -->
-        <div class="links">
-            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Log in with Spotify</a>
-            <div class="divider"></div> <!-- Vertical divider -->
-            <a href="{% url 'spotifyWrapped:spotify_login' %}" class="link">Register</a>
-        </div>
-    </div>
+<audio id="audioPlayer">
+  <source src="{% static 'spotifyWrapped/music.mp3' %}" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>
+{% endblock %}
 
-    <audio id="audioPlayer">
-      <source src="{% static 'spotifyWrapped/music.mp3' %}" type="audio/mp3">
-      Your browser does not support the audio element.
-    </audio>
-
-    <script src="{% static 'spotifyWrapped/initialLogin.js' %}"></script>
-    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</body>
-</html>
+{% block extra_scripts %}
+<script src="{% static 'spotifyWrapped/initialLogin.js' %}"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+{% endblock %}

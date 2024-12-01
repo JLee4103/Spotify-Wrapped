@@ -1,34 +1,25 @@
+{% extends 'spotifyWrapped/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Wrapped</title>
-    <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}">
-</head>
-<body class="{{ savedTheme|default:'light' }}">
-    <header>
-        <div class="header-content">
-            <h1>Welcome, {{ username }}!</h1>
-            <div class="header-buttons">
-                <a href="{% url 'spotifyWrapped:community' %}" class="header-button">Community</a>
-                {% if username != "Guest" %}
-                    <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button header-button">Log Out</a>
-                    <a href="{% url 'spotifyWrapped:deactivate_account' %}" class="header-button danger-button">Deactivate Account</a>
-                {% else %}
-                    <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button header-button">Log In</a>
-                {% endif %}
-                <button class="header-button" id="toggleDarkMode">
-                    Toggle Dark Mode
-                    <span class="tooltip-text">Switch between themes</span>
-                </button>
-            </div>
-        </div>
-    </header>
-    
-    <div class="section-divider"></div>
 
+{% block title %}Spotify Wrapped{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}">
+{% endblock %}
+
+{% block header_title %}Welcome, {{ username }}!{% endblock %}
+
+{% block header_buttons %}
+    <a href="{% url 'spotifyWrapped:community' %}" class="header-button">Community</a>
+    {% if username != "Guest" %}
+        <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button header-button">Log Out</a>
+        <a href="{% url 'spotifyWrapped:deactivate_account' %}" class="header-button danger-button">Deactivate Account</a>
+    {% else %}
+        <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button header-button">Log In</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
     <section class="wraps-section">
         <h2>Your Generated Spotify Wraps</h2>
         <div class="grid-container" id="gridContainer">
@@ -38,48 +29,46 @@
                 </div>
             </div>
             {% if wraps %}
-            {% for wrap in wraps %}
-            <div class="card wrap-card" data-slideshow-id="{{ wrap.id }}" style="cursor: pointer;">
-                <div class="card-header">
-                    <h3>{{ wrap.title }}</h3>
-                    <button class="delete-button" 
-                            data-slideshow-id="{{ wrap.id }}"
-                            onclick="deleteSlideshow(this)">
-                            &#x2716;
-                    </button>
-                    <button class="share-button" 
-                            data-slideshow-id="{{ wrap.id }}"
-                            onclick="shareToCommunity(this)">
-                        Share to Community
-                    </button>
-                </div>
-                <div class="card-cover">
-                    {% if wrap.top_tracks %}
-                        <img src="{{ wrap.top_tracks }}" alt="Top Song Cover" class="wrap-cover-image">
-                    {% else %}
-                        <div class="no-cover-placeholder">No Cover Available</div>
-                    {% endif %}
-                </div>
-                
-                
-                <p class="date-generated">Generated on: {{ wrap.date_generated|date:"F j" }}</p>
-                <button class="share-button" onclick="shareOnSocialMedia('{{ wrap.unique_id }}')">Share</button>
-                <div class="tracks-preview">
-                    {% for track in wrap.top_tracks|slice:":3" %}
-                    <div class="track-item">
-                        {% if track.album.images.0.url %}
-                        <img src="{{ track.album.images.0.url }}" alt="{{ track.name }} cover">
+                {% for wrap in wraps %}
+                <div class="card wrap-card" data-slideshow-id="{{ wrap.id }}" style="cursor: pointer;">
+                    <div class="card-header">
+                        <h3>{{ wrap.title }}</h3>
+                        <button class="delete-button" 
+                                data-slideshow-id="{{ wrap.id }}"
+                                onclick="deleteSlideshow(this)">
+                                &#x2716;
+                        </button>
+                        <button class="share-button" 
+                                data-slideshow-id="{{ wrap.id }}"
+                                onclick="shareToCommunity(this)">
+                            Share to Community
+                        </button>
+                    </div>
+                    <div class="card-cover">
+                        {% if wrap.top_tracks %}
+                            <img src="{{ wrap.top_tracks }}" alt="Top Song Cover" class="wrap-cover-image">
+                        {% else %}
+                            <div class="no-cover-placeholder">No Cover Available</div>
                         {% endif %}
                     </div>
-                    {% endfor %}
+                    <p class="date-generated">Generated on: {{ wrap.date_generated|date:"F j" }}</p>
+                    <button class="share-button" onclick="shareOnSocialMedia('{{ wrap.unique_id }}')">Share</button>
+                    <div class="tracks-preview">
+                        {% for track in wrap.top_tracks|slice:":3" %}
+                        <div class="track-item">
+                            {% if track.album.images.0.url %}
+                            <img src="{{ track.album.images.0.url }}" alt="{{ track.name }} cover">
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="progress-tracker">
-                <p>You've created <span id="wrapCount">{{ wrap_count }}</span> Spotify Wraps!</p>
-            </div>
-        {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="progress-tracker">
+                    <p>You've created <span id="wrapCount">{{ wrap_count }}</span> Spotify Wraps!</p>
+                </div>
+            {% endif %}
         </div>
     </section>
 
@@ -102,25 +91,9 @@
             <button onclick="closeModal()" class="close-button">Close</button>
         </div>
     </div>
-    
-    <div class="section-divider"></div>
+{% endblock %}
 
-    <footer class="footer-section">
-        <div class="contact-dev">
-            <h2>Contact the Dev Team</h2>
-            <p>Questions? <a href="{% url 'spotifyWrapped:dev_team' %}"><i class="fas fa-envelope"></i> Meet the Team</a></p>
-        </div>
-    </footer>
-
+{% block extra_scripts %}
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <div id="google_translate_element" class="translate-widget"></div>
-    <script>
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-        }
-    </script>
-
-</body>
-</html>
+{% endblock %}

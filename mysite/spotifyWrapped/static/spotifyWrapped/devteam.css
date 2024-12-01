@@ -8,26 +8,10 @@ body {
     text-align: center;
 }
 
-header.dev-header {
-    background: rgba(15, 32, 39, 0.95);
-    padding: 20px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-header h1 {
-    font-size: 2.5rem;
-    color: #FFD700;
-}
-
 .back-to-home-button {
+    position: absolute;
+    top: 10px;
+    left: 20px;
     text-decoration: none;
     font-size: 1rem;
     color: #1DB954;
@@ -41,6 +25,7 @@ header h1 {
     transform: scale(1.1);
     background-color: #14833B;
 }
+
 
 .team-container {
     padding: 20px;

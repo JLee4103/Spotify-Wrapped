@@ -1,20 +1,16 @@
+{% extends 'spotifyWrapped/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meet the Dev Team</title>
-    <link rel="stylesheet" href="{% static 'spotifyWrapped/devteam.css' %}">
-</head>
-<body>
-    <header class="dev-header">
-        <div class="header-content">
-            <h1>Meet the Dev Team</h1>
-            <a href="{% url 'spotifyWrapped:home' %}" class="back-to-home-button">Back to Home</a>
-        </div>
-    </header>
 
+{% block title %}Meet the Dev Team{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'spotifyWrapped/devteam.css' %}">
+{% endblock %}
+
+{% block header_title %}Meet the Dev Team{% endblock %}
+
+{% block content %}
+<a href="{% url 'spotifyWrapped:home' %}" class="header-button">Back to Home</a>
     <main class="team-container">
         <section class="about-section">
             <h2>About Us</h2>
@@ -84,25 +80,17 @@
             </form>
         </section>
     </main>
+{% endblock %}
 
-    <footer class="dev-footer">
-        <p>© 2024 Spotify Wrapped Dev Team | All rights reserved.</p>
-    </footer>
+{% block extra_scripts %}
     <script>
-                function openEmailApp(event) {
+        function openEmailApp(event) {
             event.preventDefault();
-
-            // Get the form input values
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
-
-            // Construct the mailto link
             const mailtoLink = `mailto:jlee4103@gatech.edu?subject=Message from ${encodeURIComponent(name)} (${encodeURIComponent(email)})&body=${encodeURIComponent(message)}`;
-
-            // Open the mailto link
             window.location.href = mailtoLink;
         }
     </script>
-</body>
-</html>
+{% endblock %}
