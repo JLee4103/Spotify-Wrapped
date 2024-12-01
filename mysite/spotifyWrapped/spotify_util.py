@@ -132,23 +132,28 @@ def get_listening_character(access_token, time_range='long_term'):
     """
     Determine listening character based on top genres
     """
-    headers = {"Authorization": f"Bearer {access_token}"}
-    url = f"https://api.spotify.com/v1/me/top/artists?limit=10&time_range={time_range}"
-    artists_data = make_spotify_request(url, headers)
+    listening_characters = {
+        'Rock Rebel': ['rock', 'alternative', 'punk', 'grunge', 'metal'],
+        'Pop Enthusiast': ['pop', 'dance pop', 'indie pop', 'electropop', 'synth-pop'],
+        'Hip Hop Maverick': ['hip hop', 'rap', 'trap', 'conscious rap', 'gangsta rap'],
+        'Jazz Virtuoso': ['jazz', 'bebop', 'swing', 'fusion', 'contemporary jazz'],
+        'Electronic Explorer': ['electronic', 'techno', 'house', 'ambient', 'experimental'],
+        'Indie Dreamer': ['indie', 'indie rock', 'indie folk', 'indie pop', 'lo-fi'],
+        'World Music Wanderer': ['world music', 'global', 'folk', 'traditional', 'ethnic'],
+        'Classical Connoisseur': ['classical', 'orchestral', 'opera', 'baroque', 'romantic']
+    }
 
-    if not artists_data:
-        return 'Unknown'
+    top_genres = get_top_genres(access_token, time_range)
 
-    genres = [genre for artist in artists_data.get('items', []) for genre in artist['genres']]
-
-    if 'rock' in genres:
-        return 'Rock Rebel'
-    elif 'pop' in genres:
-        return 'Pop Enthusiast'
-    elif 'hip hop' in genres:
-        return 'Hip Hop Maverick'
-    else:
+    if not top_genres:
         return 'Eclectic Explorer'
+
+    potential_characters = [
+        (character, sum(1 for genre in top_genres if any(match.lower() in genre.lower() for match in character_genres)))
+        for character, character_genres in listening_characters.items()
+    ]
+
+    return max(potential_characters, key=lambda x: x[1])[0] if potential_characters else 'Eclectic Explorer'
 
 
 def get_top_genres(access_token, time_range='long_term'):
