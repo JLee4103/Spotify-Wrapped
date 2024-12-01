@@ -1,0 +1,11 @@
+<form method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Deactivate Account</legend>
+        <p>Are you sure you want to deactivate your account? You will no longer be able to log in.</p>
+    </fieldset>
+    <div class="form-group">
+        <button class="btn btn-danger" type="submit">Deactivate Account</button>
+        <a class="btn btn-secondary" href="{% url 'spotifyWrapped:login' %}">Cancel</a>
+    </div>
+</form>

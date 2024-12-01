@@ -18,6 +18,8 @@ urlpatterns = [
 
     # Initial login page
     path('initial_login/', SpotifyInitialLogin.as_view(), name='initial_login'),
+    
+    path('deactivate/', views.deactivate_account, name='deactivate_account'),
 
     # Other application paths
     path('home/', views.HomeView.as_view(), name='home'),

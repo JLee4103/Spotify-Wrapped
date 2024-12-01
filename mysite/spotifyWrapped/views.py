@@ -12,6 +12,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from .models import CommunitySlideshow, SpotifyTrack, Score
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.views import LoginView
 from .spotify_util import (
     get_total_listening_time,
     get_sound_town,
@@ -42,14 +45,22 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # Log the user in automatically after registration
-            return redirect('spotifyWrapped:initial_login')  # Redirect after registration
+            return redirect('spotifyWrapped:initial_login')
     else:
         form = UserCreationForm()
     
     return render(request, 'register.html', {'form': form})
 
+class CustomLoginView(LoginView):
+    def form_valid(self, form):
+        user = form.get_user()
+        if not user.is_active:
+            messages.error(self.request, 'This account has been deactivated.')
+            return self.form_invalid(form)
+        return super().form_valid(form)
+
 def custom_login(request):
-    return auth_views.LoginView.as_view()(request)
+    return CustomLoginView.as_view()(request)
 
 
 # Utility: Refresh Access Token
@@ -156,42 +167,50 @@ class SpotifyCallbackView(View):
             "client_secret": SPOTIFY_CLIENT_SECRET,
         }
 
-        response = requests.post(url, headers=headers, data=data)
-        if response.status_code == 200:
-            tokens = response.json()
-            request.session["access_token"] = tokens.get("access_token")
-            request.session["refresh_token"] = tokens.get("refresh_token")
-
-            profile_data = make_spotify_api_call(request, "me")
-            if profile_data:
-                request.session["spotify_username"] = profile_data.get("display_name")
-
-                # Optionally associate the Spotify account with a Django user
-                User = get_user_model()
-                user, created = User.objects.get_or_create(username=profile_data["id"])
-                if created:
-                    user.set_unusable_password()  # Or set a default password if necessary
-                    user.save()
-
-                login(request, user)  # Log in the user
-
-        return redirect("spotifyWrapped:home")
-
+        try:
+            response = requests.post(url, headers=headers, data=data)
+            if response.status_code == 200:
+                tokens = response.json()
+                # Store tokens in session
+                request.session["access_token"] = tokens.get("access_token")
+                request.session["refresh_token"] = tokens.get("refresh_token")
+                
+                # Get user profile
+                profile_data = make_spotify_api_call(request, "me")
+                if profile_data:
+                    request.session["spotify_username"] = profile_data.get("display_name")
+                    
+                    # Update or create user
+                    user = request.user
+                    if user.is_authenticated:
+                        user.spotify_id = profile_data["id"]
+                        user.save()
+                    
+                    return redirect("spotifyWrapped:home")
+            
+            # If token request failed
+            return redirect("spotifyWrapped:spotify_login")
+            
+        except Exception as e:
+            print(f"Error in callback: {str(e)}")
+            return redirect("spotifyWrapped:spotify_login")
 
 
 
 class HomeView(View):
     template_name = "spotifyWrapped/home.html"
-
+    
     def get(self, request):
         if not request.user.is_authenticated:
+            return redirect("spotifyWrapped:login")
+            
+        access_token = request.session.get("access_token")
+        if not access_token:
             return redirect("spotifyWrapped:spotify_login")
-
+            
         username = request.session.get("spotify_username", "Guest")
-        
-        # Get all slideshows for the user
         wraps = Slideshow.objects.filter(user=request.user).order_by('-date_generated')
-
+        
         return render(request, self.template_name, {
             "username": username,
             "wraps": wraps,
@@ -424,3 +443,22 @@ class CommunityView(View):
             "shared_slideshows": shared_slideshows,
             "username": request.session.get("spotify_username", "Guest")
         })
+        
+        
+        
+@login_required
+def deactivate_account(request):
+    if request.method == 'POST':
+        user = request.user
+        # First clear all Spotify session data
+        request.session.pop('access_token', None)
+        request.session.pop('refresh_token', None)
+        request.session.pop('spotify_username', None)
+        # Then deactivate the user
+        user.is_active = False
+        user.save()
+        # Finally logout
+        logout(request)
+        messages.success(request, 'Your account has been deactivated successfully.')
+        return redirect('spotifyWrapped:login')
+    return render(request, 'spotifyWrapped/deactivate.html')

@@ -15,6 +15,7 @@
                 <a href="{% url 'spotifyWrapped:community' %}" class="header-button">Community</a>
                 {% if username != "Guest" %}
                     <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button header-button">Log Out</a>
+                    <a href="{% url 'spotifyWrapped:deactivate_account' %}" class="header-button danger-button">Deactivate Account</a>
                 {% else %}
                     <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button header-button">Log In</a>
                 {% endif %}
