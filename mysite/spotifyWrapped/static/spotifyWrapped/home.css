@@ -85,15 +85,11 @@ h1 {
 
 /* Section styles */
 .wraps-section {
-    margin-top: 1px;
-    padding: 10px;
     width: 100%;
     max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    animation: fadeInSlideUp 1s ease-out;
+    padding: 0 20px;
+    box-sizing: border-box;
+    margin: 0 auto;
 }
 
 .wraps-section h2 {
@@ -108,31 +104,32 @@ h1 {
 /* Cards grid */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
-    gap: 30px; /* Increased gap for better spacing */
-    width: 100%;
-    max-width: 1200px; /* Limit the container width */
-    margin: auto; /* Center the grid container */
-    padding: 20px; /* Add padding around the grid */
-    justify-content: center; /* Align items horizontally */
-    align-content: start; /* Ensure vertical alignment */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    width: 90%; /* Reduce from 100% to give margins */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    justify-content: center;
+    align-content: start;
     box-sizing: border-box;
 }
+
 
 /* Cards */
 .card {
     background: rgba(15, 32, 39, 0.9);
     border-radius: 15px;
-    padding: 10px;
+    padding: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    min-width: 200px;
-    max-width: 250px; /* Constrain the card width */
-    width: 100%; /* Ensure the card adjusts within the grid */
-    height: auto; /* Let the card adjust dynamically */
-    margin: 10px; /* Additional margin for spacing */
+    width: 100%;
+    max-width: 100%; /* Allow cards to fit container */
+    height: auto;
+    margin: 0; /* Remove margin to prevent overflow */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .card:hover {
@@ -140,6 +137,29 @@ h1 {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
 }
 
+/* Footer styles */
+.footer-section {
+    background: rgba(15, 32, 39, 0.9);
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.4);
+    position: relative;
+    margin-top: auto;
+    flex-shrink: 0;
+    animation: fadeInSlideUp 1.5s ease-out;
+}
+
+.footer-section a {
+    color: #f8b400;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #ffdd57;
+}
 
 /* Animations */
 @keyframes fadeIn {
@@ -301,6 +321,44 @@ h1 {
     transform: scale(1.2);
 }
 
+/* Light theme */
+body.light {
+    background: linear-gradient(120deg, #f0f8ff, #b0e0e6); /* Soft light blues */
+    color: #000000;
+}
+
+/* Dark theme */
+body.dark {
+    background: linear-gradient(120deg, #1e3c72, #2a5298); /* Deep dark blues */
+    color: #f0f0f0;
+}
+
+/* Vibrant theme */
+body.vibrant {
+    background: linear-gradient(120deg, #ff7e5f, #feb47b); /* Vibrant warm tones */
+    color: #ffffff;
+}
+
+/* Adjust header and button colors for all themes */
+body.light header, body.vibrant header, body.dark header {
+    background: rgba(15, 32, 39, 0.85); /* Ensure header contrast */
+}
+
+body.light .header-button {
+    background-color: rgba(240, 240, 240, 0.85);
+    color: #000000;
+}
+
+body.vibrant .header-button {
+    background-color: rgba(255, 110, 64, 0.85);
+    color: #ffffff;
+}
+
+body.dark .header-button {
+    background-color: rgba(32, 58, 67, 0.85);
+    color: #f8b400;
+}
+
 .progress-tracker {
     margin-top: 20px;
     font-size: 1.2rem;
@@ -437,4 +495,185 @@ h1 {
 .delete-button:hover {
     color: #ff1a1a; /* Darker red on hover */
     transform: scale(1.2); /* Slightly enlarge the X */
+}
+
+.translate-widget {
+    position: fixed;
+    bottom: 10px; /* Align just above the footer */
+    left: 20px; /* Keep it on the bottom-left corner */
+    z-index: 1000; /* Ensure it stays on top of other elements */
+    background-color: #ff5722; /* A bold orange for contrast */
+    color: white; /* White text for readability */
+    padding: 10px 15px; /* Padding for a noticeable size */
+    border-radius: 25px; /* Rounded corners for a button feel */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    font-size: 1em; /* Font size for visibility */
+    text-align: center; /* Center align text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+.translate-widget:hover {
+    background-color: #e64a19; /* Slightly darker orange on hover */
+    transform: translateY(-4px); /* Upward movement on hover */
+}
+
+.translate-widget select {
+    background: none; /* Match the button background */
+    color: white; /* Ensure text contrast */
+    border: none; /* Remove border */
+    font-size: 1em; /* Keep font consistent */
+    cursor: pointer; /* Pointer cursor */
+    appearance: none; /* Remove default dropdown styles */
+    padding: 5px 10px; /* Padding for usability */
+    border-radius: 5px; /* Match the overall style */
+}
+
+.translate-widget select:focus {
+    outline: none; /* Remove focus outline */
+    background-color: #d84315; /* Highlight background on focus */
+}
+
+.header-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 20px;
+    max-width: 100%;
+}
+
+.header-button {
+    flex: 0 1 auto;
+    min-width: fit-content;
+    white-space: nowrap;
+    font-size: clamp(0.8em, 2vw, 1em);
+    padding: 10px 15px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100vw; /* Prevent horizontal scroll */
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Add this to your CSS file */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.community-container {
+    width: 100%;
+    max-width: 100vw;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-container {
+    width: 90%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.wrapped-card {
+    background: rgba(15, 32, 39, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.wrapped-content {
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 768px) {
+    .card-container {
+        width: 95%;
+        padding: 10px;
+        grid-template-columns: 1fr;
+    }
+}
+
+.card.add-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    box-shadow: none;
+    margin: 20px auto;
+    width: 100px;
+    height: 100px;
+}
+
+.center-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+}
+
+.record-player-button {
+    width: 100px;
+    height: 100px;
+    background-color: #4CAF50;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+@media screen and (max-width: 768px) {
+  /* Mobile-specific styles */
+  body {
+    font-size: 14px; /* Smaller base font size */
+  }
+
+  header {
+    padding: 10px; /* Reduce header padding */
+  }
+
+  .header-buttons {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Add spacing between stacked buttons */
+  }
+
+  .grid-container {
+    grid-template-columns: 1fr; /* Single column layout */
+    width: 100%; /* Full width */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .card {
+    width: 100%; /* Full width cards */
+    margin: 10px 0; /* Add vertical spacing */
+  }
+
+  h1 {
+    font-size: 2em; /* Smaller heading */
+  }
 }

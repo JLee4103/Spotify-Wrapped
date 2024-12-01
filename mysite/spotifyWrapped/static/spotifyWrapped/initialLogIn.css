@@ -354,3 +354,47 @@ body {
 .modal-content .close:hover {
     color: #000;
 }
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .title-and-gif {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .title {
+        font-size: 2.5rem; /* Smaller font for mobile */
+        text-align: center;
+    }
+
+    .gif {
+        width: 250px; /* Responsive image size */
+        max-width: 90%;
+    }
+
+    .links {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .divider {
+        display: none; /* Remove vertical divider on mobile */
+    }
+
+    .header {
+        position: relative;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .audioControls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+}
