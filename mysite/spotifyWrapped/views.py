@@ -222,39 +222,68 @@ class SlideshowView(View):
     template_name = "spotifyWrapped/slideshow.html"
 
     def get(self, request):
+        period = request.GET.get("period", "Past Year")
         user_id = request.GET.get("user_id")
         slideshow_id = request.GET.get("slideshow_id")
 
-        # If viewing from community page, load the saved slideshow
+        # If user_id and slideshow_id are provided, load shared community slideshow
         if user_id and slideshow_id:
             try:
-                community_slideshow = CommunitySlideshow.objects.get(
-                    original_slideshow_id=slideshow_id,
-                    shared_by_id=user_id
-                )
-                
-                # Get the original slideshow data
-                slideshow = community_slideshow.original_slideshow
-                
+                slideshow = Slideshow.objects.get(id=slideshow_id, user_id=user_id)
                 return render(request, self.template_name, {
-                    "slideshow_data": {
-                        "intro": f"{slideshow.title}",
-                        "total_listening_time": slideshow.total_listening_time,
-                        "sound_town": slideshow.sound_town,
-                        "listening_character": slideshow.listening_character,
-                        "top_genres": slideshow.top_genres,
-                        "top_artists": slideshow.top_artists,
-                        "top_tracks": slideshow.top_tracks,
-                        "genre_persona": slideshow.genre_persona
-                    },
+                    "slideshow_data": slideshow,
                     "period": slideshow.period
                 })
-            except CommunitySlideshow.DoesNotExist:
-                return redirect("spotifyWrapped:community")
+            except Slideshow.DoesNotExist:
+                return redirect("spotifyWrapped:home")
 
-        # If viewing personal slideshow, continue with existing code
-        period = request.GET.get("period", "Past Year")
-        # ... rest of your existing code for personal slideshow ...
+        # Otherwise, load current user's data
+        time_range_map = {
+            "Past Month": "short_term",
+            "Past 6 Months": "medium_term",
+            "Past Year": "long_term",
+        }
+        selected_time_range = time_range_map.get(period, "long_term")
+        access_token = request.session.get("access_token")
+
+        if not access_token:
+            return redirect("spotifyWrapped:spotify_login")
+
+        slideshow_data = {
+            "intro": f"Here's your Spotify Wrapped for {period}!",
+            "total_listening_time": 0,
+            "sound_town": "Unknown",
+            "listening_character": "Unknown",
+            "top_genres": [],
+            "top_artists": [],
+            "top_tracks": [],
+            "genre_persona": "Unknown",
+        }
+
+        try:
+            slideshow_data.update({
+                "total_listening_time": get_total_listening_time(access_token, selected_time_range),
+                "sound_town": get_sound_town(access_token, selected_time_range),
+                "listening_character": get_listening_character(access_token, selected_time_range),
+                "top_genres": get_top_genres(access_token, selected_time_range),
+                "top_artists": get_top_artists(access_token, selected_time_range),
+                "top_tracks": get_top_tracks(access_token, selected_time_range),
+                "genre_persona": generate_genre_persona(access_token, selected_time_range),
+            })
+        except Exception as e:
+            print(f"Error fetching slideshow data: {e}")
+
+        # Serialize the top_tracks data
+        slideshow_data['top_tracks_json'] = json.dumps(slideshow_data['top_tracks'], cls=DjangoJSONEncoder)
+
+        return render(
+            request, 
+            self.template_name, 
+            {
+                "slideshow_data": slideshow_data, 
+                "period": period
+            }
+        )
 
 
 @method_decorator(csrf_exempt, name="dispatch")
