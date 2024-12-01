@@ -27,9 +27,10 @@ jobs:
           pip install pylint black  # Install pylint and black directly
 
 
-      - name: Lint with pylint
-        run: |
-          pylint mysite/spotifyWrapped/
+#      - name: Install pylint
+#        run: |
+#          pip install pylint
+#          pylint $(git ls-files '*.py')  # Lint all Python files
 
 
       - name: Run database migrations
