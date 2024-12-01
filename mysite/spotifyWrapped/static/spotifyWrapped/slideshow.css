@@ -9,7 +9,7 @@ body {
     align-items: center;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden;
+    overflow-y: auto; /* Allow vertical scrolling */
 }
 
 header h1 {
@@ -415,3 +415,121 @@ button:disabled {
     }
 }
 
+/* General Summary Slide */
+#summary-slide {
+    background-color: #121212;
+    color: white;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align content at the top */
+    min-height: 100vh; /* Ensure the slide takes at least the full viewport height */
+    overflow-y: auto; /* Allow scrolling within the slide */
+}
+
+.summary-card {
+    max-width: 90%;
+    margin: auto;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Section Styles */
+.summary-section {
+    margin-bottom: 20px;
+}
+
+.summary-section h3 {
+    color: #1db954;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Genres */
+.genre-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.genre-badge {
+    background-color: #1db954;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* Artists */
+.artist-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.artist-card {
+    max-width: 70px;
+    text-align: center;
+}
+
+.artist-image {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
+.artist-name {
+    font-size: 12px;
+    color: #ddd;
+}
+
+/* Tracks */
+.track-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.track-card {
+    display: flex;
+    align-items: center;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 180px;
+    max-height: 60px;
+}
+
+.track-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.track-info {
+    padding: 5px;
+    text-align: left;
+}
+
+.track-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.track-artist {
+    font-size: 10px;
+    color: #bbb;
+    margin: 0;
+}

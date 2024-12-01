@@ -285,7 +285,6 @@ class SlideshowView(View):
             }
         )
 
-
 @method_decorator(csrf_exempt, name="dispatch")
 class SaveSlideshowView(View):
     def post(self, request):
@@ -298,23 +297,33 @@ class SaveSlideshowView(View):
 
             data = json.loads(request.body)
             period = data.get("period", "Unknown Period")
-            tracks = data.get("tracks", [])
+            top_tracks = data.get("tracks", [])
+            total_listening_time = data.get("total_listening_time", 0)
+            sound_town = data.get("sound_town", "Unknown")
+            listening_character = data.get("listening_character", "Unknown")
+            top_artists = data.get("top_artists", [])
+            top_genres = data.get("top_genres", [])
+            genre_persona = data.get("genre_persona", "Unknown")
 
-            if not tracks:
+            if not top_tracks:
                 return JsonResponse({
                     "success": False,
                     "error": "No tracks provided"
                 }, status=400)
-
-            # Extract the album image of the first track for the cover
-            album_image = tracks[0].get("album_image") if tracks else None
+            album_image = top_tracks[0].get("album_image") if top_tracks else None
 
             slideshow = Slideshow.objects.create(
                 user=request.user,
                 title=f"Spotify Wrapped - {period}",
                 period=period,
-                top_tracks=album_image,  # Save the album image URL
-                date_generated=timezone.now()
+                total_listening_time=total_listening_time,
+                sound_town=sound_town,
+                listening_character=listening_character,
+                top_tracks=album_image,
+                top_artists=top_artists,
+                top_genres=top_genres,
+                genre_persona=genre_persona,
+                date_generated=timezone.now(),
             )
 
             return JsonResponse({
@@ -329,6 +338,7 @@ class SaveSlideshowView(View):
                 "success": False,
                 "error": "An error occurred while saving the slideshow"
             }, status=500)
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class DeleteSlideshowView(View):
@@ -477,3 +487,4 @@ def deactivate_account(request):
         messages.success(request, 'Your account has been deactivated successfully.')
         return redirect('spotifyWrapped:login')
     return render(request, 'spotifyWrapped/deactivate.html')
+    
