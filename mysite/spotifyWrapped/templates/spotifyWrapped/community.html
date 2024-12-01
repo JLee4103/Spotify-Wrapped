@@ -27,7 +27,12 @@
         <div class="grid-container">
             {% if shared_slideshows %}
                 {% for slideshow in shared_slideshows %}
-                <div class="card wrap-card">
+                <div class="card wrap-card" 
+                    data-slideshow-id="{{ slideshow.original_slideshow.id }}"
+                    data-user-id="{{ slideshow.shared_by.id }}"
+                    data-period="{{ slideshow.original_slideshow.period }}"
+                    onclick="loadCommunitySlideshow(this)"
+                    style="cursor: pointer;">
                     <div class="card-header">
                         <h3>{{ slideshow.original_slideshow.title }}</h3>
                         <p class="shared-by">Shared by: {{ slideshow.shared_by.username }}</p>
@@ -39,6 +44,10 @@
                             {% if track.album.images.0.url %}
                             <img src="{{ track.album.images.0.url }}" alt="{{ track.name }} cover">
                             {% endif %}
+                            <div class="track-info">
+                                <p class="track-name">{{ track.name }}</p>
+                                <p class="track-artist">{{ track.artists.0.name }}</p>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
@@ -50,6 +59,15 @@
         </div>
     </section>
 
+    <script>
+    function loadCommunitySlideshow(card) {
+        const userId = card.getAttribute('data-user-id');
+        const period = card.getAttribute('data-period');
+        const slideshowId = card.getAttribute('data-slideshow-id');
+        
+        window.location.href = `/spotifyWrapped/slideshow/?period=${encodeURIComponent(period)}&user_id=${userId}&slideshow_id=${slideshowId}`;
+    }
+    </script>
     <script src="{% static 'spotifyWrapped/home.js' %}"></script>
 </body>
 </html>
