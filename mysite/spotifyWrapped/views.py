@@ -113,10 +113,9 @@ class SpotifyInitialLogin(View):
 
 
 from urllib.parse import urlencode
-
 class SpotifyLoginView(View):
     def get(self, request):
-        request.session.flush()
+        request.session.flush()  # Clear previous session entirely
         spotify_auth_url = "https://accounts.spotify.com/authorize"
         scope = (
             "user-top-read "
@@ -129,13 +128,15 @@ class SpotifyLoginView(View):
             "user-modify-playback-state"
         )
         query_params = {
-            'client_id': SPOTIFY_CLIENT_ID,
-            'response_type': 'code',
-            'redirect_uri': SPOTIFY_REDIRECT_URI,
-            'scope': scope
+            "client_id": SPOTIFY_CLIENT_ID,
+            "response_type": "code",
+            "redirect_uri": SPOTIFY_REDIRECT_URI,
+            "scope": scope,
+            "show_dialog": "true",  # Always prompt for Spotify re-login
         }
         auth_url = f"{spotify_auth_url}?{urlencode(query_params)}"
         return redirect(auth_url)
+
 
 
 class SpotifyCallbackView(View):
@@ -341,9 +342,34 @@ class GameView(View):
         return render(request, self.template_name)
 
 
+from django.shortcuts import redirect
+from django.contrib.auth import logout
+from django.urls import reverse
+import requests
+
 def logout_view(request):
+    # Step 1: Revoke Spotify access token (invalidate on Spotify's server)
+    access_token = request.session.get("access_token")
+    if access_token:
+        try:
+            revoke_url = "https://accounts.spotify.com/api/token"
+            data = {
+                "token": access_token,
+                "client_id": SPOTIFY_CLIENT_ID,
+                "client_secret": SPOTIFY_CLIENT_SECRET,
+            }
+            requests.post(revoke_url, data=data)
+        except Exception as e:
+            print(f"Error revoking Spotify token: {e}")
+
+    # Step 2: Clear all session data (including Spotify-specific keys)
+    request.session.flush()
+
+    # Step 3: Log the user out of Django
     logout(request)
-    return redirect("spotifyWrapped:initial_login")
+
+    # Step 4: Redirect to the login page (ensure user must reauthenticate)
+    return redirect(reverse("spotifyWrapped:login"))
 
 
 def save_score(request):
