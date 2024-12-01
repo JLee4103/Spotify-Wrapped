@@ -1,3 +1,9 @@
+/**
+ * Retrieves a cookie value by its name.
+ * 
+ * @param {string} name - The name of the cookie to retrieve.
+ * @returns {string|null} The value of the cookie if found, or null if not found.
+ */
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -13,6 +19,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
+/**
+ * Deletes a slideshow after confirmation.
+ * 
+ * @param {HTMLElement} button - The button element that triggered the delete action.
+ * @returns {void}
+ */
 function deleteSlideshow(button) {
     if (!confirm('Are you sure you want to delete this slideshow?')) {
         return;
@@ -37,8 +49,7 @@ function deleteSlideshow(button) {
     .then(data => {
         if (data.success) {
             alert('Slideshow deleted successfully.');
-            // Refresh the page after successful deletion
-            window.location.reload();
+            window.location.reload(); // Refresh the page
         } else {
             alert('Error deleting slideshow: ' + data.error);
         }
@@ -49,13 +60,18 @@ function deleteSlideshow(button) {
     });
 }
 
-
+/**
+ * Updates the wrap count displayed on the page.
+ * If there are no wraps, it displays a message.
+ * 
+ * @returns {void}
+ */
 function updateWrapCount() {
     const wrapCount = document.getElementById('wrapCount');
     if (wrapCount) {
         const currentWraps = document.querySelectorAll('.wrap-card').length;
         wrapCount.textContent = currentWraps;
-        
+
         if (currentWraps === 0) {
             const gridContainer = document.getElementById('gridContainer');
             const progressTracker = document.createElement('div');
@@ -66,9 +82,15 @@ function updateWrapCount() {
     }
 }
 
+/**
+ * Shares a slideshow to the community.
+ * 
+ * @param {HTMLElement} button - The button element that triggered the share action.
+ * @returns {void}
+ */
 function shareToCommunity(button) {
     const slideshowId = button.getAttribute('data-slideshow-id');
-    
+
     fetch(`/spotifyWrapped/share-to-community/${slideshowId}/`, {
         method: 'POST',
         headers: {
@@ -93,148 +115,16 @@ function shareToCommunity(button) {
     });
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Add click handler for wrap cards
-    document.querySelectorAll('.wrap-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            // Don't trigger if clicking a button or sharing elements
-            if (e.target.closest('button') || 
-                e.target.closest('.share-button') || 
-                e.target.closest('.delete-button')) {
-                return;
-            }
-            
-            const period = this.querySelector('h3').textContent.split(' - ')[1];
-            if (period) {
-                window.location.href = `/spotifyWrapped/slideshow/?period=${encodeURIComponent(period)}`;
-            }
-        });
-    });
-
-    // Add hover styles to your CSS
-    const style = document.createElement('style');
-    style.textContent = `
-        .wrap-card {
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .wrap-card:hover {
-            transform: scale(1.02);
-        }
-    `;
-    document.head.appendChild(style);
-    const themeToggleButton = document.getElementById('toggleDarkMode');
-
-    // Define the available themes
-    const themes = ['light', 'dark', 'vibrant'];
-    let currentThemeIndex = themes.indexOf(localStorage.getItem('theme')) || 0;
-
-    // Function to apply a theme
-    const applyTheme = (theme) => {
-        const body = document.body;
-        body.classList.remove(...themes); // Remove all theme classes
-        body.classList.add(theme); // Add the selected theme class
-        localStorage.setItem('theme', theme); // Save the selected theme
-    };
-
-    // Apply saved theme preference on load
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
-
-    // Handle theme toggle
-    if (themeToggleButton) {
-        themeToggleButton.addEventListener('click', () => {
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length; // Cycle through themes
-            applyTheme(themes[currentThemeIndex]);
-        });
-    }
-
-    // Open the selection modal
-    if (addCard) {
-        addCard.addEventListener('click', () => {
-            selectionModal.style.display = 'flex';
-            selectionModal.setAttribute('aria-hidden', 'false');
-        });
-    }
-
-    // Close the selection modal
-    function closeSelectionModal() {
-        selectionModal.style.display = 'none';
-        selectionModal.setAttribute('aria-hidden', 'true');
-    }
-
-    // Start wrapped slideshow
-    function startWrapped(period) {
-        closeSelectionModal();
-        const slideshowUrl = `/spotifyWrapped/slideshow?period=${encodeURIComponent(period)}`;
-        window.location.href = slideshowUrl;
-    }
-
-    // Event listener for the close button
-    const closeButton = selectionModal?.querySelector('.close-button');
-    if (closeButton) {
-        closeButton.addEventListener('click', closeSelectionModal);
-    }
-
-    // Event listener for the "Escape" key to close the modal
-    document.addEventListener('keydown', (event) => {
-        if (event.key === "Escape") {
-            closeSelectionModal();
-        }
-    });
-
-    // Expose necessary functions
-    window.closeSelectionModal = closeSelectionModal;
-    window.startWrapped = startWrapped;
-
-    const wrapCount = document.getElementById('wrapCount');
-    if (wrapCount) {  // Only proceed if element exists
-        const currentWraps = document.querySelectorAll('.wrap-card').length;
-        wrapCount.textContent = currentWraps;
-        
-        if (currentWraps > 0) {
-            const addCard = document.querySelector('.add-card');
-            if (addCard) {
-                addCard.classList.remove('pulse');
-            }
-        }
-    }
-
-    function startWrapped(period) {
-        const feedback = document.createElement('div');
-        feedback.className = 'feedback-message';
-        feedback.textContent = `Generating Spotify Wrap for: ${period}`;
-        document.body.appendChild(feedback);
-    
-        setTimeout(() => {
-            // Simulate redirection
-            feedback.textContent = `Redirecting to your new Spotify Wrap...`;
-            setTimeout(() => window.location.href = `/spotifyWrapped/slideshow?period=${encodeURIComponent(period)}`, 1000);
-        }, 2000);
-    }
-    
-
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const wrapImages = document.querySelectorAll('.wrap-cover-image');
-
-    wrapImages.forEach((img) => {
-        img.onerror = () => {
-            img.style.display = 'none';
-            const placeholder = document.createElement('div');
-            placeholder.classList.add('no-cover-placeholder');
-            placeholder.textContent = 'No Cover Available';
-            img.parentNode.appendChild(placeholder);
-        };
-    });
-});
-
+/**
+ * Shares a slideshow on social media or copies a shareable link to the clipboard.
+ * 
+ * @param {string} uniqueId - The unique ID of the slideshow to share.
+ * @returns {void}
+ */
 function shareOnSocialMedia(uniqueId) {
-    const baseUrl = window.location.origin; // Get base URL
+    const baseUrl = window.location.origin;
     const shareUrl = `${baseUrl}/spotifyWrapped/shared-slideshow/${uniqueId}/`;
 
-    // Open a modal or use navigator.share for sharing
     if (navigator.share) {
         navigator.share({
             title: 'Check out my Spotify Wrapped!',
@@ -246,7 +136,6 @@ function shareOnSocialMedia(uniqueId) {
             console.error('Error sharing:', err);
         });
     } else {
-        // Fallback: Copy the URL and alert
         navigator.clipboard.writeText(shareUrl).then(() => {
             alert('Link copied to clipboard! Share it on your favorite platform.');
         }).catch(err => {
@@ -256,14 +145,19 @@ function shareOnSocialMedia(uniqueId) {
     }
 }
 
+/**
+ * Generates an image of a slideshow element using html2canvas.
+ * 
+ * @param {string} uniqueId - The unique ID of the slideshow element to capture.
+ * @returns {void}
+ */
 function generateImageFromSlideshow(uniqueId) {
     const slideshowElement = document.querySelector(`[data-slideshow-id="${uniqueId}"]`);
 
     if (slideshowElement) {
         html2canvas(slideshowElement).then(canvas => {
             const image = canvas.toDataURL('image/png');
-            
-            // Open the image in a new tab or allow downloading
+
             const link = document.createElement('a');
             link.download = 'spotify-wrapped.png';
             link.href = image;
@@ -274,11 +168,22 @@ function generateImageFromSlideshow(uniqueId) {
         });
     }
 }
+
+/**
+ * Opens the share modal by setting its display to 'flex'.
+ * 
+ * @returns {void}
+ */
 function openModal() {
     const modal = document.getElementById('shareModal');
     modal.style.display = 'flex';
 }
 
+/**
+ * Closes the share modal by setting its display to 'none'.
+ * 
+ * @returns {void}
+ */
 function closeModal() {
     const modal = document.getElementById('shareModal');
     modal.style.display = 'none';
