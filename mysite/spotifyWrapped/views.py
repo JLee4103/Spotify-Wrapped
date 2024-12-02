@@ -37,6 +37,13 @@ from django.contrib.auth.models import AnonymousUser
 
 
 def register(request):
+    """
+    Handles user registration and logs the user in automatically after a successful registration.
+
+    If the request method is POST, a new user is created using the `UserCreationForm`. Upon successful registration,
+    the user is logged in and redirected to the initial login page.
+    If the request method is GET, an empty registration form is presented to the user.
+    """
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -45,15 +52,26 @@ def register(request):
             return redirect('spotifyWrapped:initial_login')  # Redirect after registration
     else:
         form = UserCreationForm()
-    
+
     return render(request, 'register.html', {'form': form})
 
+
 def custom_login(request):
+    """
+    Custom login view using Django's built-in LoginView.
+    """
     return auth_views.LoginView.as_view()(request)
 
 
 # Utility: Refresh Access Token
 def refresh_access_token(request):
+    """
+    Refreshes the Spotify access token using the stored refresh token in the session.
+
+    This function sends a POST request to Spotify's token endpoint to exchange the refresh token
+    for a new access token. If the request is successful, the new access token is saved to the session
+    and returned.
+    """
     refresh_token = request.session.get("refresh_token")
     if not refresh_token:
         return None
@@ -79,6 +97,13 @@ def refresh_access_token(request):
 
 # Utility: Make Spotify API Call
 def make_spotify_api_call(request, endpoint):
+    """
+    Makes a GET request to the Spotify API to fetch data from a specific endpoint.
+
+    If the access token is expired (status code 401), this function will automatically attempt
+    to refresh the token and retry the request. If the request is successful, the response data
+    is returned as a JSON object. Otherwise, None is returned.
+    """
     access_token = request.session.get("access_token")
     if not access_token:
         return None
@@ -99,9 +124,13 @@ def make_spotify_api_call(request, endpoint):
         return None
 
 
-
 # Views
 class SpotifyInitialLogin(View):
+    """
+    Displays the initial login screen if the user has not connected their Spotify account.
+    If the user has already connected their account, they are redirected to the home page.
+    """
+
     def get(self, request):
         # Check if Spotify username exists in session
         if request.session.get("spotify_username"):
@@ -111,10 +140,15 @@ class SpotifyInitialLogin(View):
         return render(request, "spotifyWrapped/initialLogin.html")
 
 
-
 from urllib.parse import urlencode
 
+
 class SpotifyLoginView(View):
+    """
+    Redirects the user to the Spotify authorization page to connect their Spotify account.
+    The user is asked to grant permissions defined in the scope before the callback is handled.
+    """
+
     def get(self, request):
         request.session.flush()
         spotify_auth_url = "https://accounts.spotify.com/authorize"
@@ -187,7 +221,7 @@ class HomeView(View):
             return redirect("spotifyWrapped:spotify_login")
 
         username = request.session.get("spotify_username", "Guest")
-        
+
         # Get all slideshows for the user
         wraps = Slideshow.objects.filter(user=request.user).order_by('-date_generated')
 
@@ -242,10 +276,10 @@ class SlideshowView(View):
         slideshow_data['top_tracks_json'] = json.dumps(slideshow_data['top_tracks'], cls=DjangoJSONEncoder)
 
         return render(
-            request, 
-            self.template_name, 
+            request,
+            self.template_name,
             {
-                "slideshow_data": slideshow_data, 
+                "slideshow_data": slideshow_data,
                 "period": period
             }
         )
@@ -257,7 +291,7 @@ class SaveSlideshowView(View):
         try:
             if not request.user.is_authenticated:
                 return JsonResponse({
-                    "success": False, 
+                    "success": False,
                     "error": "User not authenticated"
                 }, status=401)
 
@@ -301,7 +335,7 @@ class DeleteSlideshowView(View):
         try:
             if not request.user.is_authenticated:
                 return JsonResponse({
-                    "success": False, 
+                    "success": False,
                     "error": "User not authenticated"
                 }, status=401)
 
@@ -326,19 +360,6 @@ class DeleteSlideshowView(View):
                 "success": False,
                 "error": str(e)
             }, status=400)
-
-
-
-class GameView(View):
-    template_name = "spotifyWrapped/game.html"
-
-    def get(self, request):
-        access_token = request.session.get("access_token")
-        if not access_token:
-            return redirect("spotifyWrapped:spotify_login")  # Redirect if no access token
-
-        # Render the game.html template if access token is available
-        return render(request, self.template_name)
 
 
 def logout_view(request):
@@ -386,14 +407,18 @@ class ShareSlideshowView(View):
                 "success": False,
                 "error": str(e)
             }, status=400)
-            
+
 class CommunityView(View):
+    """
+    Displays all shared slideshows in the community.
+    The shared slideshows are ordered by the date they were shared.
+    """
     template_name = "spotifyWrapped/community.html"
-    
+
     def get(self, request):
         # Fetch ALL shared slideshows, not just the current user's
         shared_slideshows = CommunitySlideshow.objects.all().order_by('-shared_date')
-        
+
         return render(request, self.template_name, {
             "shared_slideshows": shared_slideshows,
             "username": request.session.get("spotify_username", "Guest")
