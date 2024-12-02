@@ -423,23 +423,59 @@ function saveImageToServer(imageData) {
       });
 }
 document.getElementById("downloadImageButton").addEventListener("click", function () {
-    const summaryCard = document.querySelector(".summary-card");
+    const summaryCard = document.querySelector(".slideshow-container"); // Ensure selector matches
 
-    html2canvas(summaryCard, {
-        scrollY: -window.scrollY, // Prevent scroll capture
-        useCORS: true, // Enable cross-origin resource sharing for images
-        allowTaint: false, // Prevent tainted canvases
-    }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "spotify-wrapped-summary.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-    }).catch(error => {
-        console.error("Error generating image:", error);
-        alert("Failed to download the image. Please try again.");
+    if (!summaryCard) {
+        alert("Error: Unable to find the element to capture.");
+        return;
+    }
+
+    // Hide buttons temporarily
+    const buttons = document.querySelectorAll(".button-container button");
+    buttons.forEach(button => {
+        button.style.visibility = "hidden"; // Hide the buttons
     });
+
+    // Generate the canvas
+    html2canvas(summaryCard, {
+        useCORS: true, // Allow cross-origin images
+        allowTaint: false, // Prevent issues with tainted canvases
+        scrollY: -window.scrollY, // Correct for scroll position
+    })
+        .then(canvas => {
+            // Restore buttons visibility
+            buttons.forEach(button => {
+                button.style.visibility = "visible"; // Restore visibility
+            });
+
+            // Download the image
+            const link = document.createElement("a");
+            link.download = "spotify-wrapped-summary.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        })
+        .catch(error => {
+            // Restore buttons visibility in case of error
+            buttons.forEach(button => {
+                button.style.visibility = "visible"; // Restore visibility
+            });
+
+            console.error("Error generating image:", error);
+            alert("Failed to download the image. Please try again.");
+        });
 });
 
+
+setTimeout(() => {
+    html2canvas(summaryCard, {
+        useCORS: true,
+        allowTaint: false,
+    }).then(canvas => {
+        // Handle canvas
+    }).catch(error => {
+        console.error("Canvas generation failed:", error);
+    });
+}, 100); // Delay of 100ms
 
 
 
