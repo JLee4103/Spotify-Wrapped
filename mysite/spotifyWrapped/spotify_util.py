@@ -5,7 +5,7 @@ This module contains helper functions to interact with the Spotify API
 and retrieve user-specific data such as top tracks, top artists, genres,
 and more.
 """
-#import anthropic
+import anthropic
 import requests
 from spotifyWrapped.settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, ANTHROPIC_API_KEY
 import os
@@ -226,7 +226,7 @@ def get_top_tracks(access_token, time_range='long_term'):
 
 
 def generate_genre_persona(access_token, time_range='long_term'):
-    return "To test LLM API, comment first line in generate_genre_persona from spotify_util.py"
+    #return "To test LLM API, comment first line in generate_genre_persona from spotify_util.py"
 
     # First, get the info
     top_genres = get_top_genres(access_token, time_range)
