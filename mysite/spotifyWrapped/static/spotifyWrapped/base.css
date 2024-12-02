@@ -14,6 +14,17 @@ body.light .header-button {
     background-color: rgba(240, 240, 240, 0.85);
     color: #000000;
 }
+body.light .link{
+    color: black;
+}
+
+body.light .divider {
+    background-color: black;
+}
+
+body.light #playPauseBtn {
+    color: black;
+}
 
 /* Dark Theme */
 body.dark {
