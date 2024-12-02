@@ -1,6 +1,6 @@
 # Spotify-Wrapped
 
-Team Website: 
+Team Website: https://asapvald.wixsite.com/website
 
 Github Repo: https://github.com/JLee4103/Spotify-Wrapped
 
