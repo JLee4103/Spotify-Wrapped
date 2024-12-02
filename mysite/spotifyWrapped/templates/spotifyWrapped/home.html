@@ -1,7 +1,7 @@
 {% extends 'spotifyWrapped/base.html' %}
 {% load static %}
 
-{% block title %}Spotify Wrapped{% endblock %}
+{#{% block title %}Spotify Wrapped{% endblock %}#}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'spotifyWrapped/home.css' %}">
@@ -9,17 +9,25 @@
 
 {% block header_title %}Welcome, {{ username }}!{% endblock %}
 
-{% block header_buttons %}
-    <a href="{% url 'spotifyWrapped:community' %}" class="header-button">Community</a>
-    {% if username != "Guest" %}
-        <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button header-button">Log Out</a>
-        <a href="{% url 'spotifyWrapped:deactivate_account' %}" class="header-button danger-button">Deactivate Account</a>
-    {% else %}
-        <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button header-button">Log In</a>
-    {% endif %}
-{% endblock %}
 
 {% block content %}
+    <header>
+        <div class="header-content">
+            <h1>Welcome, {{ username }}!</h1>
+            <div class="header-buttons">
+                <a href="{% url 'spotifyWrapped:community' %}" class="header-button">Community</a>
+                {% if username != "Guest" %}
+                    <a href="{% url 'spotifyWrapped:logout' %}" class="logout-button header-button">Log Out</a>
+                    <a href="{% url 'spotifyWrapped:deactivate_account' %}" class="header-button danger-button">Deactivate Account</a>
+                {% else %}
+                    <a href="{% url 'spotifyWrapped:spotify_login' %}" class="login-button header-button">Log In</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="section-divider"></div>
+
     <section class="wraps-section">
         <h2>Your Generated Spotify Wraps</h2>
         <div class="grid-container" id="gridContainer">
@@ -91,6 +99,15 @@
             <button onclick="closeModal()" class="close-button">Close</button>
         </div>
     </div>
+
+    <div class="section-divider"></div>
+
+    <footer class="footer-section">
+        <div class="contact-dev">
+            <h2>Contact the Dev Team</h2>
+            <p>Questions? <a href="{% url 'spotifyWrapped:dev_team' %}"><i class="fas fa-envelope"></i> Meet the Team</a></p>
+        </div>
+    </footer>
 {% endblock %}
 
 {% block extra_scripts %}

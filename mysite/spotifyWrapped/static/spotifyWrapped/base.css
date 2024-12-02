@@ -17,7 +17,7 @@ body.light .header-button {
 
 /* Dark Theme */
 body.dark {
-    background: linear-gradient(120deg, #1e3c72, #2a5298); /* Deep dark blues */
+    background: linear-gradient(120deg, #14274b, #2a5298); /* Deep dark blues */
     color: #f0f0f0;
 }
 
@@ -84,9 +84,9 @@ body.vibrant .header-button {
 }
 
 
-.translate-widget {
+.menu-container {
     position: fixed;
-    bottom: 10px; /* Align just above the footer */
+    bottom: 15px; /* Align just above the footer */
     left: 20px; /* Keep it on the bottom-left corner */
     z-index: 1000; /* Ensure it stays on top of other elements */
     background-color: #ff5722; /* A bold orange for contrast */
@@ -100,12 +100,12 @@ body.vibrant .header-button {
     transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
 }
 
-.translate-widget:hover {
+.menu-container:hover {
     background-color: #e64a19; /* Slightly darker orange on hover */
     transform: translateY(-4px); /* Upward movement on hover */
 }
 
-.translate-widget select {
+.menu-container select {
     background: none; /* Match the button background */
     color: white; /* Ensure text contrast */
     border: none; /* Remove border */
@@ -116,7 +116,7 @@ body.vibrant .header-button {
     border-radius: 5px; /* Match the overall style */
 }
 
-.translate-widget select:focus {
+.menu-container select:focus {
     outline: none; /* Remove focus outline */
     background-color: #d84315; /* Highlight background on focus */
 }
@@ -141,6 +141,8 @@ header {
 
 .dark-mode-toggle {
     flex-shrink: 0;
+    background-color: Transparent;
+    margin: 5px 0;
 }
 
 .header-content {
@@ -159,6 +161,75 @@ header {
 
 .theme-button:hover {
     background-color: #f8b400;
-    color: #203a43;
+    /*color: #203a43;*/
     transform: scale(1.05);
+}
+
+.google-translate {
+    /*background-color: #b73b13;*/
+    /*border-radius: 5px;*/
+
+}
+
+.menu-button {
+    width: 40px;
+    height: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+}
+
+
+.menu-button span {
+    color: white;
+    display: block;
+    width: 70%;
+    height: 3px;
+    background-color: #ffffff;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+    margin: 4px 0;
+}
+
+/*.menu-button:hover {*/
+/*    background-color: #0056b3;*/
+/*}*/
+
+.menu-content {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: #E64A19FF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 1;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+
+}
+
+.menu-content button {
+    padding: 10px 20px;
+    background-color: #b73b13;
+    color: white;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    margin: 5px 0;
+}
+
+.menu-content button:last-child {
+    border-bottom: none;
+}
+
+.menu-content button:hover {
+    background-color: #9f310f;
 }
