@@ -1,4 +1,11 @@
 # settings.py
+"""
+Django Settings for Spotify Wrapped Application.
+
+This file contains configuration for installed apps, middleware,
+databases, API keys, and session settings.
+"""
+
 from pathlib import Path
 import os
 from dotenv import load_dotenv

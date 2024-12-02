@@ -1,3 +1,10 @@
+"""
+URL Configuration for the Spotify Wrapped Application.
+
+This file maps URL patterns to their respective views and includes
+routes for Spotify-related authentication, user account management,
+community sharing, and slideshow features.
+"""
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views

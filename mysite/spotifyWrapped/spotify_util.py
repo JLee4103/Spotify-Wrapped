@@ -1,3 +1,10 @@
+"""
+Utility Functions for Spotify Wrapped Application.
+
+This module contains helper functions to interact with the Spotify API
+and retrieve user-specific data such as top tracks, top artists, genres,
+and more.
+"""
 #import anthropic
 import requests
 from spotifyWrapped.settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, ANTHROPIC_API_KEY
